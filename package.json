@@ -1,0 +1,34 @@
+{
+  "name": "pushjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "export NODE_ENV=test ; mocha --recursive"
+  },
+  "dependencies": {
+    "apn": "^1.6.2",
+    "async": "^0.9.0",
+    "config": "^1.2.0",
+    "handlebars": "^2.0.0",
+    "hapi": "^6.8.1",
+    "joi": "^4.6.2",
+    "lodash": "^2.4.1",
+    "mariasql": "^0.1.21",
+    "mysql": "^2.5.0",
+    "pg": "^3.4.2",
+    "sequelize": "^2.0.0-rc1",
+    "sqlite3": "^2.2.7"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-browserify": "^0.5.0",
+    "gulp-concat": "^2.4.1",
+    "gulp-exit": "0.0.2",
+    "gulp-header": "^1.1.1",
+    "gulp-insert": "^0.4.0",
+    "gulp-mocha": "^1.1.0",
+    "gulp-util": "^3.0.1",
+    "mocha": "^1.21.4"
+  }
+}

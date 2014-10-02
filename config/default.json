@@ -1,0 +1,46 @@
+{
+  "DEBUG": false,
+  "SERVER": {
+    "URL": "127.0.0.1",
+    "PORT": 3000,
+    "CACHE_TEMPLATES": true
+  },
+  "PUSH": {
+    "APNS_FEEDBACK_INTERVAL": 43200 // default to 12 hours
+  },
+  "DATABASE": {
+    "DB_NAME": null,
+    "USERNAME": null,
+    "PASSWORD": null,
+    "SCHEMA": null,
+    "OPTIONS": {
+      "dialect": "sqlite",
+      "host": null,
+      "port": null,
+      "storage": "/tmp/push_server_dev_db",
+      "define": {
+        "underscored": true
+      }
+    }
+  },
+  "SUPPORTED_CHANNELS": ["APNS", "GCM"],
+
+  // Override these in local.json
+  "CREDENTIALS": {
+    "GCM": {
+      "PROJECT_ID": "",
+      "API_KEY": ""
+    },
+    "APNS": {
+      "CERT_FILE": "cert.pem",
+      "KEY_FILE": "key.pem"
+    }
+  },
+
+  "APPLICATION": {
+    "NAME": "Demo",
+    "CSS_APP_URL": "static/push_server.min.css",
+    "JS_APP_URL": "static/push_server.min.js",
+    "API_VERSION": 1
+  }
+}

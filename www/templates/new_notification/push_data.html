@@ -1,0 +1,58 @@
+ <div class="row">
+    <div class="col-sm-2">
+      <div class="form-horizontal">
+        <div class="row">
+          <label class="control-label col-sm-12">Extra data</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-10 pull-right">
+      <div class="form-inline push-data-row" ng-repeat="row in dataModel.pushDataRows">
+
+        <div class="form-group">
+          <input class="form-control"
+                 type="text"
+                 ng-model="dataModel.pushDataRows[$index].key"
+                 placeholder="Key"/>
+        </div>
+
+        <div class="form-group">
+          <select class="form-control"
+                  ng-model="dataModel.pushDataRows[$index].type"
+                  ng-options="dataType for dataType in dataModel.supportedDataTypes"></select>
+        </div>
+
+        <div class="form-group">
+          <span ng-if="!pushRowIsBoolean($index)">
+            <input class="form-control"
+                   type="text"
+                   placeholder="Value"
+                   ng-model="dataModel.pushDataRows[$index].value" />
+          </span>
+
+          <span ng-if="pushRowIsBoolean($index)">
+
+            <label class="radio-inline">
+              <input type="radio" ng-model="dataModel.pushDataRows[$index].value" ng-value="true"> True
+            </label>
+
+            <label class="radio-inline">
+              <input type="radio" ng-model="dataModel.pushDataRows[$index].value" ng-value="false"> False
+            </label>
+
+          </span>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-danger" ng-click="removeDataItem($index)">Delete row</button>
+        </div>
+
+        <div class="form-group">
+          <button class="btn btn-default btn-info" ng-click="addDataItem()">Add row</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-11 col-sm-offset-1">
+    </div>
+  </div>

@@ -1,0 +1,19 @@
+{
+  "DEBUG": true,
+  "DATABASE": {
+    "DB_NAME": null,
+    "USERNAME": null,
+    "PASSWORD": null,
+    "SCHEMA": null,
+    "OPTIONS": {
+      "dialect": "sqlite",
+      "host": null,
+      "port": null,
+      "storage": ":memory:",
+      "logging": false,
+      "define": {
+        "underscored": true
+      }
+    }
+  }
+}

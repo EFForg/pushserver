@@ -1,0 +1,6 @@
+{
+  "DEBUG": true,
+  "SERVER": {
+    "CACHE_TEMPLATES": false
+  }
+}

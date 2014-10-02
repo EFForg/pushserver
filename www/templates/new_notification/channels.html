@@ -1,0 +1,21 @@
+<div class="panel panel-danger">
+  <div class="panel-heading"><h4 class="panel-title">Channels</h4></div>
+  <div class="panel-body">
+    <p>Use the checkboxes to determine which channels to target.</p>
+    <p class="small">
+      <strong>APNS</strong>: Apple Push Notification Service (iOS devices)<br>
+      <strong>GCM</strong>: Google Cloud Messaging (Android devices)
+    </p>
+    <div class="form-group">
+        <div class="checkbox col-sm-12" ng-repeat="(channel, selected) in workingModel.selectedChannels">
+          <label>
+          	<input type="checkbox"
+            	     ng-model="workingModel.selectedChannels[channel]"
+            	     ng-change="toggleSupportedChannel(channel)" />
+            {[channel]}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

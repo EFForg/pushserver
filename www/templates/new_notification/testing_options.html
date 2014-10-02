@@ -1,0 +1,34 @@
+<div class="panel-group">
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <a class="toggle" data-toggle="collapse" href="#collapseTwo">
+        <h4 class="panel-title">
+            Testing
+        <span class="pull-right">
+          +
+        </span>
+        </h4>
+      </a>
+    </div>
+
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-9">
+            <p>Enter the device IDs of devices that you'd like to test with. If left blank, the message will be sent to all users subscribed to the service.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+          	<textarea class="form-control"
+                      rows="8"
+                      ng-model="workingModel.deviceIds"
+                      placeholder="device IDs, one per line">
+            </textarea>
+          </div>
+        </div>
+      </div>
+  	</div>
+  </div>
+</div>

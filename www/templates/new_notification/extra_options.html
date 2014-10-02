@@ -1,0 +1,29 @@
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <a class="toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+        <h4 class="panel-title">Extra options<span class="pull-right">+</span>
+        </h4>
+      </a>
+    </div>
+
+    <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="notification-sound">
+              Sound
+            </label>
+            <div class="col-sm-10">
+              <input id="notification-sound" class='form-control' type="text" ng-model="notification.sound">
+            </div>
+          </div>
+        </div>
+
+        <div push-notification-data ng-model="notification.data"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
