@@ -37,8 +37,10 @@ var staticRoutes = [
     method: 'GET',
     path: '/static/{filename}',
     handler: {
-      file: function(request) {
-        return request.params.filename;
+      directory: {
+        path: '.',
+        listing: false,
+        index: false
       }
     }
   }

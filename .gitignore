@@ -1,8 +1,8 @@
 www/templates/templates.js
 
 # Ignore everything in this directory
-/www/release/*
-!*/www/release/README.md
+/www/build/*
+!*/www/build/README.md
 
 
 # === Standard node gitignore ===

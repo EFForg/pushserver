@@ -2,10 +2,6 @@
   "name": "pushjs",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www",
-    "test": "export NODE_ENV=test ; mocha --recursive"
-  },
   "dependencies": {
     "apn": "^1.6.2",
     "async": "^0.9.0",
@@ -22,12 +18,16 @@
   },
   "devDependencies": {
     "gulp": "^3.8.8",
+    "gulp-angular-templatecache": "^1.4.1",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.4.1",
     "gulp-exit": "0.0.2",
     "gulp-header": "^1.1.1",
     "gulp-insert": "^0.4.0",
+    "gulp-livereload": "^2.1.1",
+    "gulp-minify-html": "^0.1.5",
     "gulp-mocha": "^1.1.0",
+    "gulp-preprocess": "^1.1.1",
     "gulp-util": "^3.0.1",
     "mocha": "^1.21.4"
   }

@@ -11,12 +11,14 @@ var serverConfig = require('config').get('SERVER');
 
 var db = require('./db/db');
 
+var buildDir = path.join(__dirname, 'www', 'build');
+
 var defaultOptions = {
   files: {
-    relativeTo: path.join(__dirname, 'www', 'release')
+    relativeTo: buildDir
   },
   views: {
-    basePath: path.join(__dirname, 'www'),
+    basePath: buildDir,
     engines: {
       'html': {
         module: require('handlebars'),
