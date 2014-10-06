@@ -2,12 +2,16 @@
   <div class="panel-heading"><h4 class="panel-title">Basic settings</h4></div>
   <div class="panel-body">
     <div class="form-horizontal">
+
       <div class="form-group">
         <label class="control-label col-sm-2" for="notification-title">
           Title
         </label>
         <div class="col-sm-10">
-          <input id="notification-title" class='form-control' type="text" ng-model="notification.title">
+          <input id="notification-title"
+                 class="form-control"
+                 type="text"
+                 ng-model="notification.title">
         </div>
       </div>
 
@@ -16,7 +20,23 @@
           Message
         </label>
         <div class="col-sm-10">
-          <textarea id="notification-message" class='form-control' type="text" ng-model="notification.message">
+          <textarea id="notification-message"
+                    rows="7"
+                    class="form-control"
+                    type="text"
+                    ng-model="notification.message">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="notification-message">
+          URL
+        </label>
+        <div class="col-sm-10">
+          <input id="notification-title"
+                 class="form-control"
+                 type="text"
+                 ng-model="notification.url">
         </div>
       </div>
 
