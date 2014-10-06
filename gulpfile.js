@@ -86,6 +86,16 @@ gulp.task('js', ['templates'], function () {
   }, 200);
 });
 
+// Simple accumulator to condense livereload events into a single call to the LR server.
+// NOTE: if the build ever gets to the point of taking > 350ms, update the timeout constant below.
+var liveReloadTimeout;
+var accumulateLivereloadEvents = function() {
+  clearTimeout(liveReloadTimeout);
+  liveReloadTimeout = setTimeout(function() {
+    livereload.changed();
+  }, 350);
+};
+
 gulp.task('watch', function() {
   gulp.watch('www/js/**/*.js', ['js']);
   gulp.watch(['www/templates/**/*.html'], ['js']);
@@ -93,7 +103,7 @@ gulp.task('watch', function() {
   gulp.watch('www/css/**/*.css', ['css']);
 
   livereload.listen();
-  gulp.watch(path.join(BUILD_DIR, '**')).on('change', livereload.changed);
+  gulp.watch(path.join(BUILD_DIR, '**')).on('change', accumulateLivereloadEvents);
 });
 
 gulp.task('serve', ['css', 'js', 'watch'], function() {
