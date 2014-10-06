@@ -8,7 +8,7 @@
     </p>
     <div class="form-group">
         <div class="checkbox col-sm-12" ng-repeat="(channel, selected) in workingModel.selectedChannels">
-          <label>
+          <label class="no-select">
           	<input type="checkbox"
             	     ng-model="workingModel.selectedChannels[channel]"
             	     ng-change="toggleSupportedChannel(channel)" />
