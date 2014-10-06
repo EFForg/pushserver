@@ -15,6 +15,12 @@ var PushNotificationFormController = function($scope, pushServerAPI) {
     }
   };
 
+  $scope.getChannelLabel = function(channel) {
+    var channelHelper = $scope.channelHelpers[channel];
+
+    return channelHelper || channel;
+  };
+
   $scope.submitNotification = function() {
     var isValid = true;
     var data = {};
@@ -42,6 +48,11 @@ var PushNotificationFormController = function($scope, pushServerAPI) {
     // admin variables
     channels: _.cloneDeep(channels),
     deviceIds: []
+  };
+
+  $scope.channelHelpers = {
+    'APNS': 'iOS',
+    'GCM': 'Android'
   };
 
   $scope.workingModel = {
