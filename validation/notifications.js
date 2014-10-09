@@ -4,30 +4,37 @@
 
 var Joi = require('joi');
 
-var supportedChannels = require('config').get('SUPPORTED_CHANNELS');
-var validationUtils = require('./utils');
+var notificationSchema;
 
-var notificationSchema = Joi.object().keys({
-  // Support an abbreviated version of the full push options
-  title: Joi.string(),    // the message title, unused for iOS where the app name is used instead by default
-  message: Joi.string(),  // the message body
-  sound: Joi.string(),    // the name of a sound file to play, this file must be on the device (iOS only)
-  data: Joi.object(),     // a bundle of key / value pairs to include in the notification
+// Support lazy initialization of the notification schema. This is to remove the config dependency
+// from this module, as its dependencies are not FE friendly.
+var getNotificationSchema = function(supportedChannels) {
+  if (notificationSchema === undefined) {
+    var channelsIosOnlySchema = Joi.array().min(1).max(1).includes(Joi.string().valid('APNS'))
 
-  // admin variables
-  channels: Joi.string().valid(supportedChannels).default(supportedChannels), // the channel(s) (GCM, APNS) to send to
-  mode: Joi.string().valid(['prod', 'sandbox']).default('prod'),  // the notification mode, if it's sandbox, the notification will be processed but not sent
-  deviceIds: Joi.array().includes(Joi.string())   // an array of deviceIds to send the notification to. If not supplied, the server will notify all deviceIds in the database
-});
+    notificationSchema = Joi.object().keys({
+      // Support an abbreviated version of the full push options
+      title: Joi.string().when('channels', {is: channelsIosOnlySchema, then: Joi.optional(), otherwise: Joi.required()}),    // the message title, unused for iOS where the app name is used instead by default
+      message: Joi.string(),  // the message body
+      sound: Joi.string(),    // the name of a sound file to play, this file must be on the device (iOS only)
+      data: Joi.object(),     // a bundle of key / value pairs to include in the notification
 
-var validateNotification = function(data, callback) {
+      // admin variables
+      channels: Joi.array().includes(Joi.string().valid(supportedChannels)).min(1).default(supportedChannels), // the channel(s) (GCM, APNS) to send to
+      mode: Joi.string().valid(['prod', 'sandbox']).default('prod'),  // the notification mode, if it's sandbox, the notification will be processed but not sent
+      deviceIds: Joi.array().includes(Joi.string())   // an array of deviceIds to send the notification to. If not supplied, the server will notify all deviceIds in the database
+    });
+  }
+
+  return notificationSchema;
+};
+
+var validateNotification = function(supportedChannels, data, callback) {
   var options = {abortEarly: false, allowUnknown: false};
-  Joi.validate(data, notificationSchema, options, function(err, value) {
-    if (err === null) {
-      callback(err, data);
-    } else {
-      callback(validationUtils.formatJoiValidationMessage(err));
-    }
+  var schema = getNotificationSchema(supportedChannels);
+
+  Joi.validate(data, schema, options, function(err, value) {
+    callback(err);
   });
 };
 

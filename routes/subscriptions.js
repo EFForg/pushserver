@@ -39,10 +39,12 @@ module.exports.addSubscription = function(request, reply) {
 
     if (initialized) {
       instance.save().on('success', function (newInstance) {
-        reply(newInstance.externalize()).code(200);
+        // TODO(leah): Update this to pass through a location header
+        reply(newInstance.externalize()).code(201);
       });
     } else {
-      reply(instance.externalize()).code(201);
+      // kick back a 200 for easier client handling, technically should probably be a 302 / 303
+      reply(instance.externalize()).code(200);
     }
   };
 

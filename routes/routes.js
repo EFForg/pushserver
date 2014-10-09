@@ -4,13 +4,14 @@
 
 var path = require('path');
 
-var applicationConfig = require('config').get('APPLICATION');
 var notifications = require('./notifications');
 var subscriptions = require('./subscriptions');
 var notificationValidation = require('../validation/notifications');
 var subscriptionValidation = require('../validation/subscriptions');
 
-var API_PREFIX = '/api/' + applicationConfig.get('API_VERSION');
+var APPLICATION_CONFIG = require('config').get('APPLICATION');
+var API_PREFIX = '/api/' + APPLICATION_CONFIG.get('API_VERSION');
+var SUPPORTED_CHANNELS = require('config').get('SUPPORTED_CHANNELS');
 
 var makePrefixedPath = function() {
   var args = Array.prototype.slice.call(arguments);
@@ -53,13 +54,13 @@ var templateRoutes = [
     method: 'GET',
     path: '/create_notification',
     handler: function (request, reply) {
-      reply.view('index', applicationConfig);
+      reply.view('index', APPLICATION_CONFIG);
     }
   }
 
 ];
 
-var apiRoutes = [
+var notificationRoutes = [
 
   {
     method: 'POST',
@@ -68,7 +69,7 @@ var apiRoutes = [
     config: {
       validate: {
         payload: function(value, options, next) {
-          notificationValidation.validateNotification(value, function(err) {
+          notificationValidation.validateNotification(SUPPORTED_CHANNELS, value, function(err) {
             next(err, value);
           });
         }
@@ -87,6 +88,16 @@ var apiRoutes = [
     path: makePrefixedPath('notifications'),
     handler: notifications.getNotifications
   },
+
+  {
+    method: 'POST',
+    path: makePrefixedPath('notifications/actions/validate'),
+    handler: notifications.validateNotification
+  }
+
+];
+
+var subscriptionRoutes = [
 
   {
     method: 'POST',
@@ -112,4 +123,5 @@ var apiRoutes = [
 ];
 
 module.exports.makePrefixedPath = makePrefixedPath;
-module.exports.routes = baseRoutes.concat(staticRoutes, templateRoutes, apiRoutes);
+module.exports.routes = baseRoutes.concat(
+  staticRoutes, templateRoutes, notificationRoutes, subscriptionRoutes);

@@ -2,7 +2,6 @@
  * Basic CSS for the push notification app.
  */
 
-
 .form-inline .form-control, .form-inline .btn {
 	margin-right: 10px;
 }
@@ -27,4 +26,11 @@
 
 a.toggle {
     color: transparent;
+}
+
+/* This is a copy of the alert-error CSS attrs */
+div.invalid-data-row input {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
 }

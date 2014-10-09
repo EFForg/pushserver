@@ -3,12 +3,10 @@
  */
 
 var async = require('async');
-var lodash = require('lodash');
 
 var db = require('../db/db');
 var dbUtils = require('../db/db_utils');
 var models = require('../db/models');
-
 
 before(function(done) {
   var syncComplete = function() {

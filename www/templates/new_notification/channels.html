@@ -1,17 +1,21 @@
 <div class="panel panel-danger">
-  <div class="panel-heading"><h4 class="panel-title">Channels</h4></div>
+
+  <div class="panel-heading">
+    <h4 class="panel-title">Channels</h4>
+  </div>
+
   <div class="panel-body">
-    <p>Use the checkboxes to determine which channels to target.</p>
+    <p>Use the checkboxes to select which channels to target.</p>
     <div class="form-group">
-        <div class="checkbox col-sm-12" ng-repeat="(channel, selected) in workingModel.selectedChannels">
-          <label class="no-select">
-          	<input type="checkbox"
-            	     ng-model="workingModel.selectedChannels[channel]"
-            	     ng-change="toggleSupportedChannel(channel)" />
-            {[getChannelLabel(channel)]}
-          </label>
-        </div>
+      <div class="checkbox col-sm-12" ng-repeat="(channel, selected) in dataModel.channels">
+        <label class="no-select">
+          <input type="checkbox"
+                 ng-model="dataModel.channels[channel]"
+                 ng-change="toggleSupportedChannel(channel)" />
+          {[getChannelLabel(channel)]}
+        </label>
       </div>
     </div>
   </div>
+
 </div>

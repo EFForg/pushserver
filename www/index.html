@@ -12,61 +12,51 @@
 
   </head>
 
-  <body>
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
+<body>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
 
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">{{NAME}}: Push Server</a>
-        </div>
-
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Create Notification</a></li>
-            <li><a href="#notifications">Notifications</a></li>
-          </ul>
-        </div>
-      </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">{{NAME}}: Push Server</a>
     </div>
 
-    <div class="container">
-      <div ng-controller="PushNotificationFormController">
-        <div ng-include="'new_notification/push_form.html'"></div>
-
-        <div>NOTIFICATION: {[notification]}</div>
-      </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Create Notification</a></li>
+        <li><a href="#notifications">Notifications</a></li>
+      </ul>
     </div>
+  </div>
+</div>
 
-    <!-- @if NODE_ENV!='production' -->
-    <script src="http://localhost:35729/livereload.js"></script>
-    <!-- @endif -->
+<div class="container">
 
-    <!-- Add in required JS dependencies via CDN:
-      * JQuery 1.11.1
-      * AngularJS 1.2.25
-      * lodash 2.4.1
-    -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+  <div>
+    <form name="pushNotificationForm" ng-controller="PushNotificationFormController">
+      {{> new_notification/push_form}}
 
-    <!-- Bring in the local .js file containing the Angular app, optionally this can be loaded from
-         a CDN by overriding the value of jsAppURL in the config file -->
-    <script src="{{JS_APP_URL}}"></script>
+      <div>NOTIFICATION: {[notification]}</div>
+    </form>
+  </div>
+</div>
 
-    <script>
-      angular.element(document).ready(function() {
-        angular.bootstrap(document, ['PushNotificationApp']);
-      });
-    </script>
+<!-- Bring in the local .js files containing our code, optionally this can be loaded from
+     a CDN by overriding the value of JS_LIBS_URL & JS_APP_URL in the config file -->
+<script src="{{JS_LIBS_URL}}"></script>
+<script src="{{JS_APP_URL}}"></script>
 
-  </body>
+<script>
+  angular.element(document).ready(function() {
+    angular.bootstrap(document, ['PushNotificationApp']);
+  });
+</script>
+
+</body>
 
 </html>

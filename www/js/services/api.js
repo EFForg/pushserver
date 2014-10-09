@@ -4,6 +4,7 @@
 
 var pushServerAPI = function ($http) {
 
+  var pushServerSettings = require('../../build/pushServerSettings');
   var API_PREFIX = '/api/' + pushServerSettings['APPLICATION']['API_VERSION'];
 
   return {
@@ -19,6 +20,11 @@ var pushServerAPI = function ($http) {
 
     postNotification: function(data, success, error) {
       var url = API_PREFIX + '/notifications';
+      $http.post(url, data).success(success).error(error);
+    },
+
+    validateNotification: function(data, success, error) {
+      var url = API_PREFIX + '/notifications/actions/validate';
       $http.post(url, data).success(success).error(error);
     }
 

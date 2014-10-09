@@ -10,7 +10,11 @@ var modelUtils = require('./db/model_utils');
 var pushConfig = require('config').get('PUSH');
 
 var configurePushServices = function() {
-  configureAPNSFeedback();
+  // the APNS module throws a cert not found error in test mode, that causes our test task to hang,
+  // so don't spin up the service when running tests
+  if (process.env.NODE_ENV !== 'test') {
+    configureAPNSFeedback();
+  }
 };
 
 var configureAPNSFeedback = function() {

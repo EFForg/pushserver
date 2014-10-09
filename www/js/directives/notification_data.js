@@ -2,24 +2,38 @@
  * Controller for the push notification data widget.
  */
 
+var angular = require('angular');
+
 var PushNotificationDataDirective = function() {
 
-  var dataTypeConverters = {
+  var typeConverters = {
     'integer': parseInt,
     'float': parseFloat
   };
 
+  // NOTE: this is doing pretty simplistic number-checking, there's no float vs integer
+  //       discrimination / checks, based on user-input vs specified type.
+  var isNumber = function(val) {
+    return angular.isNumber(val) && !isNaN(val);
+  };
+  var typeCheckers = {
+    'integer': isNumber,
+    'float':isNumber
+  }
+
   var makePushDataRow = function() {
-    return {key: '', type: 'string', value: ''};
+    return {key: '', type: 'string', value: '', isValid: true};
   };
 
   return {
     require: 'ngModel',
     restrict: 'A',
-    scope: {
-      pushData: '=ngModel'
-    },
+    // Create a default isolate scope
+    scope: {},
+    templateUrl: 'ng_partials/push_data.html',
     link: function(scope, elm, attrs, ctrl) {
+
+      ctrl.$name = 'data';
 
       // NOTE: This directive doesn't support decoration of an existing DOM structure - it won't
       //       pull keys out of a rendered table etc.
@@ -46,11 +60,10 @@ var PushNotificationDataDirective = function() {
         return rowType === 'boolean';
       };
 
-      // push the (optionally) converted push data values into the notification object
-      scope.$watch('dataModel.pushDataRows', function(newValue, oldValue) {
-        if (_.isArray(newValue)) {
-          scope.pushData = {};
-          for (var i = 0, newRow, oldRow, converter, value; i < newValue.length; ++i) {
+      scope.handlePushDataChanges = function(newValue, oldValue) {
+        if (!ctrl.$pristine) {
+          var pushData = {};
+          for (var i = 0, newRow, oldRow, converter, typeChecker, value; i < newValue.length; ++i) {
             newRow = newValue[i];
             oldRow = oldValue[i];
 
@@ -62,15 +75,28 @@ var PushNotificationDataDirective = function() {
             }
 
             if (newRow.key !== '' && newRow.value !== '') {
-              converter = dataTypeConverters[newRow.type];
-              value = !_.isUndefined(converter) ? converter(newRow.value) : newRow.value;
-              scope.pushData[newRow.key] = value;
+              converter = typeConverters[newRow.type];
+              value = !angular.isUndefined(converter) ? converter(newRow.value) : newRow.value;
+              typeChecker = typeCheckers[newRow.type];
+
+              if (angular.isUndefined(typeChecker) || typeChecker(value)) {
+                pushData[newRow.key] = value;
+                newRow.isValid = true;
+              } else {
+                newRow.isValid = false;
+              }
             }
           }
+
+          ctrl.$setViewValue(pushData);
+        } else {
+          ctrl.$pristine = false;
         }
-      }, true);
-    },
-    templateUrl: 'new_notification/push_data.html'
+      };
+
+      // push the (optionally) converted push data values into the notification object
+      scope.$watch('dataModel.pushDataRows', scope.handlePushDataChanges, true);
+    }
   };
 
 };

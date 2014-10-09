@@ -11,18 +11,19 @@ var serverConfig = require('config').get('SERVER');
 
 var db = require('./db/db');
 
-var buildDir = path.join(__dirname, 'www', 'build');
+var distDir = path.join(__dirname, 'www', 'dist');
 
 var defaultOptions = {
   files: {
-    relativeTo: buildDir
+    relativeTo: distDir
   },
   views: {
-    basePath: buildDir,
+    basePath: distDir,
     engines: {
       'html': {
         module: require('handlebars'),
-        compileMode: 'sync'
+        compileMode: 'sync',
+        partialsPath: path.join(__dirname, 'www/dist/templates')
       }
     },
     compileMode: 'async',

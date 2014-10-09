@@ -2,14 +2,21 @@
  * Base application definition for the Push Notification App.
  */
 
-require('../templates/templates');
+var angular = require('angular');
 
-var pushNotificationApp = angular.module('PushNotificationApp', ['pushNotification.templates']);
+var pushNotificationApp = angular.module('PushNotificationApp', []);
 pushNotificationApp.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[');
   $interpolateProvider.endSymbol(']}');
 });
 
-pushNotificationApp.controller('PushNotificationFormController', require('./form_controller'));
-pushNotificationApp.directive('pushNotificationData', require('./notification_data'));
-pushNotificationApp.factory('pushServerAPI', require('./api'));
+pushNotificationApp.controller('PushNotificationFormController', require('./controllers/notification_form'));
+
+pushNotificationApp.directive('pushNotificationChannels', require('./directives/channels'));
+pushNotificationApp.directive('pushNotificationData', require('./directives/notification_data'));
+
+pushNotificationApp.factory('pushServerValidation', require('./services/validation'));
+pushNotificationApp.factory('pushServerAPI', require('./services/api'));
+
+// Require in our cached templates - see gulp/tasks/ng_templates.js for details
+require('../build/pushNotificationTemplates');

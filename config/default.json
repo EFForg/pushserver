@@ -41,6 +41,7 @@
     "NAME": "Demo",
     "CSS_APP_URL": "static/push_server.min.css",
     "JS_APP_URL": "static/push_server.min.js",
+    "JS_LIBS_URL": "static/libs.min.js",
     "API_VERSION": 1
   }
 }

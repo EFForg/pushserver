@@ -5,7 +5,6 @@
 var Joi = require('joi');
 
 var supportedChannels = require('config').get('SUPPORTED_CHANNELS');
-var validationUtils = require('./utils');
 
 var schema = Joi.object().keys({
   channel: Joi.string().valid(supportedChannels).required(),
@@ -16,11 +15,7 @@ var schema = Joi.object().keys({
 var validateSubscriptions = function(data, callback) {
   var options = {abortEarly: false, allowUnknown: false};
   Joi.validate(data, schema, options, function(err, value) {
-    if (err === null) {
-      callback(null);
-    } else {
-      callback(validationUtils.formatJoiValidationMessage(err));
-    }
+    callback(err);
   });
 };
 
