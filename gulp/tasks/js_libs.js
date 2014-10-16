@@ -13,5 +13,5 @@ var config = require('../config');
 gulp.task('jsLibs', function() {
    gulp.src(config.jsLibs)
       .pipe(concat('libs.min.js'))
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest(config.distDir));
 });

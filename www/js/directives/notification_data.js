@@ -68,7 +68,7 @@ var PushNotificationDataDirective = function() {
             oldRow = oldValue[i];
 
             // If the type is switching to / from boolean, clear the value
-            if (!_.isUndefined(oldRow)) {
+            if (angular.isDefined(oldRow)) {
               if (newRow.type !== oldRow.type && (newRow.type === 'boolean' || oldRow.type === 'boolean')) {
                 newRow.value = newRow.type === 'boolean' ? false : '';
               }

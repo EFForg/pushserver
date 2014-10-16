@@ -32,7 +32,7 @@ module.exports = {
     ]
   },
 
-  buildDir: DIST_DIR,
+  distDir: DIST_DIR,
 
   browserify: {
     debug: !gutil.env.production,
@@ -56,26 +56,23 @@ module.exports = {
   ],
 
   ngTemplates: {
-    moduleTemplates: [{
-      dest: BUILD_DIR,
-      paths: [
-        path.join(WWW_DIR, 'templates/new_notification/push_data.html'),
-        path.join(WWW_DIR, 'templates/new_notification/channels.html')
-      ],
-      fileRoot: 'ng_partials',
-      ngModuleName: 'PushNotificationApp',
-      templateFileName: 'pushNotificationTemplates.js',
-      moduleSystem: 'browserify'
-    }]
+    dest: BUILD_DIR,
+    paths: [
+      path.join(WWW_DIR, 'templates/new_notification/push_data.html'),
+      path.join(WWW_DIR, 'templates/new_notification/channels.html')
+    ],
+    fileRoot: 'ng_partials',
+    ngModuleName: 'PushNotificationApp',
+    templateFileName: 'pushNotificationTemplates.js',
+    moduleSystem: 'browserify'
   },
 
   templates: {
     index: path.join(WWW_DIR, 'index.html'),
-    dest: DIST_DIR,
+    dest: path.join(DIST_DIR, 'templates'),
     // Paths is a little more complex here, as it's doing a recursive copy relative to a base dir
-    paths: [
-      [path.join(WWW_DIR, 'templates/**/*.html'), './www']
-    ]
+    paths: [path.join(WWW_DIR, 'templates/**/*.html')],
+    pathsBaseDir: path.join(WWW_DIR, 'templates')
   },
 
   test: {

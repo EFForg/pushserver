@@ -11,21 +11,16 @@ var handleErrors = require('../util/handle_errors');
 
 gulp.task('ngTemplates', function() {
 
-  var makeTemplateFile = function(templateConfig) {
+  return gulp.src(config.paths)
+    .on('error', handleErrors)
+    .pipe(minifyHTML({
+      quotes: true
+    }))
+    .pipe(templateCache(config.templateFileName, {
+      module: config.ngModuleName,
+      moduleSystem: config.moduleSystem,
+      root: config.fileRoot
+    }))
+    .pipe(gulp.dest(config.dest));
 
-    return gulp.src(templateConfig.paths)
-      .on('error', handleErrors)
-      .pipe(minifyHTML({
-        quotes: true
-      }))
-      .pipe(templateCache(templateConfig.templateFileName, {
-        module: templateConfig.ngModuleName,
-        moduleSystem: templateConfig.moduleSystem,
-        root: templateConfig.fileRoot
-      }))
-      .pipe(gulp.dest(templateConfig.dest));
-  };
-
-
-  config.moduleTemplates.forEach(makeTemplateFile);
 });

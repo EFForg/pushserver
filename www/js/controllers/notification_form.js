@@ -5,8 +5,7 @@
 
 var PushNotificationFormController = function($scope, $timeout, pushServerAPI, pushServerValidation) {
 
-  var pushServerSettings = require('../../build/pushServerSettings');
-  var supportedChannels = pushServerSettings['SUPPORTED_CHANNELS'];
+  var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 
   $scope.submitNotification = function() {
     var data = {};
@@ -38,19 +37,21 @@ var PushNotificationFormController = function($scope, $timeout, pushServerAPI, p
 
   $scope.workingModel = {
     deviceIds: '',
-    channels: _.cloneDeep(supportedChannels)
+    channels: angular.copy(supportedChannels)
   };
 
-  pushServerValidation.supportedChannels = _.cloneDeep(supportedChannels);
-
   $scope.formatDeviceIds = function(newValue) {
-    var deviceIds = _.map(newValue.split('\n'), function(val) {
-      return val.trim();
-    });
+    var deviceIds = [];
+    var rawDeviceIds = newValue.split('\n');
 
-    $scope.notification.deviceIds = _.filter(deviceIds, function(val) {
-      return _.isString(val) && val !== '';
-    });
+    for (var i = 0, rawDeviceId; i < rawDeviceIds.length; ++i) {
+      rawDeviceId = rawDeviceIds[i].trim();
+      if (angular.isString(rawDeviceId) && rawDeviceId !== '') {
+        deviceIds.push(rawDeviceId);
+      }
+    }
+
+    $scope.notification.deviceIds = [];
   };
 
   var validateNotificationPromise;
@@ -60,9 +61,10 @@ var PushNotificationFormController = function($scope, $timeout, pushServerAPI, p
 
       // Accumulate notification changes made < 350ms apart
       validateNotificationPromise = $timeout(function() {
-        pushServerValidation.validateNotification(newValue, function(errorMessages) {
+        var validationComplete = function(errorMessages) {
           pushServerValidation.resetFormValidity($scope.pushNotificationForm, errorMessages);
-        });
+        };
+        pushServerValidation.validateNotification(newValue, validationComplete);
       }, 350);
     }
   };

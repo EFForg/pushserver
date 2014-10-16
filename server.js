@@ -16,22 +16,18 @@ var distDir = path.join(__dirname, 'www', 'dist');
 var defaultOptions = {
   files: {
     relativeTo: distDir
-  },
-  views: {
-    basePath: distDir,
-    engines: {
-      'html': {
-        module: require('handlebars'),
-        compileMode: 'sync',
-        partialsPath: path.join(__dirname, 'www/dist/templates')
-      }
-    },
-    compileMode: 'async',
-    isCached: serverConfig.get('CACHE_TEMPLATES')
   }
 };
 
 var server = new hapi.Server(serverConfig.URL, serverConfig.PORT, defaultOptions);
+server.views({
+  basePath: distDir,
+  engines: {
+    html: require('handlebars')
+  },
+  isCached: serverConfig.get('CACHE_TEMPLATES'),
+  partialsPath: path.join(__dirname, 'www/dist/templates')
+});
 server.route(require('./routes/routes').routes);
 
 var options = {

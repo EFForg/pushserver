@@ -9,11 +9,14 @@ var pushServerValidation = function () {
   // wrapper around the Joi validation used server-side
   var notificationValidation = require('../../../validation/notifications');
 
+  var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
+
   return {
 
-    supportedChannels: [],
+    supportedChannels: angular.copy(supportedChannels),
 
     resetFormValidity: function(pushNotificationForm, errorMessages) {
+      console.log(errorMessages);
       angular.forEach(pushNotificationForm, function (value, key) {
         if (angular.isObject(value) && value.hasOwnProperty('$modelValue')) {
           value.$setValidity('err', !angular.isDefined(errorMessages[key]));

@@ -26,7 +26,7 @@ fs.readFile(clStringsPath, 'utf8', function(err, data) {
 
   var replacements = [
     [new RegExp('_.templateSettings.interpolate.*;?', 'g'),
-      'var templateSettings = { interpolate: /{:([\s\S]+?):}/g };'],
+      'var templateSettings = { interpolate: /{:([\\s\\S]+?):}/g };'],
 
     [new RegExp(escapeStringRegexp('template = _.template(template)(params);'), 'g'),
       'template = _.template(template, params, templateSettings);']
