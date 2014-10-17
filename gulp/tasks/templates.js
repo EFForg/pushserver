@@ -34,7 +34,7 @@ gulp.task('templates', function() {
 
   var index = gulp.src(config.index)
     .pipe(preprocess())
-    .pipe(gulp.dest(config.dest));
+    .pipe(gulp.dest(config.indexDest));
 
   var templates = gulp.src(config.paths, {base: config.pathsBaseDir})
     .pipe(gulpTap(function(file, t) {

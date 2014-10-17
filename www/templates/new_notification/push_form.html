@@ -6,7 +6,7 @@
          channels="workingModel.channels"
          form-field="pushNotificationForm.channels"
          name="channels"
-         ng-model="notification.channels">
+         ng-model="workingModel.notification.channels">
     </div>
   </div>
 </div>
@@ -29,8 +29,14 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-12 col-lg-10">
+    {{> new_notification/notification_preview}}
+  </div>
+</div>
+
 <button class="btn"
-        ng-class="{'btn-success': isValid}"
+        ng-class="{'btn-success': pushNotificationForm.$valid}"
         ng-click="submitNotification()">
   Submit Notification
 </button>

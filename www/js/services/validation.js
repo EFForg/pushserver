@@ -13,13 +13,12 @@ var pushServerValidation = function () {
 
   return {
 
-    supportedChannels: angular.copy(supportedChannels),
-
-    resetFormValidity: function(pushNotificationForm, errorMessages) {
-      console.log(errorMessages);
+    resetFormValidity: function(pushNotificationForm, errorMessages, opt_forceSetError) {
       angular.forEach(pushNotificationForm, function (value, key) {
         if (angular.isObject(value) && value.hasOwnProperty('$modelValue')) {
-          value.$setValidity('err', !angular.isDefined(errorMessages[key]));
+          if (!value.$pristine || opt_forceSetError === true) {
+            value.$setValidity('err', !angular.isDefined(errorMessages[key]));
+          }
         }
       });
     },
@@ -41,7 +40,7 @@ var pushServerValidation = function () {
         var errorMessages = this.parseJoiValidationMessage(err);
         callback(errorMessages);
       });
-      notificationValidation.validateNotification(this.supportedChannels, notification, onValidate);
+      notificationValidation.validateNotification(supportedChannels, notification, onValidate);
     }
 
   };

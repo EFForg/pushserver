@@ -52,6 +52,12 @@
           <button class="btn btn-danger" ng-click="removeDataItem($index)">Delete row</button>
           <button class="btn btn-default btn-info" ng-click="addDataItem()">Add row</button>
         </div>
+
+        <div class="text-danger validation-message"
+             ng-if="!dataModel.pushDataRows[$index].isValid">
+          {[dataModel.pushDataRows[$index].value]} is not a valid {[dataModel.pushDataRows[$index].type]} value
+        </div>
+
       </div>
     </div>
 

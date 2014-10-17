@@ -60,10 +60,27 @@ var PushNotificationDataDirective = function() {
         return rowType === 'boolean';
       };
 
+      scope.coerceAndCheckValue = function(row, pushData) {
+        if (row.key !== '' && row.value !== '') {
+          var converter = typeConverters[row.type];
+          var value = !angular.isUndefined(converter) ? converter(row.value) : row.value;
+          var typeChecker = typeCheckers[row.type];
+
+          if (angular.isUndefined(typeChecker) || typeChecker(value)) {
+            pushData[row.key] = value;
+            row.isValid = true;
+          } else {
+            row.isValid = false;
+          }
+        } else {
+          row.isValid = true;
+        }
+      };
+
       scope.handlePushDataChanges = function(newValue, oldValue) {
         if (!ctrl.$pristine) {
           var pushData = {};
-          for (var i = 0, newRow, oldRow, converter, typeChecker, value; i < newValue.length; ++i) {
+          for (var i = 0, newRow, oldRow; i < newValue.length; ++i) {
             newRow = newValue[i];
             oldRow = oldValue[i];
 
@@ -74,18 +91,7 @@ var PushNotificationDataDirective = function() {
               }
             }
 
-            if (newRow.key !== '' && newRow.value !== '') {
-              converter = typeConverters[newRow.type];
-              value = !angular.isUndefined(converter) ? converter(newRow.value) : newRow.value;
-              typeChecker = typeCheckers[newRow.type];
-
-              if (angular.isUndefined(typeChecker) || typeChecker(value)) {
-                pushData[newRow.key] = value;
-                newRow.isValid = true;
-              } else {
-                newRow.isValid = false;
-              }
-            }
+            scope.coerceAndCheckValue(newRow, pushData);
           }
 
           ctrl.$setViewValue(pushData);

@@ -15,7 +15,7 @@ var getNotificationSchema = function(supportedChannels) {
     notificationSchema = Joi.object().keys({
       // Support an abbreviated version of the full push options
       title: Joi.string().when('channels', {is: channelsIosOnlySchema, then: Joi.optional(), otherwise: Joi.required()}),    // the message title, unused for iOS where the app name is used instead by default
-      message: Joi.string(),  // the message body
+      message: Joi.string().required(),  // the message body
       sound: Joi.string(),    // the name of a sound file to play, this file must be on the device (iOS only)
       data: Joi.object(),     // a bundle of key / value pairs to include in the notification
 

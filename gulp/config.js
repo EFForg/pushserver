@@ -69,6 +69,7 @@ module.exports = {
 
   templates: {
     index: path.join(WWW_DIR, 'index.html'),
+    indexDest: DIST_DIR,
     dest: path.join(DIST_DIR, 'templates'),
     // Paths is a little more complex here, as it's doing a recursive copy relative to a base dir
     paths: [path.join(WWW_DIR, 'templates/**/*.html')],

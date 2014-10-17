@@ -12,10 +12,11 @@
                  name="title"
                  class="form-control"
                  type="text"
-                 ng-model="notification.title">
+                 ng-model="workingModel.notification.title">
 
-          <div class="text-danger validation-message">
-            You must include a title for the push notification
+          <div ng-if="!pushNotificationForm.title.$valid"
+               class="text-danger validation-message">
+            Distributing to the selected channels requires a title for the push notification
           </div>
         </div>
       </div>
@@ -30,8 +31,14 @@
                     name="message"
                     class="form-control"
                     type="text"
-                    ng-model="notification.message">
+                    ng-model="workingModel.notification.message">
           </textarea>
+
+          <div ng-if="!pushNotificationForm.message.$valid"
+               class="text-danger validation-message">
+            You must include a message to send with the notification
+          </div>
+
         </div>
       </div>
 
@@ -44,7 +51,7 @@
                  class="form-control"
                  name="url"
                  type="text"
-                 ng-model="notification.url">
+                 ng-model="workingModel.notification.url">
         </div>
       </div>
 

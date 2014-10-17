@@ -2,23 +2,28 @@
  * Controller for the push notification form.
  */
 
-
-var PushNotificationFormController = function($scope, $timeout, pushServerAPI, pushServerValidation) {
+var PushNotificationFormController = function($scope, $timeout, pushFormHelpers, pushServerAPI, pushServerValidation) {
 
   var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 
   $scope.submitNotification = function() {
-    var data = {};
 
-    pushServerAPI.postNotification(
-      data,
-      function(data, status, headers, config) {
-        // TODO(leah): Redirect the user to the notifications page showing the details of the notification that was just created
-      },
-      function(data, status, headers, config) {
-        // TODO(leah): Show some kind of inline validation
+    var validationCb = function(formHasErrors) {
+      if (!formHasErrors) {
+        pushServerAPI.postNotification(
+          $scope.notification,
+          function(data, status, headers, config) {
+            // TODO(leah): Redirect the user to the notifications page showing the details of the notification that was just created
+          },
+          function(data, status, headers, config) {
+            // TODO(leah): Review the err code and look at what comes back here...
+          }
+        );
       }
-    );
+    };
+
+    // Force a round of validation on all fields
+    $scope.validateNotification($scope.workingModel.notification, true, validationCb);
   };
 
   $scope.errorMessages = {};
@@ -36,41 +41,45 @@ var PushNotificationFormController = function($scope, $timeout, pushServerAPI, p
   };
 
   $scope.workingModel = {
+    notification: angular.copy($scope.notification),
     deviceIds: '',
     channels: angular.copy(supportedChannels)
   };
 
-  $scope.formatDeviceIds = function(newValue) {
-    var deviceIds = [];
-    var rawDeviceIds = newValue.split('\n');
+  $scope.validateNotification = function(newValue, opt_forceSetError, opt_cb) {
+    var validationComplete = function(errorMessages) {
+      $scope.errorMessages = errorMessages;
+      pushServerValidation.resetFormValidity(
+        $scope.pushNotificationForm, errorMessages, opt_forceSetError);
 
-    for (var i = 0, rawDeviceId; i < rawDeviceIds.length; ++i) {
-      rawDeviceId = rawDeviceIds[i].trim();
-      if (angular.isString(rawDeviceId) && rawDeviceId !== '') {
-        deviceIds.push(rawDeviceId);
+      if (angular.isDefined(opt_cb)) {
+        opt_cb(!angular.equals(errorMessages, {}));
       }
-    }
 
-    $scope.notification.deviceIds = [];
+    };
+
+    $scope.notification = pushFormHelpers.cleanNotificationForValidation(newValue);
+    pushServerValidation.validateNotification($scope.notification, validationComplete);
   };
+
+  $scope.$watch('workingModel.deviceIds', function(newValue) {
+    $scope.notification.deviceIds = pushFormHelpers.formatDeviceIds(newValue);
+  });
 
   var validateNotificationPromise;
-  $scope.validateNotification = function(newValue) {
-    if (!$scope.pushNotificationForm.$pristine) {
-      $timeout.cancel(validateNotificationPromise);
+  $scope.$watch(
+    'workingModel.notification',
+    function(newValue) {
+      if (!$scope.pushNotificationForm.$pristine) {
+        $timeout.cancel(validateNotificationPromise);
 
-      // Accumulate notification changes made < 350ms apart
-      validateNotificationPromise = $timeout(function() {
-        var validationComplete = function(errorMessages) {
-          pushServerValidation.resetFormValidity($scope.pushNotificationForm, errorMessages);
-        };
-        pushServerValidation.validateNotification(newValue, validationComplete);
-      }, 350);
-    }
-  };
-
-  $scope.$watch('workingModel.deviceIds', $scope.formatDeviceIds);
-  $scope.$watch('notification', $scope.validateNotification, true);
+        // Accumulate notification changes made < 350ms apart
+        validateNotificationPromise = $timeout(function() {
+          $scope.validateNotification(newValue);
+        }, 350);
+      }
+    },
+    true);
 };
 
 module.exports = PushNotificationFormController;
