@@ -36,11 +36,9 @@ module.exports = {
 
   browserify: {
     debug: !gutil.env.production,
-    bundleConfigs: [{
-      entries: './www/js/app.js',
-      dest: DIST_DIR,
-      outputName: 'push_server.min.js'
-    }]
+    entries: ['./www/js/app.js'],
+    dest: DIST_DIR,
+    outputName: 'push_server.min.js'
   },
 
   css: {
@@ -48,12 +46,15 @@ module.exports = {
     paths: path.join(WWW_DIR, 'css/*.css')
   },
 
-  jsLibs: [
-    path.join(COMPONENTS_DIR, 'jquery/dist/jquery.js'),
-    path.join(COMPONENTS_DIR, 'angular/angular.js'),
-    path.join(COMPONENTS_DIR, 'lodash/dist/lodash.compat.js'),
-    path.join(COMPONENTS_DIR, 'bootstrap/dist/js/bootstrap.js')
-  ],
+  jsLibs: {
+    distDir: DIST_DIR,
+    jsLibs: [
+      path.join(COMPONENTS_DIR, 'jquery/dist/jquery.js'),
+      path.join(COMPONENTS_DIR, 'angular/angular.js'),
+      path.join(COMPONENTS_DIR, 'lodash/dist/lodash.compat.js'),
+      path.join(COMPONENTS_DIR, 'bootstrap/dist/js/bootstrap.js')
+    ]
+  },
 
   ngTemplates: {
     dest: BUILD_DIR,

@@ -6,8 +6,6 @@ var gulp = require('gulp');
 var gulpTap = require('gulp-tap');
 var merge = require('merge-stream');
 var path = require('path');
-var preprocess = require('gulp-preprocess');
-var reload = require('browser-sync').reload;
 
 var handlebars = require('handlebars');
 
@@ -33,7 +31,6 @@ gulp.task('templates', function() {
   handlebars.partials = {};
 
   var index = gulp.src(config.index)
-    .pipe(preprocess())
     .pipe(gulp.dest(config.indexDest));
 
   var templates = gulp.src(config.paths, {base: config.pathsBaseDir})

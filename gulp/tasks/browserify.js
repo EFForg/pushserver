@@ -11,48 +11,36 @@ var config = require('../config').browserify;
 var bundleLogger = require('../util/bundle_logger');
 var handleErrors = require('../util/handle_errors');
 
-gulp.task('browserify', ['appSettings', 'ngTemplates'], function(callback) {
+gulp.task('browserify', ['appSettings', 'ngTemplates'], function() {
 
-  var bundlesToProcess = config.bundleConfigs.length;
+  var bundler = browserify({
+    // Required watchify args
+    cache: {}, packageCache: {}, fullPaths: true,
+    entries: config.entries,
+    debug: config.debug
+  });
 
-  var browserifyBundle = function(bundleConfig) {
-
-    var bundler = browserify({
-      // Required watchify args
-      cache: {}, packageCache: {}, fullPaths: true,
-      entries: bundleConfig.entries,
-      debug: config.debug
-    });
-
-    var bundle = function() {
-      bundleLogger.start(bundleConfig.outputName);
-
-      return bundler
-        .bundle()
-        .on('error', handleErrors)
-        .pipe(source(bundleConfig.outputName))
-        .pipe(gulp.dest(bundleConfig.dest))
-        .on('end', reportFinished);
-    };
-
-    // If in watch mode, turn on watchify to re-bundle on changes
-    if (global.isWatching) {
-      bundler = watchify(bundler);
-      bundler.on('update', bundle);
-    }
-
-    var reportFinished = function() {
-      // Log when bundling completes
-      bundleLogger.end(bundleConfig.outputName)
-
-      bundlesToProcess--;
-      if (bundlesToProcess === 0) {
-        callback();
-      }
-    };
-
-    return bundle();
+  var reportFinished = function() {
+    // Log when bundling completes
+    bundleLogger.end(config.outputName)
   };
 
-  config.bundleConfigs.forEach(browserifyBundle);
+  var bundle = function() {
+    bundleLogger.start(config.outputName);
+
+    return bundler
+      .bundle()
+      .on('error', handleErrors)
+      .pipe(source(config.outputName))
+      .pipe(gulp.dest(config.dest))
+      .on('end', reportFinished);
+  };
+
+  // If in watch mode, turn on watchify to re-bundle on changes
+  if (global.isWatching) {
+    bundler = watchify(bundler);
+    bundler.on('update', bundle);
+  }
+
+  return bundle();
 });
