@@ -17,7 +17,7 @@
     "mariasql": "^0.1.21",
     "mysql": "^2.5.0",
     "pg": "^3.4.2",
-    "sequelize": "^2.0.0-rc1",
+    "sequelize": "^2.0.0-rc2",
     "sqlite3": "^2.2.7"
   },
   "devDependencies": {

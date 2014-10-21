@@ -14,7 +14,12 @@ var bigIntegerPrimaryKey = db.options.dialect === 'sqlite' ? sequelize.INTEGER :
 var Subscriptions = db.define(
   'Subscriptions',
   {
-    subscriptionId: {type: bigIntegerPrimaryKey, primaryKey: true, autoIncrement: true},
+    subscriptionId: {
+      type: bigIntegerPrimaryKey,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'subscription_id'
+    },
     channel: {type: sequelize.ENUM, values: supportedChannels},
     // the language identifier, ideally a BCP-47 id, but could be any string
     language: sequelize.STRING(20),
@@ -40,7 +45,13 @@ var Subscriptions = db.define(
 var Notifications = db.define(
   'Notifications',
   {
-    notificationId: {type: bigIntegerPrimaryKey, primaryKey: true, autoIncrement: true, allowNull: false},
+    notificationId: {
+      type: bigIntegerPrimaryKey,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+      field: 'notification_id'
+    },
     payload: sequelize.TEXT
   },
   {

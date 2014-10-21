@@ -1,42 +1,45 @@
-<h1 class="page-header">Create Notification</h1>
+<form name="pushNotificationForm" ng-controller="PushNotificationFormController">
 
-<div class="row">
-  <div class="col-sm-12 col-lg-10">
-    <div push-notification-channels
-         channels="workingModel.channels"
-         form-field="pushNotificationForm.channels"
-         name="channels"
-         ng-model="workingModel.notification.channels">
+  <h1 class="page-header">Create Notification</h1>
+
+  <div class="row">
+    <div class="col-sm-12 col-lg-10">
+      <div push-notification-channels="workingModel.channels"
+           name="channels"
+           form-field="pushNotificationForm.channels"
+           ng-model="workingModel.notification.channels">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-sm-12 col-lg-10">
-    {{> new_notification/core_options}}
+  <div class="row">
+    <div class="col-sm-12 col-lg-10">
+      <div ng-include="'ng_partials/new_notification/core_options.html'"></div>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-sm-12 col-lg-10">
-    {{> new_notification/extra_options}}
+  <div class="row">
+    <div class="col-sm-12 col-lg-10">
+      <div ng-include="'ng_partials/new_notification/extra_options.html'"></div>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-sm-12 col-lg-10">
-    {{> new_notification/testing_options}}
+  <div class="row">
+    <div class="col-sm-12 col-lg-10">
+      <div ng-include="'ng_partials/new_notification/testing_options.html'"></div>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-sm-12 col-lg-10">
-    {{> new_notification/notification_preview}}
+  <div class="row">
+    <div class="col-sm-12 col-lg-10">
+      <div ng-include="'ng_partials/new_notification/notification_preview.html'"></div>
+    </div>
   </div>
-</div>
 
-<button class="btn"
-        ng-class="{'btn-success': pushNotificationForm.$valid}"
-        ng-click="submitNotification()">
-  Submit Notification
-</button>
+  <button class="btn"
+          ng-class="{'btn-success': pushNotificationForm.$valid}"
+          ng-click="submitNotification()">
+    Submit Notification
+  </button>
+
+</form>

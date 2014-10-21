@@ -2,10 +2,12 @@
  * Route handlers for all notification routes.
  */
 
+var async = require('async');
 var hapi = require('hapi');
+var lodash = require('lodash');
 
 var models = require('../db/models');
-var validateNotification = require('../validation/notifications').validateNotification;
+var utils = require('./notifications_utils');
 
 var addNotification = function(request, reply) {
   models.Notifications
@@ -35,17 +37,50 @@ var getNotification = function(request, reply) {
 
 
 var getNotifications = function(request, reply) {
+  var findCriteria = utils.getNotificationFindCriteria(request.payload);
 
+  var getCount = function(done) {
+    models.Notifications.count()
+      .on('success', function(count) {
+        done(null, count);
+      })
+      .on('error', function(err) {
+        done(err, null);
+      });
+  };
+
+  var getRows = function(done) {
+    models.Notifications
+      .findAndCountAll(findCriteria)
+      .on('success', function(result) {
+        done(null, result);
+      })
+      .on('error', function(err) {
+        done(err, null);
+      });
+  };
+
+  var queriesComplete = function(err, results) {
+
+    if (err) {
+      reply({error: err});
+    } else {
+      reply({
+        draw: parseInt(request.payload.draw),
+        recordsTotal: results.count,
+        recordsFiltered: results.data.count,
+        data: results.data.rows.map(function(row) {
+          return row.externalize();
+        })
+      });
+    }
+
+  };
+
+  async.parallel({count: getCount, data: getRows}, queriesComplete);
 };
 
-
-var validateNotification = function(request, reply) {
-  var isValid = validateNotification(reply.payload);
-
-  reply({isValid: true, validationErrors: [], validationMessage: ''});
-};
 
 module.exports.addNotification = addNotification;
 module.exports.getNotification = getNotification;
 module.exports.getNotifications = getNotifications;
-module.exports.validateNotification = validateNotification;

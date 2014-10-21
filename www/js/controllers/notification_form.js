@@ -2,7 +2,8 @@
  * Controller for the push notification form.
  */
 
-var PushNotificationFormController = function($scope, $timeout, pushFormHelpers, pushServerAPI, pushServerValidation) {
+var PushNotificationFormController = function(
+  $scope, $timeout, pushFormHelpers, pushServerAPI, pushServerValidation) {
 
   var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 

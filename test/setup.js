@@ -44,6 +44,8 @@ var populateSubscriptionData = function(done) {
 
 
 var populateNotificationData = function(done) {
+  var sampleNotifications = [];
+
   models.Notifications.sync().on('success', function() {
     done();
   });

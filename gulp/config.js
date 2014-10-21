@@ -50,7 +50,10 @@ module.exports = {
     distDir: DIST_DIR,
     jsLibs: [
       path.join(COMPONENTS_DIR, 'jquery/dist/jquery.js'),
+      path.join(COMPONENTS_DIR, 'datatables/media/js/jquery.dataTables.js'),
       path.join(COMPONENTS_DIR, 'angular/angular.js'),
+      path.join(COMPONENTS_DIR, 'angular-datatables/dist/angular-datatables.js'),
+      path.join(COMPONENTS_DIR, 'angular-ui-router/release/angular-ui-router.js'),
       path.join(COMPONENTS_DIR, 'lodash/dist/lodash.compat.js'),
       path.join(COMPONENTS_DIR, 'bootstrap/dist/js/bootstrap.js')
     ]
@@ -59,13 +62,16 @@ module.exports = {
   ngTemplates: {
     dest: BUILD_DIR,
     paths: [
-      path.join(WWW_DIR, 'templates/new_notification/push_data.html'),
-      path.join(WWW_DIR, 'templates/new_notification/channels.html')
+      path.join(WWW_DIR, 'templates/**/*.html'),
     ],
     fileRoot: 'ng_partials',
     ngModuleName: 'PushNotificationApp',
     templateFileName: 'pushNotificationTemplates.js',
     moduleSystem: 'browserify'
+  },
+
+  syncDatabase: {
+    force: false
   },
 
   templates: {

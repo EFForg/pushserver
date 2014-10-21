@@ -3,14 +3,12 @@
  */
 
 var models = require('../db/models');
-var modelUtils = require('../db/model_utils');
-
 
 module.exports.deleteSubscription = function(request, reply) {
   var deviceId = request.params.deviceId;
 
-  var success = function(subscriptionDeleted) {
-    if (subscriptionDeleted) {
+  var success = function(recordsDeleted) {
+    if (recordsDeleted > 0) {
       reply({deviceId: deviceId, deleted: true});
     } else {
       reply({deviceId: deviceId, deleted: false}).code(404);
@@ -22,7 +20,10 @@ module.exports.deleteSubscription = function(request, reply) {
     // reply({deleted: false});
   };
 
-  modelUtils.deleteSubscription(deviceId, success, error);
+  models.Subscriptions
+    .destroy({where: {deviceId: deviceId}})
+    .on('success', success)
+    .on('error', error);
 };
 
 

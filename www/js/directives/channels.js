@@ -8,13 +8,11 @@ var PushNotificationChannelsDirective = function() {
     require: 'ngModel',
     restrict: 'A',
     scope: {
-      channels: '=channels',
-      formField: '=formField'
+      pushNotificationChannels: '=',
+      formField: '='
     },
-    templateUrl: 'ng_partials/channels.html',
+    templateUrl: 'ng_partials/directives/channels.html',
     link: function(scope, elm, attrs, ctrl) {
-
-      ctrl.$name = 'channels';
 
       scope.dataModel = {
         channels: {},
@@ -26,8 +24,8 @@ var PushNotificationChannelsDirective = function() {
       };
 
       // Set up the data model
-      for (var i = 0, channel; i < scope.channels.length; i++) {
-        channel = scope.channels[i];
+      for (var i = 0, channel; i < scope.pushNotificationChannels.length; i++) {
+        channel = scope.pushNotificationChannels[i];
         scope.dataModel.channels[channel] = true;
         scope.dataModel.selectedChannels.push(channel);
       }
@@ -49,7 +47,7 @@ var PushNotificationChannelsDirective = function() {
         return scope.dataModel.channelHelpers[channel] || channel;
       };
 
-      ctrl.$setViewValue(scope.channels);
+      ctrl.$setViewValue(scope.pushNotificationChannels);
     }
   };
 

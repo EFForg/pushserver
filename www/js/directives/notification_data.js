@@ -30,7 +30,7 @@ var PushNotificationDataDirective = function() {
     restrict: 'A',
     // Create a default isolate scope
     scope: {},
-    templateUrl: 'ng_partials/push_data.html',
+    templateUrl: 'ng_partials/directives/push_data.html',
     link: function(scope, elm, attrs, ctrl) {
 
       ctrl.$name = 'data';

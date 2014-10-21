@@ -45,13 +45,16 @@ describe('SubscriptionRouteHandlers', function() {
     var sampleDeviceId = 'test_device_id';
     var deleteSubscriptionOptions = {
       method: 'DELETE', url: serverRoutes.makePrefixedPath('subscriptions', sampleDeviceId)};
+
     server.inject(deleteSubscriptionOptions, function(response) {
+
       models.Subscriptions
         .find({where: {deviceId: sampleDeviceId}})
         .on('success', function(subscription) {
           assert.equal(null, subscription);
           done();
-        })
+        });
+
     });
   });
 

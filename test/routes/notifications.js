@@ -3,6 +3,8 @@
  */
 
 var assert = require('assert');
+var lodash = require('lodash');
+var querystring = require('querystring');
 
 var models = require('../../db/models');
 var serverRoutes = require('../../routes/routes');
@@ -13,16 +15,22 @@ describe('NotificationRouteHandlers', function() {
   it('should add a notification to the database', function(done) {
     var validNotification = {title: 'title', message: 'message'};
     var addNotificationOptions = {
-      method: 'POST', url: serverRoutes.makePrefixedPath('notifications'), payload: validNotification};
+      method: 'POST',
+      url: serverRoutes.makePrefixedPath('notifications'),
+      payload: validNotification
+    };
 
     server.inject(addNotificationOptions, function(response) {
-      //      assert.equal(validNotification.title, response.payload.title);
+      // TODO(leah): Flip this assert on once the notification model is cleaned up
+      // assert.equal(validNotification.title, response.result.title);
+
       models.Notifications
         .find({where: {notificationId: 1}})
         .on('success', function(notification) {
           assert.equal(1, notification.notificationId);
           done();
         });
+
     });
   });
 
@@ -38,8 +46,46 @@ describe('NotificationRouteHandlers', function() {
     });
   });
 
+  var getNotificationsQuery = {
+    draw: '1',
+    columns: [{data: 'notificationId'}],
+    order: [{column: '0', dir: 'asc'}],
+    start: '0',
+    length: '10',
+    search: {value: '', regex: 'false'}
+  };
+
   it('should get a list of notifications from the database', function(done) {
-    done();
+    var getNotificationsOptions = {
+      method: 'POST',
+      url: serverRoutes.makePrefixedPath('notifications', 'search'),
+      payload: getNotificationsQuery
+    };
+
+    server.inject(getNotificationsOptions, function(response) {
+      var result = response.result;
+      assert.equal(result.recordsTotal, 1);
+      assert.equal(result.data[0].notificationId, 1);
+      done();
+    });
   });
+
+  it('should return an empty array of notifications for a pagination miss', function(done) {
+    var emptyNotificationsQuery = lodash.cloneDeep(getNotificationsQuery);
+    emptyNotificationsQuery.start = 5;
+
+    var getNotificationsOptions = {
+      method: 'POST',
+      url: serverRoutes.makePrefixedPath('notifications', 'search'),
+      payload: emptyNotificationsQuery
+    };
+
+    server.inject(getNotificationsOptions, function(response) {
+      assert.equal(response.result.recordsFiltered, 1);
+      assert.equal(response.result.data.length, 0);
+      done();
+    });
+  });
+
 
 });

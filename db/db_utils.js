@@ -13,5 +13,4 @@ var syncDatabase = function(success, failure, force) {
 
 };
 
-
 module.exports.syncDatabase = syncDatabase;

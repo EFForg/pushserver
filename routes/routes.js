@@ -2,6 +2,7 @@
  * Routing file for handling inbound requests.
  */
 
+var joi = require('joi');
 var path = require('path');
 
 var notifications = require('./notifications');
@@ -26,7 +27,7 @@ var baseRoutes = [
     path: '/',
     method: 'GET',
     handler: function(request, reply) {
-      return reply.redirect('/create_notification');
+      reply.view('index', APPLICATION_CONFIG);
     }
   }
 
@@ -43,18 +44,6 @@ var staticRoutes = [
         listing: false,
         index: false
       }
-    }
-  }
-
-];
-
-var templateRoutes = [
-
-  {
-    method: 'GET',
-    path: '/create_notification',
-    handler: function (request, reply) {
-      reply.view('index', APPLICATION_CONFIG);
     }
   }
 
@@ -84,15 +73,11 @@ var notificationRoutes = [
   },
 
   {
-    method: 'GET',
-    path: makePrefixedPath('notifications'),
-    handler: notifications.getNotifications
-  },
-
-  {
     method: 'POST',
-    path: makePrefixedPath('notifications/actions/validate'),
-    handler: notifications.validateNotification
+    // The query object used by datatables is complex enough it's a pain to stuff in query params,
+    // so provide a pragmatic search endpoint
+    path: makePrefixedPath('notifications', 'search'),
+    handler: notifications.getNotifications
   }
 
 ];
@@ -123,5 +108,4 @@ var subscriptionRoutes = [
 ];
 
 module.exports.makePrefixedPath = makePrefixedPath;
-module.exports.routes = baseRoutes.concat(
-  staticRoutes, templateRoutes, notificationRoutes, subscriptionRoutes);
+module.exports.routes = baseRoutes.concat(staticRoutes, notificationRoutes, subscriptionRoutes);
