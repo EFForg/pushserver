@@ -16,7 +16,7 @@ var getNotificationFindCriteria = function(query) {
   };
 
   if (search !== '') {
-    findCriteria.where = ['payload LIKE %' + search + '%']
+    findCriteria.where = ["payload LIKE '%" + search + "%'"];
   }
 
   return findCriteria;
