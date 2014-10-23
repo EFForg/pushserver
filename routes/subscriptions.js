@@ -4,6 +4,8 @@
 
 var models = require('../db/models');
 
+var routeUtils = require('./route_utils');
+
 module.exports.deleteSubscription = function(request, reply) {
   var deviceId = request.params.deviceId;
 
@@ -40,8 +42,11 @@ module.exports.addSubscription = function(request, reply) {
 
     if (initialized) {
       instance.save().on('success', function (newInstance) {
-        // TODO(leah): Update this to pass through a location header
-        reply(newInstance.externalize()).code(201);
+        var subscriptionURL = routeUtils.makePrefixedPath(
+          '/subscriptions/' + newInstance.subscriptionId);
+        reply(newInstance.externalize())
+          .code(201)
+          .header('Location:' + subscriptionURL);
       });
     } else {
       // kick back a 200 for easier client handling, technically should probably be a 302 / 303

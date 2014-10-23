@@ -2,6 +2,8 @@
  * Push Server API.
  */
 
+var angular = require('angular');
+
 var pushServerAPI = function ($http, $filter) {
 
   var pushServerSettings = require('../../build/pushServerSettings');
@@ -14,11 +16,16 @@ var pushServerAPI = function ($http, $filter) {
       var cleanArgs = [API_PREFIX];
       // Trivial use case, hence nested loops
       angular.forEach(arguments, function(arg) {
-        angular.forEach(arg.split('/'), function(urlBit) {
-          if (angular.isString(urlBit) && urlBit != '') {
-           cleanArgs.push(urlBit);
-          }
-        });
+        if (angular.isString(arg)) {
+          angular.forEach(arg.split('/'), function(urlBit) {
+            if (angular.isString(urlBit) && urlBit != '') {
+             cleanArgs.push(urlBit);
+            }
+          });
+        } else {
+          cleanArgs.push(arg);
+        }
+
       });
 
       return cleanArgs.join('/');

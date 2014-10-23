@@ -3,19 +3,37 @@
  */
 
 var async = require('async');
+var config = require('config');
 var hapi = require('hapi');
 var lodash = require('lodash');
 
 var models = require('../db/models');
+var routeUtils = require('./route_utils');
+var supportedChannels = config.get('SUPPORTED_CHANNELS');
 var utils = require('./notifications_utils');
 
 var addNotification = function(request, reply) {
+
+  var payload = request.payload;
+  var notification = {
+    title: lodash.isUndefined(payload.title) ? null : payload.title,
+    message: payload.message,
+    sound: lodash.isUndefined(payload.sound) ? null : payload.sound,
+    data: lodash.isUndefined(payload.data) ? null : payload.data,
+    channels: lodash.isUndefined(payload.channels) ? supportedChannels : payload.channels,
+    mode: lodash.isUndefined(payload.mode) ? 'prod' : payload.mode,
+    deviceIds: lodash.isUndefined(payload.deviceIds) ? null : payload.deviceIds
+  };
+  notification.payload = lodash.cloneDeep(notification);
+
   models.Notifications
-    .build(request.payload)
+    .build(notification)
     .save()
     .on('success', function(notification) {
-      // TODO(leah): Update this to pass through a location header
-      reply(notification.externalize()).code(201);
+      var locationURL = routeUtils.makePrefixedPath('/notifications/' + notification.notificationId);
+      reply(notification)
+        .code(201)
+        .header('Location:' + locationURL);
     })
     .on('error', function(err) {
       hapi.error.internal('unable to add the notification', err);
@@ -25,12 +43,16 @@ var addNotification = function(request, reply) {
 
 var getNotification = function(request, reply) {
   var notificationId = request.params.notificationId;
+  console.log('GETTING NOTIFICATION FOR notificationId: ' + notificationId);
+
   models.Notifications
     .find({where: {notificationId: notificationId}})
     .on('success', function(notification) {
+      console.log('FOUND NOTIFICATION');
       reply(notification.externalize());
     })
-    .on('error', function() {
+    .on('error', function(err) {
+      console.log('notification not found for id: ' + notificationId);
       hapi.error.notFound('notification not found for id: ' + notificationId);
     });
 };

@@ -3,7 +3,7 @@
  */
 
 var PushNotificationFormController = function(
-  $scope, $timeout, pushFormHelpers, pushServerAPI, pushServerValidation) {
+  $scope, $timeout, $state, pushFormHelpers, pushServerAPI, pushServerValidation) {
 
   var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 
@@ -14,9 +14,10 @@ var PushNotificationFormController = function(
         pushServerAPI.postNotification(
           $scope.notification,
           function(data, status, headers, config) {
-            // TODO(leah): Redirect the user to the notifications page showing the details of the notification that was just created
+            $state.go('notification', {notificationId: data.notificationId});
           },
           function(data, status, headers, config) {
+            console.log(data);
             // TODO(leah): Review the err code and look at what comes back here...
           }
         );

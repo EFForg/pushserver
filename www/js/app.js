@@ -39,9 +39,10 @@ pushNotificationApp.config(function($stateProvider, $urlRouterProvider) {
       templateUrl: 'ng_partials/new_notification/push_form.html'
     })
     .state('notification', {
-      url: '/notification',
+      url: '/notification/:notificationId',
       templateUrl: 'ng_partials/list/notification_detail.html'
     })
+    // TODO(leah): Figure out passing limit / offset, search etc.
     .state('notifications', {
       url: '/notifications',
       templateUrl: 'ng_partials/list/notification_list.html'

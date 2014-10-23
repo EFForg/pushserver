@@ -2,11 +2,25 @@
  * Database models for working with the push server.
  */
 
+var lodash = require('lodash');
 var sequelize = require('sequelize');
 
 var dbConfig = require('config').get('DATABASE');
 var supportedChannels = require('config').get('SUPPORTED_CHANNELS');
 var db = require('./db');
+
+var getJSONField = function(fieldName) {
+  return function() {
+    return JSON.parse(this.getDataValue(fieldName));
+  };
+};
+
+var setJSONField = function(fieldName) {
+  return function(value) {
+    var dataValue = lodash.isNull(value) ? null : JSON.stringify(value);
+    return this.setDataValue(fieldName, dataValue);
+  };
+};
 
 // Sqlite doesn't play nicely with a bigint specified as the pk, so use a conditional to alias it
 var bigIntegerPrimaryKey = db.options.dialect === 'sqlite' ? sequelize.INTEGER : sequelize.BIGINT;
@@ -20,11 +34,20 @@ var Subscriptions = db.define(
       autoIncrement: true,
       field: 'subscription_id'
     },
-    channel: {type: sequelize.ENUM, values: supportedChannels},
+    channel: {
+      type: sequelize.ENUM,
+      values: supportedChannels
+    },
     // the language identifier, ideally a BCP-47 id, but could be any string
-    language: sequelize.STRING(20),
+    language: {
+      type: sequelize.STRING(20)
+    },
     // device token for APNS, registration_id for GCM etc.
-    deviceId: {type: sequelize.TEXT, allowNull: false, unique: true}
+    deviceId: {
+      type: sequelize.TEXT,
+      allowNull: false,
+      unique: true
+    }
   },
   {
     tableName: 'subscriptions',
@@ -39,8 +62,10 @@ var Subscriptions = db.define(
         };
       }
     }
+
   }
 );
+
 
 var Notifications = db.define(
   'Notifications',
@@ -52,25 +77,68 @@ var Notifications = db.define(
       allowNull: false,
       field: 'notification_id'
     },
-    payload: sequelize.TEXT
+    title: {
+      type: sequelize.TEXT,
+      allowNull: true
+    },
+    message: {
+      type: sequelize.TEXT,
+      allowNull: false
+    },
+    sound: {
+      type: sequelize.TEXT,
+      allowNull: true
+    },
+    data: {
+      type: sequelize.TEXT,
+      allowNull: true
+    },
+    channels: {
+      type: sequelize.TEXT,
+      allowNull: false
+    },
+    mode: {
+      type: sequelize.ENUM,
+      values: ['prod', 'sandbox'],
+      allowNull: false
+    },
+    deviceIds: {
+      type: sequelize.TEXT,
+      allowNull: true
+    },
+    // separated out as a convenience for full-text search, dupes content in other fields
+    payload: {
+      type: sequelize.TEXT,
+      allowNull: false
+    }
   },
   {
     getterMethods: {
-      payload: function() {
-        return JSON.parse(this.getDataValue('payload'));
-      }
+      payload: getJSONField('payload'),
+      data: getJSONField('data'),
+      channels: getJSONField('channels'),
+      deviceIds: getJSONField('deviceIds')
     },
 
     setterMethods: {
-      payload: function(value) {
-        return this.setDataValue('payload', JSON.stringify(value));
-      }
+      payload: setJSONField('payload'),
+      data: setJSONField('data'),
+      channels: setJSONField('channels'),
+      deviceIds: setJSONField('deviceIds')
     },
 
     instanceMethods: {
       externalize: function() {
-        // TODO(leah): Update this to be less absurd
-        return {notificationId: this.notificationId};
+        return {
+          notificationId: this.notificationId,
+          title: this.title,
+          message: this.message,
+          sound: this.sound,
+          data: this.data,
+          channels: this.channels,
+          mode: this.mode,
+          deviceIds: this.deviceIds
+        };
       }
     },
 

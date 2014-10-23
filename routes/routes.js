@@ -6,20 +6,13 @@ var joi = require('joi');
 var path = require('path');
 
 var notifications = require('./notifications');
-var subscriptions = require('./subscriptions');
 var notificationValidation = require('../validation/notifications');
+var routeUtils = require('./route_utils');
+var subscriptions = require('./subscriptions');
 var subscriptionValidation = require('../validation/subscriptions');
 
 var APPLICATION_CONFIG = require('config').get('APPLICATION');
-var API_PREFIX = '/api/' + APPLICATION_CONFIG.get('API_VERSION');
 var SUPPORTED_CHANNELS = require('config').get('SUPPORTED_CHANNELS');
-
-var makePrefixedPath = function() {
-  var args = Array.prototype.slice.call(arguments);
-  args.splice(0, 0, API_PREFIX);
-
-  return path.join.apply(null, args);
-};
 
 var baseRoutes = [
 
@@ -53,7 +46,7 @@ var notificationRoutes = [
 
   {
     method: 'POST',
-    path: makePrefixedPath('notifications'),
+    path: routeUtils.makePrefixedPath('notifications'),
     handler: notifications.addNotification,
     config: {
       validate: {
@@ -68,7 +61,7 @@ var notificationRoutes = [
 
   {
     method: 'GET',
-    path: makePrefixedPath('notifications/{notificationId}'),
+    path: routeUtils.makePrefixedPath('notifications/{notificationId}'),
     handler: notifications.getNotification
   },
 
@@ -76,7 +69,7 @@ var notificationRoutes = [
     method: 'POST',
     // The query object used by datatables is complex enough it's a pain to stuff in query params,
     // so provide a pragmatic search endpoint
-    path: makePrefixedPath('notifications', 'search'),
+    path: routeUtils.makePrefixedPath('notifications', 'search'),
     handler: notifications.getNotifications
   }
 
@@ -86,7 +79,7 @@ var subscriptionRoutes = [
 
   {
     method: 'POST',
-    path: makePrefixedPath('subscriptions'),
+    path: routeUtils.makePrefixedPath('subscriptions'),
     handler: subscriptions.addSubscription,
     config: {
       validate: {
@@ -101,11 +94,10 @@ var subscriptionRoutes = [
 
   {
     method: 'DELETE',
-    path: makePrefixedPath('subscriptions/{deviceId}'),
+    path: routeUtils.makePrefixedPath('subscriptions/{deviceId}'),
     handler: subscriptions.deleteSubscription
   }
 
 ];
 
-module.exports.makePrefixedPath = makePrefixedPath;
 module.exports.routes = baseRoutes.concat(staticRoutes, notificationRoutes, subscriptionRoutes);
