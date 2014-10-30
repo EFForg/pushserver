@@ -1,5 +1,6 @@
 {
   "DEBUG": true,
+  "MODE": "test",
   "DATABASE": {
     "DB_NAME": null,
     "USERNAME": null,

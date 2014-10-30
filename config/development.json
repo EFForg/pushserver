@@ -1,5 +1,6 @@
 {
   "DEBUG": true,
+  "MODE": "development",
   "SERVER": {
     "CACHE_TEMPLATES": false
   }

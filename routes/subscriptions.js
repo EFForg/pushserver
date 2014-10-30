@@ -6,7 +6,7 @@ var models = require('../db/models');
 
 var routeUtils = require('./route_utils');
 
-module.exports.deleteSubscription = function(request, reply) {
+var deleteSubscription = function(request, reply) {
   var deviceId = request.params.deviceId;
 
   var success = function(recordsDeleted) {
@@ -29,7 +29,7 @@ module.exports.deleteSubscription = function(request, reply) {
 };
 
 
-module.exports.addSubscription = function(request, reply) {
+var addSubscription = function(request, reply) {
 
   var error = function(error) {
     // TODO(leah): raise a 500
@@ -66,3 +66,7 @@ module.exports.addSubscription = function(request, reply) {
     .on('success', success)
     .on('error', error);
 };
+
+
+module.exports.deleteSubscription = deleteSubscription;
+module.exports.addSubscription = addSubscription;

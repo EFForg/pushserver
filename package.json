@@ -16,7 +16,9 @@
     "lodash": "^2.4.1",
     "mariasql": "^0.1.21",
     "mysql": "^2.5.0",
+    "node-gcm": "^0.9.12",
     "pg": "^3.4.2",
+    "q": "^1.0.1",
     "sequelize": "^2.0.0-rc2",
     "sqlite3": "^2.2.7"
   },
@@ -42,7 +44,9 @@
     "merge-stream": "^0.1.6",
     "mocha": "^1.21.4",
     "pretty-hrtime": "~0.2.1",
+    "randomstring": "^1.0.3",
     "require-dir": "^0.1.0",
+    "sinon": "^1.11.1",
     "vinyl-source-stream": "~0.1.1",
     "watchify": "~1.0.2"
   },

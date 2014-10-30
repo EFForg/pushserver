@@ -5,24 +5,36 @@
 var assert = require('assert');
 var lodash = require('lodash');
 var querystring = require('querystring');
+var sinon = require('sinon');
 
 var models = require('../../db/models');
-var serverRoutes = require('../../routes/routes');
+var routeUtils = require('../../routes/route_utils');
 var server = require('../../server');
 
 describe('NotificationRouteHandlers', function() {
 
+  var validNotification = {title: 'title', message: 'message'};
+
+  var dispatchPushNotificationMock;
+
+  before(function() {
+    dispatchPushNotificationMock = sinon.mock(server.methods)
+      .expects('dispatchPushNotification').once();
+  });
+
+  after(function() {
+    dispatchPushNotificationMock.verify();
+  });
+
   it('should add a notification to the database', function(done) {
-    var validNotification = {title: 'title', message: 'message'};
     var addNotificationOptions = {
       method: 'POST',
-      url: serverRoutes.makePrefixedPath('notifications'),
+      url: routeUtils.makePrefixedPath('notifications'),
       payload: validNotification
     };
 
     server.inject(addNotificationOptions, function(response) {
-      // TODO(leah): Flip this assert on once the notification model is cleaned up
-      // assert.equal(validNotification.title, response.result.title);
+      assert.equal(response.result.title, validNotification.title);
 
       models.Notifications
         .find({where: {notificationId: 1}})
@@ -37,11 +49,10 @@ describe('NotificationRouteHandlers', function() {
   it('should get a notification from the database', function(done) {
     var getNotificationOptions = {
       method: 'GET',
-      url: serverRoutes.makePrefixedPath('notifications/' + 1)
+      url: routeUtils.makePrefixedPath('notifications/' + 1)
     };
     server.inject(getNotificationOptions, function(response) {
-//      console.log(response);
-//      assert.equal(response.payload.title, 'title');
+      assert.equal(response.result.title, validNotification.title);
       done();
     });
   });
@@ -58,7 +69,7 @@ describe('NotificationRouteHandlers', function() {
   it('should get a list of notifications from the database', function(done) {
     var getNotificationsOptions = {
       method: 'POST',
-      url: serverRoutes.makePrefixedPath('notifications', 'search'),
+      url: routeUtils.makePrefixedPath('notifications', 'search'),
       payload: getNotificationsQuery
     };
 
@@ -76,7 +87,7 @@ describe('NotificationRouteHandlers', function() {
 
     var getNotificationsOptions = {
       method: 'POST',
-      url: serverRoutes.makePrefixedPath('notifications', 'search'),
+      url: routeUtils.makePrefixedPath('notifications', 'search'),
       payload: emptyNotificationsQuery
     };
 

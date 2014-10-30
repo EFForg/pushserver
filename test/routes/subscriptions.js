@@ -5,14 +5,14 @@
 var assert = require('assert');
 
 var models = require('../../db/models');
-var serverRoutes = require('../../routes/routes');
+var routeUtils = require('../../routes/route_utils');
 var server = require('../../server');
 
 describe('SubscriptionRouteHandlers', function() {
 
   var addSubscriptionOptions = {
     method: 'POST',
-    url: serverRoutes.makePrefixedPath('subscriptions'),
+    url: routeUtils.makePrefixedPath('subscriptions'),
     payload: {
       channel: 'APNS',
       language: 'en',
@@ -42,9 +42,9 @@ describe('SubscriptionRouteHandlers', function() {
   });
 
   it('should delete a subscription from the database', function(done) {
-    var sampleDeviceId = 'test_device_id';
+    var sampleDeviceId = 'device_id_to_be_deleted';
     var deleteSubscriptionOptions = {
-      method: 'DELETE', url: serverRoutes.makePrefixedPath('subscriptions', sampleDeviceId)};
+      method: 'DELETE', url: routeUtils.makePrefixedPath('subscriptions', sampleDeviceId)};
 
     server.inject(deleteSubscriptionOptions, function(response) {
 

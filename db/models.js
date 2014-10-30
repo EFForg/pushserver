@@ -32,15 +32,18 @@ var Subscriptions = db.define(
       type: bigIntegerPrimaryKey,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
       field: 'subscription_id'
     },
     channel: {
       type: sequelize.ENUM,
-      values: supportedChannels
+      values: supportedChannels,
+      allowNull: false
     },
     // the language identifier, ideally a BCP-47 id, but could be any string
     language: {
-      type: sequelize.STRING(20)
+      type: sequelize.STRING(20),
+      allowNull: false
     },
     // device token for APNS, registration_id for GCM etc.
     deviceId: {

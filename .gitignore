@@ -7,6 +7,8 @@
 
 bower_components
 
+.idea
+
 # === Standard node gitignore ===
 
 # Logs
