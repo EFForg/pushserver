@@ -20,7 +20,8 @@ module.exports = {
     fileName: 'pushServerSettings.js',
     settingsKeys: [
       'SUPPORTED_CHANNELS',
-      'APPLICATION'
+      'APPLICATION',
+      'CHANNEL_LOOKUP'
     ]
   },
 
@@ -43,7 +44,10 @@ module.exports = {
 
   css: {
     dest: DIST_DIR,
-    paths: path.join(WWW_DIR, 'css/*.css')
+    paths: [
+      path.join(WWW_DIR, 'css/*.css'),
+      path.join(COMPONENTS_DIR, 'AngularJS-Toaster/toaster.css')
+    ]
   },
 
   jsLibs: {
@@ -54,8 +58,10 @@ module.exports = {
       path.join(COMPONENTS_DIR, 'angular/angular.js'),
       path.join(COMPONENTS_DIR, 'angular-datatables/dist/angular-datatables.js'),
       path.join(COMPONENTS_DIR, 'angular-ui-router/release/angular-ui-router.js'),
+      path.join(COMPONENTS_DIR, 'angular-animate/angular-animate.js'),
+      path.join(COMPONENTS_DIR, 'AngularJS-Toaster/toaster.js'),
       path.join(COMPONENTS_DIR, 'lodash/dist/lodash.compat.js'),
-      path.join(COMPONENTS_DIR, 'bootstrap/dist/js/bootstrap.js')
+      path.join(COMPONENTS_DIR, 'bootstrap/dist/js/bootstrap.js'),
     ]
   },
 

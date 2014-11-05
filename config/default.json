@@ -24,6 +24,10 @@
     }
   },
   "SUPPORTED_CHANNELS": ["APNS", "GCM"],
+  "CHANNEL_LOOKUP": {
+    "APNS": "iOS",
+    "GCM": "Android"
+  },
 
   // Override these in local.json
   "CREDENTIALS": {

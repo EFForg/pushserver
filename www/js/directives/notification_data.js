@@ -55,11 +55,17 @@ var PushNotificationDataDirective = function() {
         }
       };
 
+      /**
+       * Checks whether the data row is for a boolean data item.
+       */
       scope.pushRowIsBoolean = function(index) {
         var rowType = scope.dataModel.pushDataRows[index].type;
         return rowType === 'boolean';
       };
 
+      /**
+       * Validates the data value is valid for the chosen type and type-coerces it to that type.
+       */
       scope.coerceAndCheckValue = function(row, pushData) {
         if (row.key !== '' && row.value !== '') {
           var converter = typeConverters[row.type];
@@ -77,6 +83,11 @@ var PushNotificationDataDirective = function() {
         }
       };
 
+      /**
+       * Handles changes to the data array and updates the view value.
+       * @param newValue The new value for scope.dataModel.pushDataRows.
+       * @param oldValue The old value for scope.dataModel.pushDataRows.
+       */
       scope.handlePushDataChanges = function(newValue, oldValue) {
         if (!ctrl.$pristine) {
           var pushData = {};
@@ -100,7 +111,6 @@ var PushNotificationDataDirective = function() {
         }
       };
 
-      // push the (optionally) converted push data values into the notification object
       scope.$watch('dataModel.pushDataRows', scope.handlePushDataChanges, true);
     }
   };

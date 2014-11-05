@@ -13,6 +13,12 @@ var pushServerValidation = function () {
 
   return {
 
+    /**
+     * Resets the valid / error state on all fields in the supplied form.
+     * @param pushNotificationForm The push form to reset.
+     * @param errorMessages An object, keyed on field name, values of errors for that field
+     * @param opt_forceSetError Whether to force-set error state even if the field is pristine.
+     */
     resetFormValidity: function(pushNotificationForm, errorMessages, opt_forceSetError) {
       angular.forEach(pushNotificationForm, function (value, key) {
         if (angular.isObject(value) && value.hasOwnProperty('$modelValue')) {
@@ -23,6 +29,11 @@ var pushServerValidation = function () {
       });
     },
 
+    /**
+     * Parses the Joi validation response to produce an easier to consume error object.
+     * @param err The Joi validation object.
+     * @returns {{}} An object, keyed on field name, value of error message.
+     */
     parseJoiValidationMessage: function(err) {
       var errorMessages = {};
       if (err !== null) {
@@ -35,6 +46,11 @@ var pushServerValidation = function () {
       return errorMessages;
     },
 
+    /**
+     * Validates the supplied notification using the Joi validation functionality.
+     * @param notification The notification to validate.
+     * @param callback The callback to call once validation completes.
+     */
     validateNotification: function(notification, callback) {
       var onValidate = angular.bind(this, function(err) {
         var errorMessages = this.parseJoiValidationMessage(err);

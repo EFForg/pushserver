@@ -7,6 +7,7 @@
       <div push-notification-channels="workingModel.channels"
            name="channels"
            form-field="pushNotificationForm.channels"
+           channel-lookup="channelLookup"
            ng-model="workingModel.notification.channels">
       </div>
     </div>
@@ -38,8 +39,8 @@
 
   <button class="btn"
           ng-class="{'btn-success': pushNotificationForm.$valid}"
-          ng-click="submitNotification()">
-    Submit Notification
+          ng-click="previewNotification()">
+    Preview Notification
   </button>
 
 </form>

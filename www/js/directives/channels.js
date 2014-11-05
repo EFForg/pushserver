@@ -9,7 +9,8 @@ var PushNotificationChannelsDirective = function() {
     restrict: 'A',
     scope: {
       pushNotificationChannels: '=',
-      formField: '='
+      formField: '=',
+      channelLookup: '='
     },
     templateUrl: 'ng_partials/directives/channels.html',
     link: function(scope, elm, attrs, ctrl) {
@@ -17,10 +18,7 @@ var PushNotificationChannelsDirective = function() {
       scope.dataModel = {
         channels: {},
         selectedChannels: [],
-        channelHelpers: {
-          'APNS': 'iOS',
-          'GCM': 'Android'
-        }
+        channelHelpers: scope.channelLookup
       };
 
       // Set up the data model
@@ -30,6 +28,10 @@ var PushNotificationChannelsDirective = function() {
         scope.dataModel.selectedChannels.push(channel);
       }
 
+      /**
+       * Toggles a boolean isSupported value for the supplied channel.
+       * @param channel The name of the channel to toggle, e.g GCM.
+       */
       scope.toggleSupportedChannel = function(channel) {
         ctrl.$pristine = false;
 
@@ -43,6 +45,9 @@ var PushNotificationChannelsDirective = function() {
         ctrl.$setViewValue(scope.dataModel.selectedChannels);
       };
 
+      /**
+       * Returns a user friendly label for the channel, e.g. APNS returns iOS.
+       */
       scope.getChannelLabel = function(channel) {
         return scope.dataModel.channelHelpers[channel] || channel;
       };

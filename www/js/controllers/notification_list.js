@@ -13,9 +13,15 @@ var PushNotificationListController = function(
     $state.go('notification', {notificationId: notificationId});
   };
 
+  /**
+   * Callback called when a new row is added to the datatable.
+   * @param newRow The row element.
+   * @param data The data associated with the new row.
+   * @returns {*}
+   */
   $scope.addRowClickedEvents = function(newRow, data) {
-    // TODO(leah): Look at moving this logic somewhere else, adding events here like this isn't
-    //             good practice.
+    // TODO(leah): Look at whether this can be handled via bubbling / top level click handler vs.
+    //             adding (row_count) * individual events.
     var elem = angular.element(newRow);
     elem.unbind('click');
     elem.bind('click', angular.bind(this, $scope.handleRowClicked, data.notificationId));

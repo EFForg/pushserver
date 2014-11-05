@@ -4,7 +4,7 @@
 
 var angular = require('angular');
 
-var pushNotificationApp = angular.module('PushNotificationApp', ['ui.router', 'datatables']);
+var pushNotificationApp = angular.module('PushNotificationApp', ['ui.router', 'datatables', 'toaster']);
 pushNotificationApp.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[');
   $interpolateProvider.endSymbol(']}');
@@ -24,6 +24,7 @@ pushNotificationApp.directive('pushNotificationData', require('./directives/noti
 pushNotificationApp.factory('pushServerValidation', require('./services/validation'));
 pushNotificationApp.factory('pushServerAPI', require('./services/api'));
 pushNotificationApp.factory('pushFormHelpers', require('./services/push_form_helpers'));
+pushNotificationApp.factory('notificationPreview', require('./services/notification_preview'));
 
 // Require in the cached templates - see gulp/tasks/ng_templates.js for details
 require('../build/pushNotificationTemplates');

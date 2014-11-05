@@ -1,5 +1,146 @@
 <div ng-controller="PushNotificationDetailController">
 
-  <span>notification detail</span>
+  <h1 class="page-header">Notification {[isPreview ? 'Preview' : 'Detail']}</h1>
+
+  <div class="panel panel-success">
+
+    <div class="panel-heading">
+      <h4 class="panel-title">Core Details</h4>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Channels
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[friendlyChannels()]}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Title
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[notification.title]}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Message
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[notification.message]}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          URL
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[notification.data.url]}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+   <div class="panel panel-info">
+
+    <div class="panel-heading">
+      <h4 class="panel-title">Options</h4>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Sound
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[notification.sound]}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Data
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          <div class="row detail-data-row" ng-repeat="(key, value) in getNotificationData()">
+            <div class="col-sm-5 col-lg-5">
+              {[key]}
+            </div>
+
+            <div class="col-sm-2 col-lg-2"> : </div>
+
+            <div class="col-sm-5 col-lg-5">
+              {[value]}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+   <div class="panel panel-warning">
+
+    <div class="panel-heading">
+      <a class="toggle" data-toggle="collapse" href="#collapseOne">
+        <h4 class="panel-title">
+          Testing & Development
+        <span class="pull-right">
+          +
+        </span>
+        </h4>
+      </a>
+    </div>
+
+     <div id="collapseOne" class="panel-collapse collapse">
+
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-3 col-lg-2">
+            Device Ids
+          </div>
+
+          <div class="col-sm-9 col-lg-8">
+            <pre class="scrollable-pre">{[deviceIds()]}</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-3 col-lg-2">
+            Notification
+          </div>
+
+          <div class="col-sm-9 col-lg-8">
+            <pre>{[notification | json]}</pre>
+          </div>
+        </div>
+
+      </div>
+
+  	</div>
+
+  </div>
+
+  <div ng-if="isPreview">
+    <button class="btn btn-success" ng-click="submitNotification()">
+      Submit Notification
+    </button>
+  </div>
 
 </div>

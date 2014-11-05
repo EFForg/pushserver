@@ -29,9 +29,17 @@ var pushFormHelpers = function () {
         }
       }, rawNotification);
 
+      // URL is presented as a top-level option in the frontend, but treated as a data key for the
+      // purposes of the backend.
+      cleanNotification.data.url = cleanNotification.url;
+      delete cleanNotification.url;
+
       return cleanNotification;
     },
 
+    /**
+     * Converts the raw \n delimited deviceIds string to an array of individual deviceIds.
+     */
     formatDeviceIds: function(newValue) {
       var deviceIds = [];
       var rawDeviceIds = newValue.split('\n');

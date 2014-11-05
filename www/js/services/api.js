@@ -11,6 +11,9 @@ var pushServerAPI = function ($http, $filter) {
 
   return {
 
+    /**
+     * Creates a URL with the appropriate API server prefix applied.
+     */
     makePrefixedUrl: function() {
 
       var cleanArgs = [API_PREFIX];
@@ -31,11 +34,17 @@ var pushServerAPI = function ($http, $filter) {
       return cleanArgs.join('/');
     },
 
+    /**
+     * Gets a notification object from the server.
+     */
     getNotification: function(notificationId, success, failure) {
       var url = this.makePrefixedUrl('notifications', notificationId);
       $http.get(url).success(success).error(failure);
     },
 
+    /**
+     * Adds a notification object to the server.
+     */
     postNotification: function(data, success, failure) {
       var url = this.makePrefixedUrl('notifications');
       $http.post(url, data).success(success).error(failure);
