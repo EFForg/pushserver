@@ -4,6 +4,7 @@
 
 var angular = require('angular');
 
+
 var pushFormHelpers = function () {
 
   return {
@@ -57,5 +58,6 @@ var pushFormHelpers = function () {
   };
 
 };
+
 
 module.exports = pushFormHelpers;

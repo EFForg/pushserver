@@ -20,4 +20,5 @@ var notificationPreview = function () {
 
 };
 
+
 module.exports = notificationPreview;

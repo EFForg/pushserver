@@ -1,16 +1,18 @@
 /**
- * Utility functions for the notification routes.
+ * Utility functions for the notification route handlers.
  */
 
 var config = require('config');
 var lodash = require('lodash');
 
-var models = require('../db/models');
+var models = require('../../db/models');
 
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 
+
 /**
  * Constructs a Sequelize-friendly criteria object to search for notifications.
+ *
  * @param query The query parameters submitted to the server
  * @returns {{offset: Number, limit: Number, order: *}}
  */
@@ -37,6 +39,7 @@ var getNotificationFindCriteria = function(query) {
 
 /**
  * Creates a clean notification object from a Hapi request payload.
+ *
  * @param payload
  * @returns {Object}
  */
@@ -58,6 +61,7 @@ var notificationFromPayload = function(payload) {
 
 /**
  * Fetches the device ids subscribed to the supplied channels.
+ *
  * @param channels The channels to fetch device ids for.
  * @param done The callback to call once the fetch completes.
  */

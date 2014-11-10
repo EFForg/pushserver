@@ -1,32 +1,10 @@
 /**
- * Handlers for dealing with subscribing devices and deleting subscriptions.
+ * Adds a new subscription to the database.
  */
 
-var models = require('../db/models');
+var models = require('../../db/models');
 
-var routeUtils = require('./route_utils');
-
-var deleteSubscription = function(request, reply) {
-  var deviceId = request.params.deviceId;
-
-  var success = function(recordsDeleted) {
-    if (recordsDeleted > 0) {
-      reply({deviceId: deviceId, deleted: true});
-    } else {
-      reply({deviceId: deviceId, deleted: false}).code(404);
-    }
-  };
-
-  var error = function() {
-    // TODO(leah): Figure out how to deal with the 500
-    // reply({deleted: false});
-  };
-
-  models.Subscriptions
-    .destroy({where: {deviceId: deviceId}})
-    .on('success', success)
-    .on('error', error);
-};
+var routeUtils = require('../utils');
 
 
 var addSubscription = function(request, reply) {
@@ -68,5 +46,4 @@ var addSubscription = function(request, reply) {
 };
 
 
-module.exports.deleteSubscription = deleteSubscription;
-module.exports.addSubscription = addSubscription;
+module.exports = addSubscription;

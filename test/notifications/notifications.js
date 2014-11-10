@@ -8,8 +8,9 @@ var querystring = require('querystring');
 var sinon = require('sinon');
 
 var models = require('../../db/models');
-var routeUtils = require('../../routes/route_utils');
+var routeUtils = require('../../routes/utils');
 var server = require('../../server');
+
 
 describe('NotificationRouteHandlers', function() {
 

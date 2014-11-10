@@ -1,7 +1,11 @@
+/**
+ * Utility functions for working with route definitions.
+ */
+
 var path = require('path');
 
-var APPLICATION_CONFIG = require('config').get('APPLICATION');
-var API_PREFIX = '/api/' + APPLICATION_CONFIG.get('API_VERSION');
+var API_PREFIX = '/api/' + require('config').get('APPLICATION').get('API_VERSION');
+
 
 var makePrefixedPath = function() {
   var args = Array.prototype.slice.call(arguments);

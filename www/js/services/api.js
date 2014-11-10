@@ -1,10 +1,11 @@
 /**
- * Push Server API.
+ * Push Server API service.
  */
 
 var angular = require('angular');
 
-var pushServerAPI = function ($http, $filter) {
+
+var pushServerAPI = function ($http) {
 
   var pushServerSettings = require('../../build/pushServerSettings');
   var API_PREFIX = '/api/' + pushServerSettings['APPLICATION']['API_VERSION'];
@@ -53,5 +54,6 @@ var pushServerAPI = function ($http, $filter) {
   };
 
 };
+
 
 module.exports = pushServerAPI;

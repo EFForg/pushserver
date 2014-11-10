@@ -5,8 +5,9 @@
 var assert = require('assert');
 
 var models = require('../../db/models');
-var routeUtils = require('../../routes/route_utils');
+var routeUtils = require('../../routes/utils');
 var server = require('../../server');
+
 
 describe('SubscriptionRouteHandlers', function() {
 

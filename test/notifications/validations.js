@@ -5,9 +5,10 @@
 var assert = require('assert');
 var lodash = require('lodash');
 
-var notificationValidation = require('../../validation/notifications');
+var notificationValidation = require('../../routes/notifications/validation');
 
 var SUPPORTED_CHANNELS = require('config').get('SUPPORTED_CHANNELS');
+
 
 describe('NotificationValidation', function() {
 

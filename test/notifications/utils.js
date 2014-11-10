@@ -5,9 +5,10 @@
 var assert = require('assert');
 var config = require('config');
 
-var utils = require('../../routes/notifications_utils');
+var notificationUtils = require('../../routes/notifications/utils');
 
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
+
 
 describe('NotificationUtils', function() {
 
@@ -29,7 +30,7 @@ describe('NotificationUtils', function() {
       search: {value: 'test', regex: 'false'}
     };
 
-    var findCriteria = utils.getNotificationFindCriteria(payload);
+    var findCriteria = notificationUtils.getNotificationFindCriteria(payload);
     assert.equal(findCriteria.offset, 0);
     assert.equal(findCriteria.limit, 15);
     assert.equal(findCriteria.where, "payload LIKE '%test%'");
@@ -37,7 +38,7 @@ describe('NotificationUtils', function() {
   });
 
   it('should get a clean notification object', function() {
-    var notification = utils.notificationFromPayload({message: 'test'});
+    var notification = notificationUtils.notificationFromPayload({message: 'test'});
     assert.equal(notification.title, null);
     assert.equal(notification.sound, null);
     assert.equal(notification.data, null);
@@ -47,7 +48,7 @@ describe('NotificationUtils', function() {
   });
 
   it('should get a set of subscription objects for specific channels', function(done) {
-    utils.fetchDeviceIdsForChannels(
+    notificationUtils.fetchDeviceIdsForChannels(
       SUPPORTED_CHANNELS,
       function(groupedChannels) {
         // Do a >= check to avoid creating any dependencies or need for ordering v-a-v the

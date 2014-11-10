@@ -4,10 +4,11 @@
 
 var angular = require('angular');
 
+
 var pushServerValidation = function () {
 
   // wrapper around the Joi validation used server-side
-  var notificationValidation = require('../../../validation/notifications');
+  var notificationValidation = require('../../../routes/notifications/validation');
 
   var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 
@@ -62,5 +63,6 @@ var pushServerValidation = function () {
   };
 
 };
+
 
 module.exports = pushServerValidation;

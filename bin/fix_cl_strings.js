@@ -1,7 +1,7 @@
 /**
- * Fixer script to update the cl-strings dependency to fix an issue with it touch lodash globals.
+ * Fixer script to update the cl-strings dependency to fix an issue with it editing lodash globals.
  *
- * This is required as the current latest cl-strings sets the lodash.templateSettings.interpolate
+ * This is required as the latest cl-strings sets the lodash.templateSettings.interpolate
  * property to a value that causes sequelize to fail on syncDatabase.
  *
  * See github.com/shakyShane/cl-strings/commit/2d7c4399a72c50e175573e8ab0fe3e79b2eac69c for the PR

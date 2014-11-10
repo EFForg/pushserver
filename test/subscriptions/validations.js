@@ -5,9 +5,10 @@
 var assert = require('assert');
 var lodash = require('lodash');
 
-var subscriptionValidation = require('../../validation/subscriptions');
+var subscriptionValidation = require('../../routes/subscriptions/validation');
 
 var SUPPORTED_CHANNELS = require('config').get('SUPPORTED_CHANNELS');
+
 
 describe('Validation', function() {
 

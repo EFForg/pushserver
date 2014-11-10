@@ -4,6 +4,7 @@
 
 var Joi = require('joi');
 
+
 var notificationSchema;
 
 // Support lazy initialization of the notification schema. This is to remove the config dependency
@@ -13,8 +14,15 @@ var getNotificationSchema = function(supportedChannels) {
     var channelsIosOnlySchema = Joi.array().min(1).max(1).includes(Joi.string().valid('APNS'))
 
     notificationSchema = Joi.object().keys({
-      // Support an abbreviated version of the full push options
-      title: Joi.string().when('channels', {is: channelsIosOnlySchema, then: Joi.optional(), otherwise: Joi.required()}),    // the message title, unused for iOS where the app name is used instead by default
+      // the message title, unused for iOS where the app name is used instead by default
+      title: Joi.string().when(
+        'channels',
+        {
+          is: channelsIosOnlySchema,
+          then: Joi.optional(),
+          otherwise: Joi.required()
+        }
+      ),
       message: Joi.string().required(),  // the message body
       sound: Joi.string(),    // the name of a sound file to play, this file must be on the device (iOS only)
       data: Joi.object(),     // a bundle of key / value pairs to include in the notification
@@ -29,6 +37,14 @@ var getNotificationSchema = function(supportedChannels) {
   return notificationSchema;
 };
 
+
+/**
+ * Validates a notification object.
+ *
+ * @param supportedChannels The channels the push server supports publishing to.
+ * @param data The notification object to validate.
+ * @param callback
+ */
 var validateNotification = function(supportedChannels, data, callback) {
   var options = {abortEarly: false, allowUnknown: false};
   var schema = getNotificationSchema(supportedChannels);
@@ -37,5 +53,6 @@ var validateNotification = function(supportedChannels, data, callback) {
     callback(err);
   });
 };
+
 
 module.exports.validateNotification = validateNotification;
