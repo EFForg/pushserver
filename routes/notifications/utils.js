@@ -6,6 +6,7 @@ var config = require('config');
 var lodash = require('lodash');
 
 var models = require('../../db/models');
+var MessageAdapter = require('../../message_adapters/message_adapter');
 
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 
@@ -66,12 +67,22 @@ var notificationFromPayload = function(payload) {
  * @param done The callback to call once the fetch completes.
  */
 var fetchDeviceIdsForChannels = function(channels, success, error) {
-  var groupedSubscriptions = lodash.zipObject(lodash.map(channels, function(channel) {
-    return [channel, []];
-  }));
+
+  var queryCriteria = {
+    where: {channel: channels},
+    attributes: ['subscriptionId', 'language', 'deviceId', 'channel']
+  };
+
+  // TODO(leah): This should move to a limit / offset based iterator. Unfortunately, sequelize
+  //             doesn't seem to support lazy iteration of query results. So, implement a wrapper
+  //             to protect against pulling a huge result and getting mem issues.
   models.Subscriptions
-    .findAll({where: {channel: channels}})
+    .findAll(queryCriteria, {raw: true})  // Use raw to reduce object footprint
     .on('success', function(subscriptions) {
+
+      var groupedSubscriptions = lodash.zipObject(lodash.map(channels, function(channel) {
+        return [channel, []];
+      }));
 
       lodash.forEach(subscriptions, function(subscription) {
         groupedSubscriptions[subscription.channel].push({
@@ -84,9 +95,50 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
       success(groupedSubscriptions);
     })
     .on('error', error);
+
+};
+
+
+//
+//          // TODO(leah): Update the local DB to indicate the push notification has completed
+//          console.log('dispatch completed');
+//        });
+
+
+/**
+ * Sends a notification to all listening channels.
+ * @param notification The notification to send.
+ */
+var sendNotification = function(notification, dispatchFn) {
+  // TODO(leah): Stuff this all in a promise.
+
+  // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
+  //             that could be arbitrarily large.
+  fetchDeviceIdsForChannels(
+    notification.channels,
+    function(groupedSubscriptions) {
+      var messageAdapter = new MessageAdapter(notification, groupedSubscriptions);
+
+      var channelData = lodash.zipObject(lodash.map(messageAdapter.adapters, function(adapter, channel) {
+        return [channel, {deviceIds: adapter.deviceIds, message: adapter.message}];
+      }));
+
+      console.log(channelData);
+      dispatchFn(channelData, function() {
+
+      });
+
+    },
+    function(error) {
+      // TODO(leah): Update the notification to failed state
+    }
+  );
+
+
 };
 
 
 module.exports.getNotificationFindCriteria = getNotificationFindCriteria;
 module.exports.notificationFromPayload = notificationFromPayload;
 module.exports.fetchDeviceIdsForChannels = fetchDeviceIdsForChannels;
+module.exports.sendNotification = sendNotification;

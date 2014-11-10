@@ -20,9 +20,8 @@ var ChannelDispatcher = function(channel, config) {
  * Dispatch a notification to the supplied deviceIds
  * @param deviceIds An array of ids for clients to send the notification to.
  * @param notification The notification to send to clients.
- * @param done Callback to invoke once send completes.
  */
-ChannelDispatcher.prototype.dispatch = function(deviceIds, notification, done) {
+ChannelDispatcher.prototype.dispatch = function(deviceIds, notification) {
   // Should be overridden by subclasses
 };
 

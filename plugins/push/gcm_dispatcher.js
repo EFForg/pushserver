@@ -3,7 +3,8 @@
  */
 
 var gcm = require('node-gcm');
-var lodash = require('lodash');
+var q = require('q');
+var util = require('util');
 
 var ChannelDispatcher = require('./channel_dispatcher');
 
@@ -12,21 +13,21 @@ var GCMDispatcher = function(channel, config) {
   ChannelDispatcher.call(this, channel, config);
 };
 
-GCMDispatcher.prototype = lodash.create(
-  ChannelDispatcher.prototype,
-  {'constructor': GCMDispatcher, '_super': ChannelDispatcher.prototype}
-);
+util.inherits(GCMDispatcher, ChannelDispatcher);
 
 
-GCMDispatcher.prototype.dispatch = function(registrationIds, notification, done) {
-  this._super.dispatch.call(this, registrationIds, notification);
+GCMDispatcher.prototype.dispatch = function(registrationIds, message) {
+  GCMDispatcher.super_.prototype.dispatch.call(this, registrationIds, message);
 
   var defer = q.defer();
 
-  var message = new gcm.Message(notification);
+  var gcmMessage = new gcm.Message(message);
   var sender = new gcm.Sender(this.config.apiKey);
 
-  sender.send(message, registrationIds, 3, function(err, result) {
+  console.log(registrationIds);
+  console.log(message);
+
+  sender.send(gcmMessage, registrationIds, 3, function(err, result) {
     // TODO(leah): Figure out how to pass back feedback.
     if (err) {
       defer.reject(err);

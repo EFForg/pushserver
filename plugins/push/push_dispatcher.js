@@ -8,29 +8,47 @@ var q = require('q');
 var APNSDispatcher = require('./apns_dispatcher');
 var GCMDispatcher = require('./gcm_dispatcher');
 
+
+/**
+ * @param channels Array of channels the push dispatcher should support.
+ * @param channelsConfig Object, keyed on channel name, values of configuration for that channel.
+ * @constructor
+ */
 var PushDispatcher = function(channels, channelsConfig) {
+
+  /**
+   * The channels this push dispatcher should support.
+   * @type {Array.<string>}
+   */
   this.channels = channels;
 
+  /**
+   * Object, keyed on channel name, value of the associated channel dispatcher.
+   * @type {{}}
+   */
   this.dispatchers = {};
 
-  // There's some kind of subtle issue wrt to node module loading patterns that means that doing
-  // something like require('./' + channel + '_dispatcher') and using the resulting Dispatcher class
-  // causes mocks applied to the prototype of that class to get wiped off. This means that sinon
-  // mock verify calls then subsequently fail out in test. To avoid this,
-  if (lodash.contains(this.channels, 'APNS')) {
-    var channelConfig = lodash.isUndefined(channelsConfig['APNS']) ? {} : channelsConfig['APNS'];
-    this.dispatchers['APNS'] = new APNSDispatcher('APNS', channelConfig);
-  }
+  /**
+   * Object, keyed on channel name, value of the available dispatcher classes.
+   * @type {{}}
+   * @privaate
+   */
+  this.dispatcherClasses_ = {
+    APNS: APNSDispatcher,
+    GCM: GCMDispatcher
+  };
 
-  if (lodash.contains(this.channels, 'GCM')) {
-    var channelConfig = lodash.isUndefined(channelsConfig['GCM']) ? {} : channelsConfig['GCM'];
-    this.dispatchers['GCM'] = new GCMDispatcher('GCM', channelConfig);
-  }
+  lodash.forEach(this.channels, function(channel) {
+    var channelConfig = lodash.isUndefined(channelsConfig[channel]) ? {} : channelsConfig[channel];
+    var DispatcherClass = this.dispatcherClasses_[channel];
+    this.dispatchers[channel] = new DispatcherClass(channel, channelConfig);
+  }, this);
 };
 
 
 /**
  * Registers a function to use to handle feedback from a remote push service.
+ *
  * @param channel The name of the channel to register.
  * @param feedbackCallback The callback to use when the channel's service sends feedback.
  */
@@ -47,17 +65,17 @@ PushDispatcher.prototype.registerChannelFeedbackHandler = function(channel, feed
 
 /**
  * Dispatch a push notification to the requested channels.
- * @param channels Object containing channel specific notification and deviceIds.
+ *
+ * @param channels Object, keyed on channel name, values of channel specific message and deviceIds.
  * @param done
  */
 PushDispatcher.prototype.dispatch = function(channels, done) {
   var promises = [];
 
   lodash.forEach(this.dispatchers, function(dispatcher) {
-    if (lodash.contains(channels, dispatcher.channel)) {
-
+    if (lodash.has(channels, dispatcher.channel)) {
       var channel = channels[dispatcher.channel];
-      var dispatcherPromise = dispatcher.dispatch(channel.deviceIds, channel.notification);
+      var dispatcherPromise = dispatcher.dispatch(channel.deviceIds, channel.message);
 
       promises.push(dispatcherPromise);
     }

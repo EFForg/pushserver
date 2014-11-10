@@ -17,18 +17,8 @@ var addNotification = function(request, reply) {
     var locationURL = routeUtils.makePrefixedPath('/notifications/' + notification.notificationId);
 
     var externalNotification = notification.externalize();
-    notificationUtils.fetchDeviceIdsForChannels(
-      externalNotification.channels,
-      function(groupedSubscriptions) {
-        request.server.methods.dispatchPushNotification(groupedSubscriptions, externalNotification, function() {
-          // TODO(leah): Update the local DB to indicate the push notification has completed
-          console.log('dispatch completed');
-        });
-      },
-      function(error) {
-        // TODO(leah): Update the notification to failed state
-      }
-    );
+    notificationUtils.sendNotification(
+      externalNotification, request.server.methods.dispatchPushNotification);
 
     reply(externalNotification)
       .code(201)

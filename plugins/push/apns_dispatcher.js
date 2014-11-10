@@ -5,6 +5,7 @@
 var apn = require('apn');
 var lodash = require('lodash');
 var q = require('q');
+var util = require('util');
 
 var ChannelDispatcher = require('./channel_dispatcher');
 
@@ -37,25 +38,22 @@ var APNSDispatcher = function(channel, config) {
   this.configureFeedbackService_(this.config);
 };
 
+util.inherits(APNSDispatcher, ChannelDispatcher);
 
-APNSDispatcher.prototype = lodash.create(
-  ChannelDispatcher.prototype,
-  {'constructor': APNSDispatcher, '_super': ChannelDispatcher.prototype}
-);
 
 /**
  * Register the feedback handler and clear any buffered feedback notifications.
  * @param feedbackHandler
  */
 APNSDispatcher.prototype.registerChannelFeedbackHandler = function(feedbackHandler) {
-  this._super.registerChannelFeedbackHandler.call(this, feedbackHandler);
+  APNSDispatcher.super_.prototype.registerChannelFeedbackHandler.call(this, feedbackHandler);
 
   lodash.forEach(this.feedbackBuffer_, this.feedbackHandler);
 };
 
 
 APNSDispatcher.prototype.dispatch = function(notificationIds, notification) {
-  this._super.dispatch.call(this, notificationIds, notification);
+  APNSDispatcher.super_.prototype.dispatch.call(this, notificationIds, notification);
 
   var defer = q.defer();
   var connection = this.getConnection_(done);

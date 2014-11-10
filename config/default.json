@@ -1,13 +1,16 @@
 {
   "DEBUG": false,
+
   "SERVER": {
     "URL": "127.0.0.1",
     "PORT": 3000,
     "CACHE_TEMPLATES": true
   },
+
   "PUSH": {
     "APNS_FEEDBACK_INTERVAL": 43200 // default to 12 hours
   },
+
   "DATABASE": {
     "DB_NAME": null,
     "USERNAME": null,
@@ -23,6 +26,7 @@
       }
     }
   },
+
   "SUPPORTED_CHANNELS": ["APNS", "GCM"],
   "CHANNEL_LOOKUP": {
     "APNS": "iOS",
@@ -48,4 +52,5 @@
     "JS_LIBS_URL": "static/libs.min.js",
     "API_VERSION": 1
   }
+
 }

@@ -27,13 +27,13 @@ gulp test
 
 # API
 
-## [Notifications](https://github.com/EFForg/pushserver/blob/master/routes/notifications.js)
+## [Notifications](https://github.com/EFForg/pushserver/tree/master/routes/notifications)
 
 - **<code>POST</code> /api/v1/notifications** - adds a new notification to the database and publishes it to all attached channels
 - **<code>GET</code> /api/v1/notification/{notificationId}** - fetches the notification matching notificationId
 - **<code>POST</code> /api/v1/notifications/search** - fetches all notifications matching the supplied search object
 
-## [Subscriptions](https://github.com/EFForg/pushserver/blob/master/routes/subscriptions.js)
+## [Subscriptions](https://github.com/EFForg/pushserver/tree/master/routes/subscriptions)
 
 - **<code>POST</code> /api/v1/subscriptions** - adds a new subscription and subscribes that user to notifications from their preferred channel(s)
-- **<code>DELETE</code> /api/v1/subscriptions** - deletes a subscription
+- **<code>DELETE</code> /api/v1/subscriptions/{deviceId}** - deletes a subscription
