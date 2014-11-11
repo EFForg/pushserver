@@ -8,8 +8,8 @@ var register = function(plugin, options, next) {
 
   var pushDispatcher = new PushDispatcher(options.channels, options.channelConfig);
 
-  plugin.method('dispatchPushNotification', function(channelData, done) {
-    pushDispatcher.dispatch(channelData, done);
+  plugin.method('dispatchPushNotification', function(channel, deviceIds, message, done) {
+    pushDispatcher.dispatch(channel, deviceIds, message, done);
   });
 
   plugin.method('registerChannelFeedbackHandler', function(channel, handler) {

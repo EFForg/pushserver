@@ -1,20 +1,23 @@
 {
   "DEBUG": true,
+
   "MODE": "test",
+
   "DATABASE": {
-    "DB_NAME": null,
-    "USERNAME": null,
-    "PASSWORD": null,
-    "SCHEMA": null,
     "OPTIONS": {
-      "dialect": "sqlite",
-      "host": null,
-      "port": null,
       "storage": ":memory:",
-      "logging": false,
-      "define": {
-        "underscored": true
-      }
+      "logging": false
     }
+  },
+
+  "LOGGING": {
+    "appenders": [
+      {
+        "type": "file",
+        "filename": "/tmp/push_server_test_logs",
+        "absolute": true
+      }
+    ]
   }
+
 }

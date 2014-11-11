@@ -3,7 +3,7 @@
  */
 
 var lodash = require('lodash');
-var q = require('q');
+var util = require('util');
 
 var APNSDispatcher = require('./apns_dispatcher');
 var GCMDispatcher = require('./gcm_dispatcher');
@@ -41,7 +41,7 @@ var PushDispatcher = function(channels, channelsConfig) {
   lodash.forEach(this.channels, function(channel) {
     var channelConfig = lodash.isUndefined(channelsConfig[channel]) ? {} : channelsConfig[channel];
     var DispatcherClass = this.dispatcherClasses_[channel];
-    this.dispatchers[channel] = new DispatcherClass(channel, channelConfig);
+    this.dispatchers[channel] = new DispatcherClass(channelConfig);
   }, this);
 };
 
@@ -69,20 +69,14 @@ PushDispatcher.prototype.registerChannelFeedbackHandler = function(channel, feed
  * @param channels Object, keyed on channel name, values of channel specific message and deviceIds.
  * @param done
  */
-PushDispatcher.prototype.dispatch = function(channels, done) {
+PushDispatcher.prototype.dispatch = function(channel, deviceIds, message, done) {
   var promises = [];
 
-  lodash.forEach(this.dispatchers, function(dispatcher) {
-    if (lodash.has(channels, dispatcher.channel)) {
-      var channel = channels[dispatcher.channel];
-      var dispatcherPromise = dispatcher.dispatch(channel.deviceIds, channel.message);
-
-      promises.push(dispatcherPromise);
-    }
-  });
-
-  q.all(promises)
-    .then(done);
+  if (lodash.has(this.dispatchers, channel)) {
+    this.dispatchers[channel].dispatch(deviceIds, message, done);
+  } else {
+    throw new Error(util.format('No dispatcher is available for the channel: %s', channel));
+  }
 
 };
 

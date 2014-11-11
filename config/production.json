@@ -1,3 +1,15 @@
 {
-  "MODE": "production"
+  "MODE": "production",
+
+  "LOGGING": {
+    "appenders": [
+      {
+        "type": "file",
+        "filename": "/tmp/push_server_logs",
+        "absolute": true,
+        "maxLogSize": 20480,
+        "backups": 10
+      }
+    ]
+  }
 }

@@ -113,6 +113,15 @@ var Notifications = db.define(
     payload: {
       type: sequelize.TEXT,
       allowNull: false
+    },
+    state: {
+      type: sequelize.ENUM,
+      values: ['pending', 'failed', 'complete'],
+      allowNull: false
+    },
+    stats: {
+      type: sequelize.TEXT,
+      allowNull: true
     }
   },
   {
@@ -120,14 +129,16 @@ var Notifications = db.define(
       payload: getJSONField('payload'),
       data: getJSONField('data'),
       channels: getJSONField('channels'),
-      deviceIds: getJSONField('deviceIds')
+      deviceIds: getJSONField('deviceIds'),
+      stats: getJSONField('stats')
     },
 
     setterMethods: {
       payload: setJSONField('payload'),
       data: setJSONField('data'),
       channels: setJSONField('channels'),
-      deviceIds: setJSONField('deviceIds')
+      deviceIds: setJSONField('deviceIds'),
+      stats: setJSONField('stats')
     },
 
     instanceMethods: {
@@ -140,7 +151,9 @@ var Notifications = db.define(
           data: this.data,
           channels: this.channels,
           mode: this.mode,
-          deviceIds: this.deviceIds
+          deviceIds: this.deviceIds,
+          state: this.state,
+          stats: this.stats
         };
       }
     },

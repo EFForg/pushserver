@@ -27,6 +27,16 @@
     }
   },
 
+  "LOGGING": {
+    "appenders": [
+      {
+        "type": "file",
+        "filename": "/tmp/push_server_logs",
+        "absolute": true
+      }
+    ]
+  },
+
   "SUPPORTED_CHANNELS": ["APNS", "GCM"],
   "CHANNEL_LOOKUP": {
     "APNS": "iOS",

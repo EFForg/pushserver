@@ -8,8 +8,6 @@ var angular = require('angular');
 var PushNotificationListController = function(
   $scope, $state, pushServerAPI, notificationFormatting, DTOptionsBuilder, DTColumnBuilder) {
 
-  var channelLookup = require('../../build/pushServerSettings')['CHANNEL_LOOKUP'];
-
   $.fn.dataTableExt.sErrMode = 'throw';
 
   $scope.handleRowClicked = function(notificationId) {
@@ -17,7 +15,8 @@ var PushNotificationListController = function(
   };
 
   /**
-   * Callback called when a new row is added to the datatable.
+   * Callback for when a new row is added to the datatable.
+   *
    * @param newRow The row element.
    * @param data The data associated with the new row.
    * @returns {*}
@@ -52,7 +51,17 @@ var PushNotificationListController = function(
     DTColumnBuilder.newColumn('channels').withTitle('Channels').renderWith(function(data, type, full) {
       return notificationFormatting.friendlyChannels(data).join(', ');
     }),
-    DTColumnBuilder.newColumn('mode').withTitle('Notification Mode')
+    DTColumnBuilder.newColumn('mode').withTitle('Notification Mode'),
+    DTColumnBuilder.newColumn('state').withTitle('State'),
+    DTColumnBuilder.newColumn('stats').withTitle('Push Total #').renderWith(function(data, type, full) {
+      return data['totals']['idCount'];
+    }),
+    DTColumnBuilder.newColumn('stats').withTitle('Push Success #').renderWith(function(data, type, full) {
+      return data['totals']['success'];
+    }),
+    DTColumnBuilder.newColumn('stats').withTitle('Push Failed #').renderWith(function(data, type, full) {
+      return data['totals']['failure'];
+    })
   ];
 
 };

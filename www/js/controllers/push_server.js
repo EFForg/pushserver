@@ -9,6 +9,7 @@ var PushServerController = function($scope) {
   var handleStateChange = function(event, toState) {
     $scope.activeState = toState.name;
   };
+
   $scope.$on('$stateChangeSuccess', handleStateChange);
 
 };

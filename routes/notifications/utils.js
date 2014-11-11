@@ -2,8 +2,10 @@
  * Utility functions for the notification route handlers.
  */
 
+var async = require('async');
 var config = require('config');
 var lodash = require('lodash');
+var logger = require('log4js').getLogger();
 
 var models = require('../../db/models');
 var MessageAdapter = require('../../message_adapters/message_adapter');
@@ -52,7 +54,9 @@ var notificationFromPayload = function(payload) {
     data: lodash.isUndefined(payload.data) ? null : payload.data,
     channels: lodash.isUndefined(payload.channels) ? SUPPORTED_CHANNELS : payload.channels,
     mode: lodash.isUndefined(payload.mode) ? 'prod' : payload.mode, // NOTE: default prod
-    deviceIds: lodash.isUndefined(payload.deviceIds) ? null : payload.deviceIds
+    deviceIds: lodash.isUndefined(payload.deviceIds) ? null : payload.deviceIds,
+    state: 'pending',
+    stats: {success: 0, failed: 0, unregistered: 0}
   };
   notification.payload = lodash.cloneDeep(notification);
 
@@ -99,42 +103,129 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
 };
 
 
-//
-//          // TODO(leah): Update the local DB to indicate the push notification has completed
-//          console.log('dispatch completed');
-//        });
-
-
 /**
- * Sends a notification to all listening channels.
+ * Sends a notification out via the supported channels
+ *
  * @param notification The notification to send.
+ * @param {function} dispatchFn The function responsible for sending the adapted messages and
+ *     deviceIds to the remote servers for distribution.
  */
 var sendNotification = function(notification, dispatchFn) {
-  // TODO(leah): Stuff this all in a promise.
-
   // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
   //             that could be arbitrarily large.
   fetchDeviceIdsForChannels(
     notification.channels,
     function(groupedSubscriptions) {
-      var messageAdapter = new MessageAdapter(notification, groupedSubscriptions);
-
-      var channelData = lodash.zipObject(lodash.map(messageAdapter.adapters, function(adapter, channel) {
-        return [channel, {deviceIds: adapter.deviceIds, message: adapter.message}];
-      }));
-
-      console.log(channelData);
-      dispatchFn(channelData, function() {
-
+      var arrLengths = lodash.map(groupedSubscriptions, function(val) {
+        return val.length;
       });
 
+      var devicesToSendTo = lodash.reduce(arrLengths, function(sum, num) {
+        return sum + num;
+      }) > 0;
+
+      if (devicesToSendTo) {
+        sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
+      } else {
+        var emptyStats = {idCount: 0, success: 0, unregistered: 0, failure: 0};
+        var stats = lodash.zipObject(lodash.map(groupedSubscriptions, function(val, key) {
+          return [key, lodash.clone(emptyStats)];
+        }));
+        stats.totals = lodash.clone(emptyStats);
+        updateNotificationStateAndStats(notification.notificationId, 'complete', stats);
+      }
     },
-    function(error) {
-      // TODO(leah): Update the notification to failed state
+    function(err) {
+      logger.error('Fetching device ids for channels %s failed with:\n%s', channels, err.toString());
+      updateNotificationStateAndStats(notification.notificationId, 'error', undefined);
     }
   );
+};
 
 
+/**
+ *
+ * @param notification
+ * @param groupedSubscriptions
+ * @param {function} dispatchFn The function responsible for sending the adapted messages and
+ *     deviceIds to the remote servers for distribution.
+ */
+var sendNotificationToSubscribers = function(notification, groupedSubscriptions, dispatchFn) {
+  var msgAdapter = new MessageAdapter(notification, groupedSubscriptions);
+
+  var wrappedDispatchFn = function(channel, deviceIds, message, callback) {
+    dispatchFn(channel, deviceIds, message, function(err, results) {
+      callback(err, lodash.zipObject([channel], [results]))
+    });
+  };
+
+  var channelDispatchFns = lodash.map(msgAdapter.adapters, function(adapter, channel) {
+    return lodash.partial(wrappedDispatchFn, channel, adapter.deviceIds, adapter.message);
+  });
+
+  async.parallel(channelDispatchFns, function(err, results) {
+
+    results.total = getTotalStats(results);
+
+    if (lodash.isUndefined(err)) {
+      updateNotificationStateAndStats(notification.notificationId, 'success', results);
+    } else {
+      updateNotificationStateAndStats(notification.notificationId, 'failed', results);
+    }
+  });
+};
+
+
+/**
+ * Gets a stats object showing total success across all channels.
+ *
+ * @param {Object} results Object, keyed on channel name, values of the channel's dispatch stats.
+ * @returns {*}
+ */
+var getTotalStats = function(results) {
+  var statsValues = lodash.values(results);
+  if (statsValues.length === 1) {
+    return lodash.cloneDeep(statsValues[0]);
+  } else {
+    return lodash.reduce(statsValues, function(total, channelTotal) {
+      return {
+        idCount: total.idCount + channelTotal.idCount,
+        success: total.success + channelTotal.success,
+        unregistered: total.unregistered + channelTotal.unregistered,
+        failure: total.failure + channelTotal.failure
+      };
+    });
+  }
+};
+
+/**
+ * Updates the specified notification to the supplied state.
+ * @param notificationId
+ * @param state
+ * @param opt_stats
+ */
+var updateNotificationStateAndStats = function(notificationId, state, opt_stats) {
+  models.Notifications
+    .find({where: {notificationId: notificationId}})
+    .on('success', function(notification) {
+      notification.state = state;
+
+      if (!lodash.isUndefined(opt_stats)) {
+        notification.stats = opt_stats;
+      }
+
+      notification.save()
+        .on('error', function(err) {
+          logger.error(
+            'Unable to update notificationId %s to state %s, failed with:\n%s',
+            notificationId, state, err.toString());
+        });
+    })
+    .on('error', function(err) {
+      logger.error(
+        'Unable to update notificationId %s to failed state, failed with:\n%s',
+        notificationId, err.toString());
+    });
 };
 
 

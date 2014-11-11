@@ -4,7 +4,6 @@
 
 var apn = require('apn');
 var lodash = require('lodash');
-var q = require('q');
 var util = require('util');
 
 var ChannelDispatcher = require('./channel_dispatcher');
@@ -29,8 +28,8 @@ APNSResponseLogger.prototype.getResponseStats = function() {
 };
 
 
-var APNSDispatcher = function(channel, config) {
-  ChannelDispatcher.call(this, channel, config);
+var APNSDispatcher = function(config) {
+  ChannelDispatcher.call(this, 'APNS', config);
 
   this.feedbackBuffer_ = [];
   this.config = config;
@@ -52,14 +51,17 @@ APNSDispatcher.prototype.registerChannelFeedbackHandler = function(feedbackHandl
 };
 
 
-APNSDispatcher.prototype.dispatch = function(notificationIds, notification) {
+APNSDispatcher.prototype.dispatch = function(notificationIds, notification, done) {
   APNSDispatcher.super_.prototype.dispatch.call(this, notificationIds, notification);
 
-  var defer = q.defer();
-  var connection = this.getConnection_(done);
-//  connection.pushNotification(notification, notificationIds);
+  //  var connection = this.getConnection_();
+  //  connection.pushNotification(notification, notificationIds);
 
-//  defer.promise.then();
+  //  defer.promise.then();
+
+  setTimeout(function() {
+    defer.resolve();
+  }, 200);
 
   return defer.promise;
 };

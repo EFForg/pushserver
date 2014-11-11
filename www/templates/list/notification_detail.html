@@ -5,7 +5,58 @@
   <div class="panel panel-success">
 
     <div class="panel-heading">
-      <h4 class="panel-title">Core Details</h4>
+      <h4 class="panel-title">Distribution Details</h4>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Notification Status
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+          {[notification.state]}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">&nbsp;</div>
+        <div class="col-sm-9 col-lg-8">&nbsp;</div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3 col-lg-2">
+          Stats
+        </div>
+
+        <div class="col-sm-9 col-lg-8">
+
+          <div class="row detail-data-row">
+            <div class="col-sm-4 col-lg-2"></div>
+            <div class="col-sm-2 col-lg-2">Total</div>
+            <div class="col-sm-2 col-lg-2">Success</div>
+            <div class="col-sm-2 col-lg-2">Not Sent</div>
+            <div class="col-sm-2 col-lg-2">Failed</div>
+          </div>
+
+          <div class="row detail-data-row" ng-repeat="(key, value) in notification.stats">
+            <div class="col-sm-4 col-lg-2">{[key]}</div>
+            <div class="col-sm-2 col-lg-2">{[value.idCount]}</div>
+            <div class="col-sm-2 col-lg-2">{[value.success]}</div>
+            <div class="col-sm-2 col-lg-2">{[value.unregistered]}</div>
+            <div class="col-sm-2 col-lg-2">{[value.failure]}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel panel-success">
+
+    <div class="panel-heading">
+      <h4 class="panel-title">Push Details</h4>
     </div>
 
     <div class="panel-body">
@@ -53,7 +104,7 @@
     </div>
   </div>
 
-   <div class="panel panel-info">
+  <div class="panel panel-info">
 
     <div class="panel-heading">
       <h4 class="panel-title">Options</h4>

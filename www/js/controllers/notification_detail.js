@@ -12,22 +12,30 @@ var PushNotificationDetailController = function(
   $scope.isPreview = $stateParams.notificationId === 'preview';
 
   /**
+   * Shows a toast with details of the API error.
+   * @param message
+   */
+  $scope.showAPIError = function(message) {
+    toaster.pop(
+      'error',
+      message,
+      'Please check your internet connection or contact the administrator',
+      6000
+    );
+  };
+
+  /**
    * Save the notification to the remote server.
    */
   $scope.submitNotification = function() {
 
-    var success = function(data, status, headers, config) {
+    var success = function(data) {
       notificationPreview.setPreviewNotification(null);
-      $state.go('notification', {notificationId: data.notificationId});
+      $state.go('notification', {notificationId: data.notificationId}, {location: 'replace'});
     };
 
-    var error = function(data, status, headers, config) {
-      toaster.pop(
-        'error',
-        'Unable to save notification',
-        'Please check your internet connection or contact the administrator',
-        6000
-      );
+    var error = function() {
+      $scope.showAPIError('Unable to save notification');
     };
 
     pushServerAPI.postNotification($scope.notification, success, error);
@@ -41,13 +49,8 @@ var PushNotificationDetailController = function(
       $scope.notification = data;
     };
 
-    var failure = function(err) {
-      toaster.pop(
-        'error',
-        'Unable to fetch notification',
-        'Please check your internet connection or contact the administrator',
-        6000
-      );
+    var failure = function() {
+      $scope.showAPIError('Unable to fetch notification');
     };
 
     pushServerAPI.getNotification($stateParams.notificationId, success, failure);

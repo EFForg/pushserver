@@ -20,7 +20,7 @@ describe('NotificationRouteHandlers', function() {
 
   before(function() {
     dispatchPushNotificationMock = sinon.mock(server.methods)
-      .expects('dispatchPushNotification').once();
+      .expects('dispatchPushNotification').twice();
   });
 
   after(function() {
@@ -40,7 +40,9 @@ describe('NotificationRouteHandlers', function() {
       models.Notifications
         .find({where: {notificationId: 1}})
         .on('success', function(notification) {
-          assert.equal(1, notification.notificationId);
+          assert.equal(notification.notificationId, 1);
+          assert.equal(notification.title, 'title');
+          assert.equal(notification.state, 'pending');
           done();
         });
 

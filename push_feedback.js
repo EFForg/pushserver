@@ -4,8 +4,9 @@
 
 
 var feedbackHandlers = {
-  GCM: function(registrationId) {
 
+  GCM: function(registrationIds) {
+    console.log(registrationIds);
   },
 
   APNS: function(notificationId) {

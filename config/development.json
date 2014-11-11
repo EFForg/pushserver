@@ -3,5 +3,20 @@
   "MODE": "development",
   "SERVER": {
     "CACHE_TEMPLATES": false
+  },
+
+  "LOGGING": {
+    "appenders": [
+      {
+        "type": "file",
+        "filename": "/tmp/push_server_logs",
+        "absolute": true,
+        "maxLogSize": 20480,
+        "backups": 10
+      },
+      {
+        "type": "console"
+      }
+    ]
   }
 }

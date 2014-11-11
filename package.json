@@ -9,11 +9,13 @@
   "dependencies": {
     "apn": "^1.6.2",
     "async": "^0.9.0",
+    "chunk": "0.0.2",
     "config": "^1.2.0",
     "handlebars": "^2.0.0",
     "hapi": "^7.0.0",
     "joi": "4.7.0",
     "lodash": "^2.4.1",
+    "log4js": "^0.6.21",
     "mariasql": "^0.1.21",
     "mysql": "^2.5.0",
     "node-gcm": "^0.9.12",

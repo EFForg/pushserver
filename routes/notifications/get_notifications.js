@@ -49,6 +49,7 @@ var getNotifications = function(request, reply) {
   var queriesComplete = function(err, results) {
 
     if (err) {
+      console.log(err);
       // TODO(leah): look at the datatables docs to see if this is the correct approach
       reply({error: err});
     } else {

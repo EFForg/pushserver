@@ -44,7 +44,6 @@ describe('MessageAdapters', function() {
   };
 
   it('should adapt the notification into channel specific messages', function() {
-    // TODO(leah): Implement this test.
     var messageAdapter = new MessageAdapter(notification, groupedSubs);
 
     lodash.forEach(expectedMessages, function(expectedMessage, channel) {

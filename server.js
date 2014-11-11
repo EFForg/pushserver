@@ -6,7 +6,9 @@ var apn = require('apn');
 var config = require('config');
 var hapi = require('hapi');
 var lodash = require('lodash');
+var log4js = require('log4js');
 var path = require('path');
+
 
 var pushFeedback = require('./push_feedback');
 var serverConfig = config.get('SERVER');
@@ -20,6 +22,8 @@ var defaultOptions = {
     relativeTo: distDir
   }
 };
+
+log4js.configure(config.get('LOGGING'));
 
 var server = new hapi.Server(serverConfig.URL, serverConfig.PORT, defaultOptions);
 server.views({
