@@ -22,7 +22,13 @@ var PushNotificationDataDirective = function() {
   }
 
   var makePushDataRow = function() {
-    return {key: '', type: 'string', value: '', isValid: true};
+    return {
+      key: '',
+      type: 'string',
+      value: '',
+      isValid: true,
+      validationMessage: ''
+    };
   };
 
   return {
@@ -67,7 +73,10 @@ var PushNotificationDataDirective = function() {
        * Validates the data value is valid for the chosen type and type-coerces it to that type.
        */
       scope.coerceAndCheckValue = function(row, pushData) {
-        if (row.key !== '' && row.value !== '') {
+        if (row.key.toLowerCase() === 'url') {
+          row.isValid = false;
+          row.validationMessage = 'URL is not a valid key name';
+        } else if (row.key !== '' && row.value !== '') {
           var converter = typeConverters[row.type];
           var value = !angular.isUndefined(converter) ? converter(row.value) : row.value;
           var typeChecker = typeCheckers[row.type];
@@ -97,7 +106,8 @@ var PushNotificationDataDirective = function() {
 
             // If the type is switching to / from boolean, clear the value
             if (angular.isDefined(oldRow)) {
-              if (newRow.type !== oldRow.type && (newRow.type === 'boolean' || oldRow.type === 'boolean')) {
+              if (newRow.type !== oldRow.type &&
+                (newRow.type === 'boolean' || oldRow.type === 'boolean')) {
                 newRow.value = newRow.type === 'boolean' ? false : '';
               }
             }

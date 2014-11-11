@@ -46,13 +46,26 @@
         <label class="control-label col-sm-2" for="notification-url">
           URL
         </label>
-        <div class="col-sm-10">
+
+        <div class="col-sm-2">
+          <select class="form-control" ng-model="workingModel.url.scheme"
+                  ng-options="scheme for scheme in workingModel.urlSchemes">
+          </select>
+        </div>
+
+        <div class="col-sm-8">
           <input id="notification-url"
                  class="form-control"
                  name="url"
                  type="text"
-                 ng-model="workingModel.notification.url">
+                 ng-model="workingModel.url.urlStringMinusScheme">
+
+          <div class="text-warning validation-message">
+            The URL is not checked, please ensure it's working before submitting
+          </div>
+
         </div>
+
       </div>
 
     </div>

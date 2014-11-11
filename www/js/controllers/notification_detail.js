@@ -5,9 +5,7 @@
 var angular = require('angular');
 
 var PushNotificationDetailController = function(
-  $scope, $state, $stateParams, toaster, pushServerAPI, notificationPreview) {
-
-  var channelLookup = require('../../build/pushServerSettings')['CHANNEL_LOOKUP'];
+  $scope, $state, $stateParams, toaster, pushServerAPI, notificationPreview, notificationFormatting) {
 
   $scope.notification = undefined;
 
@@ -17,21 +15,22 @@ var PushNotificationDetailController = function(
    * Save the notification to the remote server.
    */
   $scope.submitNotification = function() {
-    pushServerAPI.postNotification(
-      $scope.notification,
-      function(data, status, headers, config) {
-        notificationPreview.setPreviewNotification(null);
-        $state.go('notification', {notificationId: data.notificationId});
-      },
-      function(data, status, headers, config) {
-        toaster.pop(
-          'error',
-          'Unable to save notification',
-          'Please check your internet connection or contact the administrator',
-          6000
-        );
-      }
-    );
+
+    var success = function(data, status, headers, config) {
+      notificationPreview.setPreviewNotification(null);
+      $state.go('notification', {notificationId: data.notificationId});
+    };
+
+    var error = function(data, status, headers, config) {
+      toaster.pop(
+        'error',
+        'Unable to save notification',
+        'Please check your internet connection or contact the administrator',
+        6000
+      );
+    };
+
+    pushServerAPI.postNotification($scope.notification, success, error);
   };
 
   /**
@@ -71,16 +70,19 @@ var PushNotificationDetailController = function(
    * @returns {string}
    */
   $scope.friendlyChannels = function() {
-    var friendlyChannels = [];
-    if (!angular.isUndefined($scope.notification) &&
-        !angular.isUndefined($scope.notification.channels)) {
-      angular.forEach($scope.notification.channels, function(channel) {
-        friendlyChannels.push(channelLookup[channel]);
-      });
-    }
+    var hasChannels = !angular.isUndefined($scope.notification) &&
+      !angular.isUndefined($scope.notification.channels);
+
+    var friendlyChannels = notificationFormatting.friendlyChannels(
+      hasChannels ? $scope.notification.channels : []);
 
     var lastElem = friendlyChannels.pop();
-    return friendlyChannels.join(',') + !angular.isUndefined(lastElem) ? ' and ' + lastElem : '';
+
+    if (friendlyChannels.length > 0) {
+      return friendlyChannels.join(', ') + ' and ' + lastElem;
+    } else {
+      return lastElem;
+    }
   };
 
   /**
@@ -97,12 +99,17 @@ var PushNotificationDetailController = function(
 
   /**
    * Returns the notification data object, with the URL field removed.
+   *
+   * This is because the FE presents URL as a top-level option, but to comply with the backend API
+   * it's treated as a data key.
    */
   $scope.getNotificationData = function() {
     var data = {};
     if (!angular.isUndefined($scope.notification)) {
       angular.forEach($scope.notification.data, function(val, key) {
-        data[key] = val;
+        if (key !== 'url') {
+          data[key] = val;
+        }
       });
     }
 

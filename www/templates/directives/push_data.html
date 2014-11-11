@@ -55,7 +55,14 @@
 
         <div class="text-danger validation-message"
              ng-if="!dataModel.pushDataRows[$index].isValid">
-          {[dataModel.pushDataRows[$index].value]} is not a valid {[dataModel.pushDataRows[$index].type]} value
+          <span ng-if="dataModel.pushDataRows[$index].validationMessage">
+            {[dataModel.pushDataRows[$index].validationMessage]}
+          </span>
+
+          <span ng-if="!dataModel.pushDataRows[$index].validationMessage">
+            {[dataModel.pushDataRows[$index].value]} is not a valid {[dataModel.pushDataRows[$index].type]} value
+          </span>
+
         </div>
 
       </div>

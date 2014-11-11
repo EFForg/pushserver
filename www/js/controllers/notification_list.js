@@ -4,8 +4,11 @@
 
 var angular = require('angular');
 
+
 var PushNotificationListController = function(
-  $scope, $state, pushServerAPI, DTOptionsBuilder, DTColumnBuilder) {
+  $scope, $state, pushServerAPI, notificationFormatting, DTOptionsBuilder, DTColumnBuilder) {
+
+  var channelLookup = require('../../build/pushServerSettings')['CHANNEL_LOOKUP'];
 
   $.fn.dataTableExt.sErrMode = 'throw';
 
@@ -29,11 +32,12 @@ var PushNotificationListController = function(
     return newRow;
   };
 
+
   $scope.datatableOptions = DTOptionsBuilder.newOptions()
     .withOption('ajax', {
-        dataSrc: 'data',
-        url: pushServerAPI.makePrefixedUrl('notifications', 'search'),
-        type: 'POST'
+      dataSrc: 'data',
+      url: pushServerAPI.makePrefixedUrl('notifications', 'search'),
+      type: 'POST'
     })
     .withOption('rowCallback', $scope.addRowClickedEvents)
     .withOption('serverSide', true)
@@ -45,7 +49,9 @@ var PushNotificationListController = function(
   $scope.datatableColumns = [
     DTColumnBuilder.newColumn('notificationId').withTitle('Notification Id'),
     DTColumnBuilder.newColumn('title').withTitle('Title'),
-    DTColumnBuilder.newColumn('channels').withTitle('Channels'),
+    DTColumnBuilder.newColumn('channels').withTitle('Channels').renderWith(function(data, type, full) {
+      return notificationFormatting.friendlyChannels(data).join(', ');
+    }),
     DTColumnBuilder.newColumn('mode').withTitle('Notification Mode')
   ];
 

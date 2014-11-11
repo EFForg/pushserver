@@ -1,5 +1,5 @@
 /**
- * Simple factory for storing preview notifications between controllers.
+ * Cross-controller store for preview notifications data.
  */
 
 var notificationPreview = function () {

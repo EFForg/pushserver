@@ -58,6 +58,7 @@
   "browserify-shim": {
     "//": "NOTE: our libs are shimmed as globals to support easy drop-in of CDN URLs",
     "angular": "global:angular",
-    "jquery": "global:jquery"
+    "jquery": "global:jquery",
+    "URI": "global:URI"
   }
 }

@@ -5,7 +5,7 @@
 var angular = require('angular');
 
 
-var pushFormHelpers = function () {
+var pushFormHelpers = function (notificationFormatting) {
 
   return {
 
@@ -30,11 +30,6 @@ var pushFormHelpers = function () {
         }
       }, rawNotification);
 
-      // URL is presented as a top-level option in the frontend, but treated as a data key for the
-      // purposes of the backend.
-      cleanNotification.data.url = cleanNotification.url;
-      delete cleanNotification.url;
-
       return cleanNotification;
     },
 
@@ -53,6 +48,48 @@ var pushFormHelpers = function () {
       }
 
       return deviceIds;
+    },
+
+    /**
+     * Creates an empty notification object.
+     * @returns {{}}
+     */
+    makeEmptyNotification: function() {
+      return {
+        title: undefined,
+        message: undefined,
+        sound: undefined,
+        data: {},
+
+        // admin variables
+        channels: [],
+        deviceIds: []
+      };
+    },
+
+    /**
+     * Creates the working model for the push form.
+     *
+     * @param {{}} notification
+     * @param {boolean} lastPageWasNotificationPreview
+     * @param {Array.<string>} supportedChannels
+     * @returns {{}}
+     */
+    getWorkingModel: function(notification, lastPageWasNotificationPreview, supportedChannels) {
+      var uri = notificationFormatting.getBaseURI(
+        lastPageWasNotificationPreview, notification.data.url);
+
+      return {
+        notification: angular.copy(notification),
+        deviceIds: notification.deviceIds.join('\n'),
+        channels: angular.copy(supportedChannels),
+        uri: uri,
+        url: {
+          scheme: uri.scheme() + '://',
+          urlStringMinusScheme: notificationFormatting.urlStringMinusScheme(uri)
+        },
+        urlSchemes: ['http://', 'https://']
+      };
     }
 
   };

@@ -25,6 +25,8 @@ pushNotificationApp.factory('pushServerValidation', require('./services/validati
 pushNotificationApp.factory('pushServerAPI', require('./services/api'));
 pushNotificationApp.factory('pushFormHelpers', require('./services/push_form_helpers'));
 pushNotificationApp.factory('notificationPreview', require('./services/notification_preview'));
+pushNotificationApp.factory('notificationFormatting', require('./services/notification_formatting'));
+pushNotificationApp.factory('stateHistory', require('./services/state_history'));
 
 // Require in the cached templates - see gulp/tasks/ng_templates.js for details
 require('../build/pushNotificationTemplates');
