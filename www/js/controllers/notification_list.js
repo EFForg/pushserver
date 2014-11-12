@@ -54,13 +54,13 @@ var PushNotificationListController = function(
     DTColumnBuilder.newColumn('mode').withTitle('Notification Mode'),
     DTColumnBuilder.newColumn('state').withTitle('State'),
     DTColumnBuilder.newColumn('stats').withTitle('Push Total #').renderWith(function(data, type, full) {
-      return data['totals']['idCount'];
+      return data['total']['idCount'];
     }),
     DTColumnBuilder.newColumn('stats').withTitle('Push Success #').renderWith(function(data, type, full) {
-      return data['totals']['success'];
+      return data['total']['success'];
     }),
     DTColumnBuilder.newColumn('stats').withTitle('Push Failed #').renderWith(function(data, type, full) {
-      return data['totals']['failure'];
+      return data['total']['failure'];
     })
   ];
 

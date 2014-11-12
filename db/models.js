@@ -49,7 +49,8 @@ var Subscriptions = db.define(
     deviceId: {
       type: sequelize.TEXT,
       allowNull: false,
-      unique: true
+      unique: true,
+      field: 'device_id'
     }
   },
   {
@@ -68,7 +69,6 @@ var Subscriptions = db.define(
 
   }
 );
-
 
 var Notifications = db.define(
   'Notifications',
@@ -107,7 +107,8 @@ var Notifications = db.define(
     },
     deviceIds: {
       type: sequelize.TEXT,
-      allowNull: true
+      allowNull: true,
+      field: 'device_ids'
     },
     // separated out as a convenience for full-text search, dupes content in other fields
     payload: {
@@ -116,7 +117,7 @@ var Notifications = db.define(
     },
     state: {
       type: sequelize.ENUM,
-      values: ['pending', 'failed', 'complete'],
+      values: ['pending', 'failed', 'success'],
       allowNull: false
     },
     stats: {

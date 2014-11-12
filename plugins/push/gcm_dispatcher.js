@@ -12,7 +12,8 @@ var util = require('util');
 var ChannelDispatcher = require('./channel_dispatcher');
 
 var DEREGISTRATION_ERR_MSGS = [
-  'NotRegistered', 'InvalidRegistration'
+  'NotRegistered',
+  'InvalidRegistration'
 ];
 
 
@@ -61,8 +62,9 @@ GCMDispatcher.prototype.getSendResults = function(results) {
   var failedIds = [];
 
   lodash.forEach(results, function(nestedResultsObj) {
+
     var registrationIds = nestedResultsObj.registrationIds;
-    var nestedResults = nestedResultsObj.results;
+    var nestedResults = nestedResultsObj.result;
 
     stats.idCount += registrationIds.length;
     if (lodash.isObject(nestedResults)) {

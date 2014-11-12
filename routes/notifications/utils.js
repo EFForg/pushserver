@@ -47,16 +47,25 @@ var getNotificationFindCriteria = function(query) {
  * @returns {Object}
  */
 var notificationFromPayload = function(payload) {
+
+  var channels = lodash.isUndefined(payload.channels) ? SUPPORTED_CHANNELS : payload.channels;
+
+  var emptyStats = {idCount: 0, success: 0, unregistered: 0, failure: 0};
+  var stats = lodash.zipObject(lodash.map(channels, function(channel) {
+    return [channel, lodash.clone(emptyStats)];
+  }));
+  stats.total = lodash.clone(emptyStats);
+
   var notification = {
     title: lodash.isUndefined(payload.title) ? null : payload.title,
     message: payload.message,
     sound: lodash.isUndefined(payload.sound) ? null : payload.sound,
     data: lodash.isUndefined(payload.data) ? null : payload.data,
-    channels: lodash.isUndefined(payload.channels) ? SUPPORTED_CHANNELS : payload.channels,
+    channels: channels,
     mode: lodash.isUndefined(payload.mode) ? 'prod' : payload.mode, // NOTE: default prod
     deviceIds: lodash.isUndefined(payload.deviceIds) ? null : payload.deviceIds,
     state: 'pending',
-    stats: {success: 0, failed: 0, unregistered: 0}
+    stats: stats
   };
   notification.payload = lodash.cloneDeep(notification);
 
@@ -127,12 +136,7 @@ var sendNotification = function(notification, dispatchFn) {
       if (devicesToSendTo) {
         sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
       } else {
-        var emptyStats = {idCount: 0, success: 0, unregistered: 0, failure: 0};
-        var stats = lodash.zipObject(lodash.map(groupedSubscriptions, function(val, key) {
-          return [key, lodash.clone(emptyStats)];
-        }));
-        stats.totals = lodash.clone(emptyStats);
-        updateNotificationStateAndStats(notification.notificationId, 'complete', stats);
+        updateNotificationStateAndStats(notification.notificationId, 'success', undefined);
       }
     },
     function(err) {
@@ -165,12 +169,12 @@ var sendNotificationToSubscribers = function(notification, groupedSubscriptions,
 
   async.parallel(channelDispatchFns, function(err, results) {
 
-    results.total = getTotalStats(results);
+    var stats = summarizeNotificationStats(results);
 
     if (lodash.isUndefined(err)) {
-      updateNotificationStateAndStats(notification.notificationId, 'success', results);
+      updateNotificationStateAndStats(notification.notificationId, 'success', stats);
     } else {
-      updateNotificationStateAndStats(notification.notificationId, 'failed', results);
+      updateNotificationStateAndStats(notification.notificationId, 'failed', stats);
     }
   });
 };
@@ -179,23 +183,33 @@ var sendNotificationToSubscribers = function(notification, groupedSubscriptions,
 /**
  * Gets a stats object showing total success across all channels.
  *
- * @param {Object} results Object, keyed on channel name, values of the channel's dispatch stats.
+ * @param {Array.<Object>} results array of stats objects to summarize.
  * @returns {*}
  */
-var getTotalStats = function(results) {
-  var statsValues = lodash.values(results);
-  if (statsValues.length === 1) {
-    return lodash.cloneDeep(statsValues[0]);
-  } else {
-    return lodash.reduce(statsValues, function(total, channelTotal) {
-      return {
-        idCount: total.idCount + channelTotal.idCount,
-        success: total.success + channelTotal.success,
-        unregistered: total.unregistered + channelTotal.unregistered,
-        failure: total.failure + channelTotal.failure
-      };
-    });
-  }
+var summarizeNotificationStats = function(results) {
+  var emptyStats = {idCount: 0, success: 0, unregistered: 0, failure: 0};
+
+  var incrementStats = function(total, subTotal) {
+    total.idCount += subTotal.idCount;
+    total.success += subTotal.success;
+    total.unregistered += subTotal.unregistered;
+    total.failure += subTotal.failure;
+  };
+
+  return lodash.reduce(results, function(accumulator, subTotal) {
+
+    var channel = lodash.keys(subTotal)[0];
+    var subTotalStats = lodash.values(subTotal)[0];
+
+    if (!lodash.has(accumulator, channel)) {
+      accumulator[channel] = lodash.clone(emptyStats);
+    }
+
+    incrementStats(accumulator.total, subTotalStats);
+    incrementStats(accumulator[channel], subTotalStats);
+
+    return accumulator;
+  }, {total: lodash.cloneDeep(emptyStats)});
 };
 
 /**
@@ -233,3 +247,4 @@ module.exports.getNotificationFindCriteria = getNotificationFindCriteria;
 module.exports.notificationFromPayload = notificationFromPayload;
 module.exports.fetchDeviceIdsForChannels = fetchDeviceIdsForChannels;
 module.exports.sendNotification = sendNotification;
+module.exports.summarizeNotificationStats = summarizeNotificationStats;

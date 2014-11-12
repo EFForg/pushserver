@@ -16,7 +16,7 @@ describe('GCMDispatcher', function() {
 
     var deregisterResponse = [
       {
-        results: {
+        result: {
           multicast_id: 5487775449680367000,
           success: 0,
           failure: 1,
@@ -38,7 +38,7 @@ describe('GCMDispatcher', function() {
 
     var totalFailureResponse = [
       {
-        results: {
+        result: {
           multicast_id: 5487775449680367000,
           success: 0,
           failure: 1,
@@ -59,7 +59,7 @@ describe('GCMDispatcher', function() {
 
     var successResponse = [
       {
-        results: {
+        result: {
           multicast_id: 5487775449680367000,
           success: 1,
           failure: 0,

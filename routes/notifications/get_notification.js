@@ -13,6 +13,7 @@ var getNotification = function(request, reply) {
   models.Notifications
     .find({where: {notificationId: notificationId}})
     .on('success', function(notification) {
+      console.log(notification.stats);
       reply(notification.externalize());
     })
     .on('error', function(err) {

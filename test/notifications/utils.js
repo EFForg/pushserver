@@ -4,6 +4,7 @@
 
 var assert = require('assert');
 var config = require('config');
+var lodash = require('lodash');
 
 var notificationUtils = require('../../routes/notifications/utils');
 
@@ -60,6 +61,26 @@ describe('NotificationUtils', function() {
       function(err) {
         throw err;
       });
+  });
+
+  it('should correctly summarize push result stats', function() {
+
+    var expected = {
+      total: {idCount: 1014, success: 1001, unregistered: 2, failure: 10},
+      GCM: {idCount: 1003, success: 1000, unregistered: 2, failure: 0},
+      APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}
+    };
+
+    var stats = notificationUtils.summarizeNotificationStats([
+      {GCM: {idCount: 1000, success: 998, unregistered: 2, failure: 0}},
+      {GCM: {idCount: 3, success: 2, unregistered: 0, failure: 0}},
+      {APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}}
+    ]);
+
+    lodash.forEach(stats, function(val, key) {
+      assert.deepEqual(val, expected[key]);
+    });
+
   });
 
 });
