@@ -21,7 +21,7 @@ var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
  */
 var getNotificationFindCriteria = function(query) {
   // NOTE: due to its complexity and the fact it's a 3rd-party lib, the getNotifications query
-  //       isn't Joi-validated
+  //       object from datatables isn't Joi-validated
   var search = query.search.value;
 
   var findCriteria = {

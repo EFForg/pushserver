@@ -3,6 +3,7 @@
  */
 
 var hapi = require('hapi');
+var logger = require('log4js').getLogger('server');
 
 var models = require('../../db/models');
 var notificationUtils = require('./utils');
@@ -30,6 +31,7 @@ var addNotification = function(request, reply) {
     .save()
     .on('success', success)
     .on('error', function(err) {
+      logger.error('unable to add notification %s, error: %s', notification, err);
       reply(hapi.error.internal('unable to add the notification', err));
     });
 };

@@ -3,6 +3,7 @@
  */
 
 var hapi = require('hapi');
+var logger = require('log4js').getLogger('server');
 
 var models = require('../../db/models');
 
@@ -13,10 +14,15 @@ var getNotification = function(request, reply) {
   models.Notifications
     .find({where: {notificationId: notificationId}})
     .on('success', function(notification) {
-      reply(notification.externalize());
+      if (notification !== null) {
+        reply(notification.externalize());
+      } else {
+        reply(hapi.error.notFound('notification not found for id: ' + notificationId));
+      }
     })
     .on('error', function(err) {
-      reply(hapi.error.notFound('notification not found for id: ' + notificationId));
+      logger.error('unable to fetch notification for id %s, err:\n %s', notificationId, err);
+      reply(hapi.error.internal('unable to fetch notification for id %s, err: %s', notificationId, err));
     });
 };
 

@@ -1,17 +1,21 @@
 /**
  * Adds a new subscription to the database.
+ *
+ * Subscription add is idempotent.
  */
 
-var models = require('../../db/models');
+var hapi = require('hapi');
 
+var logger = require('log4js').getLogger('server');
+var models = require('../../db/models');
 var routeUtils = require('../utils');
 
 
 var addSubscription = function(request, reply) {
 
-  var error = function(error) {
-    // TODO(leah): raise a 500
-    console.log('ADD SUB ERROR: ' + error);
+  var error = function(err) {
+    logger.error('unable to add subscription %s err:\n%s', err);
+    reply(hapi.error.internal('unable to add the subscription', err));
   };
 
   var success = function(res) {

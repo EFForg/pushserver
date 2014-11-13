@@ -4,6 +4,7 @@
 
 var apn = require('apn');
 var lodash = require('lodash');
+var logger = require('log4js').getLogger('server');
 var util = require('util');
 
 var ChannelDispatcher = require('./channel_dispatcher');
@@ -14,12 +15,12 @@ var APNSResponseLogger = function() {
 };
 
 APNSResponseLogger.prototype.handleTransmitted = function(notification, device) {
-  console.log(device + ' has been sent');
+  logger.info(device + ' has been sent');
 };
 
 
 APNSResponseLogger.prototype.handleTransmissionError = function(notification, device) {
-  console.log(device + ' failed to transmit');
+  logger.info(device + ' failed to transmit');
 };
 
 

@@ -3,7 +3,9 @@
  */
 
 var async = require('async');
+var hapi = require('hapi');
 var lodash = require('lodash');
+var logger = require('log4js').getLogger('server');
 
 var models = require('../../db/models');
 var notificationUtils = require('./utils');
@@ -20,6 +22,7 @@ var getCount = function(done) {
       done(null, count);
     })
     .on('error', function(err) {
+      logger.error('unable to get a count of notification rows for getNotifications: %s', err);
       done(err, null);
     });
 };
@@ -38,6 +41,7 @@ var getRows = function(findCriteria, done) {
       done(null, result);
     })
     .on('error', function(err) {
+      logger.error('unable to fetch rows and row count for getNotifications: %s', err);
       done(err, null);
     });
 };
@@ -49,9 +53,8 @@ var getNotifications = function(request, reply) {
   var queriesComplete = function(err, results) {
 
     if (err) {
-      console.log(err);
-      // TODO(leah): look at the datatables docs to see if this is the correct approach
-      reply({error: err});
+      logger('unable to fetch notifications from the db: %s', err);
+      reply(hapi.error.internal('unable to fetch notifications from the db: %s', err));
     } else {
       reply({
         draw: parseInt(request.payload.draw),
