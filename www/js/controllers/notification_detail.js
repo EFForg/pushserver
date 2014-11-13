@@ -119,6 +119,27 @@ var PushNotificationDetailController = function(
     return data;
   };
 
+  var dataSkipKeys = [
+    'stats',
+    'state'
+  ];
+
+  /**
+   * Fetches a copy of the notification with internal app state removed.
+   */
+  $scope.getUserFacingNotification = function() {
+    var data = {};
+    if (!angular.isUndefined($scope.notification)) {
+      angular.forEach($scope.notification, function(val, key) {
+        if (dataSkipKeys.indexOf(key) === -1) {
+          data[key] = val;
+        }
+      });
+    }
+
+    return data;
+  };
+
 };
 
 module.exports = PushNotificationDetailController;

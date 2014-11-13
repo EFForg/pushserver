@@ -6,7 +6,7 @@ var async = require('async');
 var chunk = require('chunk');
 var gcm = require('node-gcm');
 var lodash = require('lodash');
-var logger = require('log4js').getLogger();
+var logger = require('log4js').getLogger('server');
 var util = require('util');
 
 var ChannelDispatcher = require('./channel_dispatcher');

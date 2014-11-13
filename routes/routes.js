@@ -34,7 +34,8 @@ var staticRoutes = [
 var allRoutes = baseRoutes.concat(
   staticRoutes,
   require('./notifications/routes'),
-  require('./subscriptions/routes')
+  require('./subscriptions/routes'),
+  require('./errors/routes')
 );
 
 

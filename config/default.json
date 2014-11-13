@@ -29,7 +29,18 @@
       {
         "type": "file",
         "filename": "/tmp/push_server_logs",
-        "absolute": true
+        "absolute": true,
+        "maxLogSize": 20480,
+        "backups": 10,
+        "category": "server"
+      },
+      {
+        "type": "file",
+        "filename": "/tmp/push_server_client_logs",
+        "absolute": true,
+        "maxLogSize": 20480,
+        "backups": 10,
+        "category": "client"
       }
     ]
   },

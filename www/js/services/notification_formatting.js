@@ -34,17 +34,6 @@ var notificationPreview = function () {
       } else {
         return urlWithoutScheme;
       }
-    },
-
-    /**
-     * @param lastPageWasNotificationPreview Whether the last visited page was the notification preview.
-     * @param url The string form of the URL to get a URI object for.
-     * @returns {*}
-     */
-    getBaseURI: function(lastPageWasNotificationPreview, url) {
-      var baseURL = lastPageWasNotificationPreview ? url : 'http://';
-      baseURL = (baseURL === '' || angular.isUndefined(baseURL)) ? 'http://' : baseURL;
-      return new URI(baseURL);
     }
 
   };

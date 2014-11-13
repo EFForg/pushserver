@@ -3,7 +3,7 @@
  */
 
 var lodash = require('lodash');
-var logger = require('log4js').getLogger();
+var logger = require('log4js').getLogger('server');
 
 var models = require('./db/models');
 

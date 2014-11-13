@@ -5,7 +5,7 @@
 var async = require('async');
 var config = require('config');
 var lodash = require('lodash');
-var logger = require('log4js').getLogger();
+var logger = require('log4js').getLogger('server');
 
 var models = require('../../db/models');
 var MessageAdapter = require('../../message_adapters/message_adapter');

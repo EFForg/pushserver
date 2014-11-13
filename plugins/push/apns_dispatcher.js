@@ -57,13 +57,9 @@ APNSDispatcher.prototype.dispatch = function(notificationIds, notification, done
   //  var connection = this.getConnection_();
   //  connection.pushNotification(notification, notificationIds);
 
-  //  defer.promise.then();
-
   setTimeout(function() {
-    defer.resolve();
+    done();
   }, 200);
-
-  return defer.promise;
 };
 
 
