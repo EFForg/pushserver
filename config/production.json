@@ -1,6 +1,12 @@
 {
   "MODE": "production",
 
+  "DATABASE": {
+    "OPTIONS": {
+      "logging": false
+    }
+  },
+
   "LOGGING": {
     "appenders": [
       {

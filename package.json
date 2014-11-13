@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "postinstall": "node bin/fix_cl_strings.js",
-    "postupdate": "node bin/fix_cl_strings.js"
+    "postupdate": "node bin/fix_cl_strings.js",
+    "start": "node bin/start_server"
   },
   "dependencies": {
     "apn": "^1.6.2",
@@ -30,7 +31,7 @@
     "browserify": "~5.10.1",
     "browserify-shim": "~3.7.0",
     "escape-string-regexp": "^1.0.2",
-    "gulp": "^3.8.7",
+    "gulp": "^3.8.10",
     "gulp-angular-templatecache": "^1.4.2",
     "gulp-changed": "^0.4.1",
     "gulp-concat": "^2.4.1",

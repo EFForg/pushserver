@@ -84,7 +84,7 @@ var PushNotificationFormController = function(
   // deviceIds comes back as a \n delimited string, this watch is used to break it up and pass a
   // clean array to the notification object.
   $scope.$watch('workingModel.deviceIds', function(newValue) {
-    $scope.workingModel.notification.deviceIds = pushFormHelpers.formatDeviceIds(newValue);
+    $scope.workingModel.notification.deviceIds = notificationFormatting.formatDeviceIds(newValue);
   });
 
   // URL is presented as a top-level option in the frontend, but treated as a data key for the
