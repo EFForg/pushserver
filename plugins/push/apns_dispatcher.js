@@ -7,26 +7,8 @@ var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
 var util = require('util');
 
+var APNSResponseLogger = require('./apns_response_logger');
 var ChannelDispatcher = require('./channel_dispatcher');
-
-
-var APNSResponseLogger = function() {
-
-};
-
-APNSResponseLogger.prototype.handleTransmitted = function(notification, device) {
-  logger.info(device + ' has been sent');
-};
-
-
-APNSResponseLogger.prototype.handleTransmissionError = function(notification, device) {
-  logger.info(device + ' failed to transmit');
-};
-
-
-APNSResponseLogger.prototype.getResponseStats = function() {
-
-};
 
 
 var APNSDispatcher = function(config) {
@@ -48,6 +30,7 @@ util.inherits(APNSDispatcher, ChannelDispatcher);
 APNSDispatcher.prototype.registerChannelFeedbackHandler = function(feedbackHandler) {
   APNSDispatcher.super_.prototype.registerChannelFeedbackHandler.call(this, feedbackHandler);
 
+  // TODO(leah): No idea what this is supposed to do?
   lodash.forEach(this.feedbackBuffer_, this.feedbackHandler);
 };
 
@@ -55,11 +38,12 @@ APNSDispatcher.prototype.registerChannelFeedbackHandler = function(feedbackHandl
 APNSDispatcher.prototype.dispatch = function(notificationIds, notification, done) {
   APNSDispatcher.super_.prototype.dispatch.call(this, notificationIds, notification);
 
+  var emptyStats = {total: this.getEmptyStatsObject()};
   //  var connection = this.getConnection_();
   //  connection.pushNotification(notification, notificationIds);
 
   setTimeout(function() {
-    done();
+    done(null, emptyStats);
   }, 200);
 };
 

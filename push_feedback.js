@@ -5,19 +5,32 @@
 var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
 
+var db = require('./db/db');
 var models = require('./db/models');
 
+var deleteQuery = "SELECT subscription_id FROM subscriptions WHERE channel = ? AND device_id LIKE ?";
 
-// TODO(leah): Get this working.
+
+var deleteSubscription = function(channel, registrationId) {
+  db.query(deleteQuery, null, {raw: true}, [channel, registrationId])
+    .on('success', function(res) {
+      if (res.length > 0) {
+        logger.info(
+          'deleted subscription with id %s, device_id %s', res[0]['subscription_id'], registrationId);
+      } else {
+        logger.info('no subscription matching device_id %s found', registrationId);
+      }
+    })
+    .on('error', function(err) {
+      logger.error('unable to delete subscription with id %s, err:\n%s', registrationId, err);
+    });
+};
+
+
 var removeSubscription = function(channel, registrationIds) {
-//  models.Subscriptions
-//    .destroy({deviceId: registrationIds})
-//    .on('success', function(affectedRows) {
-//      logger.info('Deleted %s subscriptions', affectedRows);
-//    })
-//    .on('error', function(err) {
-//      logger.error('Unable to delete registrationIds: %s, err:\n%s', registrationIds, err.toString());
-//    });
+  lodash.forEach(registrationIds, function(registrationId) {
+    deleteSubscription(channel, registrationId);
+  });
 };
 
 

@@ -49,13 +49,21 @@ var Subscriptions = db.define(
     deviceId: {
       type: sequelize.TEXT,
       allowNull: false,
-      unique: true,
       field: 'device_id'
     }
   },
   {
     tableName: 'subscriptions',
     schema: dbConfig.schema,
+
+    indexes: [
+      {
+        name: 'subscriptions_device_id',
+        type: 'FULLTEXT',
+        unique: true,
+        fields: ['device_id']
+      }
+    ],
 
     instanceMethods: {
       externalize: function() {
@@ -126,6 +134,22 @@ var Notifications = db.define(
     }
   },
   {
+
+    indexes: [
+
+      {
+        name: 'notifications_state',
+        fields: ['state']
+      },
+
+      {
+        name: 'notifications_payload',
+        type: 'FULLTEXT',
+        fields: ['payload']
+      }
+
+    ],
+
     getterMethods: {
       payload: getJSONField('payload'),
       data: getJSONField('data'),
