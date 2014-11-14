@@ -7,10 +7,15 @@ var angular = require('angular');
 
 var supportedChannels = require('../../build/pushServerSettings')['SUPPORTED_CHANNELS'];
 
-
 var PushNotificationFormController = function(
   $scope, $timeout, $state,
   pushFormHelpers, notificationPreview, notificationFormatting, stateHistory, pushServerValidation) {
+
+  /**
+   * The app mode - development, production etc - used to show / hide sections.
+   * @type {string}
+   */
+  $scope.appMode = require('../../build/pushServerSettings')['MODE'];
 
   /**
    * Object, keyed on channel name, value of friendly name for that channel, e.g. APNS: iOS
@@ -90,11 +95,8 @@ var PushNotificationFormController = function(
   // URL is presented as a top-level option in the frontend, but treated as a data key for the
   // purposes of the backend.
   $scope.$watch('workingModel.url', function(newValue) {
-    if (newValue.urlStringMinusScheme !== '') {
-      $scope.workingModel.uri = new URI(newValue.urlStringMinusScheme);
-      $scope.workingModel.uri.scheme(newValue.scheme);
-
-      $scope.workingModel.notification.data['url'] = $scope.workingModel.uri.toString();
+    if (newValue !== '') {
+      $scope.workingModel.notification.data['url'] = $scope.workingModel.url;
     } else {
       delete $scope.workingModel.notification.data['url'];
     }

@@ -9,6 +9,7 @@
     </div>
 
     <div class="col-sm-10 pull-right">
+
       <div class="form-inline push-data-row"
            ng-class="{'invalid-data-row': !dataModel.pushDataRows[$index].isValid}"
            ng-repeat="row in dataModel.pushDataRows">
@@ -66,6 +67,19 @@
         </div>
 
       </div>
+
+      <div class="text-warning validation-message">
+        This allows you to add arbitrary data to the notification, e.g. Key: "EFF-Score" Value: "10".
+        <br>
+        The types of values you can include are:
+        <ul>
+          <li>string: a word or phrase, e.g. "the cat in the hat"</li>
+          <li>integer: a whole number, e.g. 1</li>
+          <li>float: a number including a decimal place, e.g. 1.7</li>
+          <li>boolean: a true or false value, e.g. followsEFFOnTwitter: false</li>
+        </ul>
+      </div>
+
     </div>
 
   </div>

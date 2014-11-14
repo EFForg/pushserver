@@ -19,9 +19,10 @@ module.exports = {
     dest: BUILD_DIR,
     fileName: 'pushServerSettings.js',
     settingsKeys: [
-      'SUPPORTED_CHANNELS',
       'APPLICATION',
-      'CHANNEL_LOOKUP'
+      'CHANNEL_LOOKUP',
+      'MODE',
+      'SUPPORTED_CHANNELS'
     ]
   },
 

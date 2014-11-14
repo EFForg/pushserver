@@ -13,10 +13,14 @@
         <div class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-sm-2" for="notification-sound">
-              Sound
+              Sound File
             </label>
             <div class="col-sm-10">
               <input id="notification-sound" class="form-control" type="text" ng-model="workingModel.notification.sound">
+
+              <div class="text-warning validation-message">
+                iOS only - the name of a sound file deployed with the app, e.g. my_sound.wav
+              </div>
             </div>
           </div>
         </div>

@@ -47,21 +47,15 @@
           URL
         </label>
 
-        <div class="col-sm-2">
-          <select class="form-control" ng-model="workingModel.url.scheme"
-                  ng-options="scheme for scheme in workingModel.urlSchemes">
-          </select>
-        </div>
-
-        <div class="col-sm-8">
+        <div class="col-sm-10">
           <input id="notification-url"
                  class="form-control"
                  name="url"
                  type="text"
-                 ng-model="workingModel.url.urlStringMinusScheme">
+                 ng-model="workingModel.url">
 
           <div class="text-warning validation-message">
-            The URL is not checked, please ensure it's working before submitting
+            The app doesn't validate that the URL is working, please confirm it's good before submitting the notification
           </div>
 
         </div>

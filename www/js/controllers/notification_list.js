@@ -38,6 +38,7 @@ var PushNotificationListController = function(
       url: pushServerAPI.makePrefixedUrl('notifications', 'search'),
       type: 'POST'
     })
+    .withOption('order', [0, 'desc'])
     .withOption('rowCallback', $scope.addRowClickedEvents)
     .withOption('serverSide', true)
     .withOption('lengthMenu', [15, 30, 50, 100])
@@ -51,7 +52,6 @@ var PushNotificationListController = function(
     DTColumnBuilder.newColumn('channels').withTitle('Channels').renderWith(function(data, type, full) {
       return notificationFormatting.friendlyChannels(data).join(', ');
     }),
-    DTColumnBuilder.newColumn('mode').withTitle('Notification Mode'),
     DTColumnBuilder.newColumn('state').withTitle('State'),
     DTColumnBuilder.newColumn('stats').withTitle('Push Total #').renderWith(function(data, type, full) {
       return data['total']['idCount'];

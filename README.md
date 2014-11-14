@@ -8,6 +8,7 @@ Hapi server app for creating and distributing push notifications
 * [Getting Started](#getting-started)
 * [Running the server](#running-the-server)
 * [App Configuration](#app-configuration)
+* [Securing the app](#securing-the-app)
 * [Run tests](#run-tests)
 * [API](#api)
   * [Notifications](#notifications)
@@ -19,7 +20,7 @@ Hapi server app for creating and distributing push notifications
 
 ```
 npm install
-gulp bower
+bower install
 gulp build
 ```
 
@@ -41,6 +42,13 @@ Alternately, you can use:
 * [Environment variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables)
 * [Command line options](https://github.com/lorenwest/node-config/wiki/Command-Line-Overrides)
 
+## Securing the app
+
+By default, the app exposes all API endpoints and the web UI. This would allow a 3rd party to send a correctly crafted notification object to the server and have it go to all subscribers.
+
+You should ensure that wherever the app is running it either:
+* has an authentication layer
+* is running behind another server, nginx / apache etc., that restricts access to the relevant endpoints
 
 ## Run tests
 

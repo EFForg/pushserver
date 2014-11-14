@@ -42,7 +42,7 @@ var PushNotificationDetailController = function(
   };
 
   /**
-   * Re-attempts fetching the notification from the server.
+   * Fetches a notification from the server.
    */
   $scope.getNotification = function() {
     var success = function(data) {
@@ -86,6 +86,22 @@ var PushNotificationDetailController = function(
     } else {
       return lastElem;
     }
+  };
+
+  /**
+   * Gets the stats object with friendly names substituted for the channels
+   * @returns {{}}
+   */
+  $scope.getFriendlyStats = function() {
+    var friendlyStats = {};
+    if (!$scope.isPreview && !angular.isUndefined($scope.notification)) {
+      var stats = $scope.notification.stats;
+      angular.forEach(stats, function(val, key) {
+        friendlyStats[notificationFormatting.getFriendlyChannel(key) || key] = val;
+      });
+    }
+
+    return friendlyStats;
   };
 
   /**

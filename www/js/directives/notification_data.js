@@ -19,7 +19,7 @@ var PushNotificationDataDirective = function() {
   var typeCheckers = {
     'integer': isNumber,
     'float':isNumber
-  }
+  };
 
   var makePushDataRow = function() {
     return {
@@ -30,6 +30,16 @@ var PushNotificationDataDirective = function() {
       validationMessage: ''
     };
   };
+
+  /**
+   * Reserved field names - these are typically used by other push form fields.
+   * @type {Array}
+   */
+  var reservedFieldNames = [
+    'url',
+    'title',
+    'message'
+  ];
 
   return {
     require: 'ngModel',
@@ -73,9 +83,9 @@ var PushNotificationDataDirective = function() {
        * Validates the data value is valid for the chosen type and type-coerces it to that type.
        */
       scope.coerceAndCheckValue = function(row, pushData) {
-        if (row.key.toLowerCase() === 'url') {
+        if (reservedFieldNames.indexOf(row.key.toLowerCase()) !== -1) {
           row.isValid = false;
-          row.validationMessage = 'URL is not a valid key name';
+          row.validationMessage = row.key + ' is not a valid key name';
         } else if (row.key !== '' && row.value !== '') {
           var converter = typeConverters[row.type];
           var value = !angular.isUndefined(converter) ? converter(row.value) : row.value;

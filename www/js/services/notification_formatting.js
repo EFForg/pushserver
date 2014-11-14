@@ -10,6 +10,19 @@ var notificationPreview = function () {
 
   return {
 
+    /**
+     * @param {string} unfriendlyChannel The "unfriendly" channel, e.g. APNS.
+     * @returns {string} The "friendly" channel, e.g. iOS
+     */
+    getFriendlyChannel: function(unfriendlyChannel) {
+      return channelLookup[unfriendlyChannel];
+    },
+
+    /**
+     * Returns an array of "friendly" channel names for the supplied channels, e.g iOS for APNS
+     * @param channels
+     * @returns {Array}
+     */
     friendlyChannels: function(channels) {
       var friendlyChannels = [];
       angular.forEach(channels, function(channel) {
@@ -17,23 +30,6 @@ var notificationPreview = function () {
       });
 
       return friendlyChannels;
-    },
-
-    /**
-     * Converts a URIjs object to a string, minus the scheme.
-     *
-     * @param uri The URIjs object to get the string form of.
-     * @returns {String} The string form of the URI instance with the scheme and :// removed.
-     */
-    urlStringMinusScheme: function(uri) {
-      var urlWithoutScheme = uri.clone().scheme('').toString();
-      if (urlWithoutScheme === '/') {
-        return '';
-      } else if (urlWithoutScheme.indexOf('//') === 0) {
-        return urlWithoutScheme.substring(2, urlWithoutScheme.length);
-      } else {
-        return urlWithoutScheme;
-      }
     },
 
     /**

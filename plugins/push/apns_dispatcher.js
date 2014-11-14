@@ -7,15 +7,24 @@ var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
 var util = require('util');
 
-var APNSResponseLogger = require('./apns_response_logger');
 var ChannelDispatcher = require('./channel_dispatcher');
+// Default to a 2 hour expiry
+var DEFAULT_NOTIFICATION_EXPIRY = Math.floor(Date.now() / 1000) + (60 * 60 * 2);
 
 
 var APNSDispatcher = function(config) {
   ChannelDispatcher.call(this, 'APNS', config);
 
-  this.feedbackBuffer_ = [];
+  /**
+   * Object defining the configuration vars to use with the APN connection and feedback service.
+   * @type {*}
+   */
   this.config = config;
+
+  /**
+   * The underlying connection to the APNS servers.
+   */
+  this.apnConnection_ = this.getConnection_(this.config);
 
   this.configureFeedbackService_(this.config);
 };
@@ -38,13 +47,20 @@ APNSDispatcher.prototype.registerChannelFeedbackHandler = function(feedbackHandl
 APNSDispatcher.prototype.dispatch = function(notificationIds, notification, done) {
   APNSDispatcher.super_.prototype.dispatch.call(this, notificationIds, notification);
 
-  var emptyStats = {total: this.getEmptyStatsObject()};
-  //  var connection = this.getConnection_();
-  //  connection.pushNotification(notification, notificationIds);
+  var note = new apn.Notification(notification.payload);
 
-  setTimeout(function() {
-    done(null, emptyStats);
-  }, 200);
+  note.expiry = DEFAULT_NOTIFICATION_EXPIRY;
+  note.badge = notification.badge;
+  note.sound = notification.sound;
+  note.alert = notification.alert;
+
+  this.apnConnection_.pushNotification(note, notificationIds);
+
+  // Notification stats tracking isn't implemented as the EFF app isn't going to be released on
+  // iOS. To get this fully working, these TODOs need to be resolved:
+  //   * track when the notification has been processed by node-apn, so that the callback can fire
+  //   * track the success / failure on the requests
+  done(null, this.getEmptyStatsObject());
 };
 
 
@@ -56,10 +72,10 @@ APNSDispatcher.prototype.dispatch = function(notificationIds, notification, done
 APNSDispatcher.prototype.configureFeedbackService_ = function(options) {
 
   var options = {
-    'key': options.key,
-    'cert': options.cert,
-    'batchFeedback': true,
-    'interval': options.feedbackInterval
+    key: options.key,
+    cert: options.cert,
+    batchFeedback: true,
+    interval: options.feedbackInterval
   };
 
   var feedback = new apn.Feedback(options);
@@ -73,15 +89,11 @@ APNSDispatcher.prototype.configureFeedbackService_ = function(options) {
  * @private
  */
 APNSDispatcher.prototype.handleAPNSFeedback_ = function(notificationIds) {
-
-  lodash.forEach(notificationIds, function(notificationId) {
-    if (this.feedbackHandler_ !== null) {
+  if (this.feedbackHandler_ !== null) {
+    lodash.forEach(notificationIds, function(notificationId) {
       this.feedbackHandler_(notificationId);
-    } else {
-      this.feedbackBuffer_.push(notificationId);
-    }
-  });
-
+    });
+  }
 };
 
 
@@ -89,23 +101,14 @@ APNSDispatcher.prototype.handleAPNSFeedback_ = function(notificationIds) {
  * Creates a new APNS connection and response logger.
  * @param function() done The function to call once notifications complete.
  */
-APNSDispatcher.prototype.getConnection_ = function(done) {
-  // TODO(leah): Update this.
+APNSDispatcher.prototype.getConnection_ = function(options) {
   var options = {
-    production: false
+    key: options.key,
+    cert: options.cert,
+    production: options.mode === 'production'
   };
-  var service = new apn.connection(options);
 
-  var responseLogger = new APNSResponseLogger();
-
-  service.on('transmitted', responseLogger.handleTransmitted);
-  service.on('transmissionError', responseLogger.handleTransmissionError);
-  service.on('disconnected', function() {
-    // TODO(leah): Create + resolve a promise
-  });
-  service.on('socketError', function() {
-    // TODO(leah): Create + resolve a promise
-  });
+  return new apn.connection(options);
 };
 
 

@@ -19,12 +19,16 @@ util.inherits(APNSMessageAdapter, ChannelMessageAdapter);
 /** @override */
 APNSMessageAdapter.prototype.createMessage = function(notification) {
 
-  // TODO(leah): Update this.
   var apnsMessage = {
-
+    payload: {
+      title: notification.title,
+      message: notification.message,
+    },
+    sound: notification.sound,
+    alert: notification.title
   };
 
-  lodash.assign(apnsMessage, notification.data);
+  lodash.assign(apnsMessage.payload, notification.data);
 
   return apnsMessage;
 
