@@ -51,7 +51,6 @@
     "GCM": "Android"
   },
 
-  // Override these in local.json
   "CREDENTIALS": {
     "GCM": {
       "PROJECT_ID": "",

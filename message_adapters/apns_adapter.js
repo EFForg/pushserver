@@ -22,7 +22,7 @@ APNSMessageAdapter.prototype.createMessage = function(notification) {
   var apnsMessage = {
     payload: {
       title: notification.title,
-      message: notification.message,
+      message: notification.message
     },
     sound: notification.sound,
     alert: notification.title

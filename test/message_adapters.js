@@ -33,9 +33,15 @@ describe('MessageAdapters', function() {
 
   var expectedMessages = {
     APNS: {
-
+      'payload': {
+        'message': 'message',
+        'title': 'title'
+      },
+      sound: null,
+      alert: 'title'
     },
     GCM: {
+      'dry_run': false,
       'data': {
         'message': 'message',
         'title': 'title'
