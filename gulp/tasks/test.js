@@ -5,8 +5,15 @@
 var gulp = require('gulp');
 var gulpExit = require('gulp-exit');
 var gulpMocha = require('gulp-mocha');
+var karma = require('karma').server;
 
 var config = require('../config').test;
+
+gulp.task('testFE', function(done) {
+  karma.start(config.karma, function(exitCode) {
+    done();
+  });
+});
 
 gulp.task('test', ['build'], function() {
   return gulp.src(config.paths)

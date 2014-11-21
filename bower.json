@@ -4,6 +4,7 @@
   "devDependencies": {},
   "dependencies": {
     "angular": "v1.3.0",
+    "angular-mocks": "~1.3.0",
     "angular-datatables": "v0.2.1",
     "angular-ui-router": "~0.2.11",
     "datatables": "1.10.3",

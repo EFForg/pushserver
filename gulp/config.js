@@ -91,10 +91,47 @@ module.exports = {
   },
 
   test: {
+
     mochaOptions: {
       reporter: 'spec'
     },
-    paths: path.join(BASE_DIR, 'test/**/*.js')
+    paths: path.join(BASE_DIR, 'test/**/*.js'),
+
+    karma: {
+
+      basePath: '',
+
+      frameworks: ['mocha', 'chai', 'sinon'],
+
+      // Order matters
+      files: [
+        path.join(DIST_DIR, 'libs.min.js'),
+        path.join(COMPONENTS_DIR, 'angular-mocks/angular-mocks.js'),
+        path.join(DIST_DIR, 'push_server.min.js'),
+        path.join(WWW_DIR, 'test/**/*.js')
+      ],
+
+      exclude: [],
+
+      port: 9876,
+
+      browsers: [
+        'PhantomJS'
+      ],
+
+      plugins: [
+        'karma-phantomjs-launcher',
+        'karma-mocha',
+        'karma-chai',
+        'karma-sinon'
+      ],
+
+      singleRun: true,
+
+      colors: true
+
+    }
+
   }
 
 };
