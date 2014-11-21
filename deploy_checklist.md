@@ -31,4 +31,91 @@ Check that the app has been secured so that the api/{version}/notifications endp
 
 ## Deploying the app to production
 
-TODO(mark/leah): Update this following deploy discussion
+TODO: this should be systematized per EFF deploy practices and updated to a salt file or similar configuration tool.
+
+#### Install packages
+
+```
+sudo apt-get install git
+sudo apt-get install supervisor
+sudo apt-get install nginx
+sudo apt-get install sqlite3
+```
+
+#### Install node + npm
+
+see https://github.com/joyent/node/wiki/installing-node.js-via-package-manager
+
+#### Install npm dependencies
+
+```
+sudo npm install -g bower
+sudo npm install -g gulp
+```
+
+#### Create pushserver user
+
+```
+sudo adduser pushserver
+sudo service ssh restart
+echo 'DenyUsers pushserver' | sudo tee --append /etc/ssh/sshd_config
+```
+
+#### Create pushserver directories and clone the code
+
+As the pushserver user (<code>sudo su pushserver</code>)
+
+```
+mkdir -p ~/logs/supervisor
+mkdir -p ~/logs/pushserver
+
+git clone git@github.com:EFForg/pushserver.git
+cd pushserver
+git checkout tags/{tag_name}
+
+npm install
+bower install
+gulp syncDb
+```
+
+#### Create required credentials
+
+Copy over a production.json containing required Android creds to <code>/home/pushserver/pushserver/config/production.json</code>
+
+#### Build js and css on the server
+
+NOTE: this must happen after the prod creds have been copied over, or the app settings will be incorrectly set
+
+As the pushserver user and from <code>/home/pushserver/pushserver</code>
+
+```
+export NODE_ENV=production
+gulp build
+```
+
+#### Copy over application config files
+
+* [nginx.conf](/deploy/nginx.conf) to <code>/etc/nginx/sites-enabled/pushserver</code>
+* [supervisor.conf](/deploy/supervisor.conf) to <code>/etc/supervisor/conf.d/pushserver.conf</code>
+
+...then restart the services to pick up the files
+
+```
+sudo service nginx restart
+sudo service supervisor restart
+```
+
+#### As a sudo-capable user
+
+```
+sudo supervisorctl restart pushserver
+```
+
+#### Setup firewall rules
+
+incoming:
+* port 443
+
+outgoing:
+* port 443
+* port 80

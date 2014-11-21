@@ -11,7 +11,7 @@
     "appenders": [
       {
         "type": "file",
-        "filename": "/tmp/push_server_logs",
+        "filename": "/home/pushserver/logs/pushserver/push_server",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
@@ -19,12 +19,32 @@
       },
       {
         "type": "file",
-        "filename": "/tmp/push_server_client_logs",
+        "filename": "/home/pushserver/logs/pushserver/push_client",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
         "category": "client"
       }
     ]
+  },
+
+  "SUPPORTED_CHANNELS": ["GCM"],
+
+  "DATABASE": {
+    "OPTIONS": {
+      "storage": "/home/pushserver/push_server_db"
+    }
+  },
+
+  "APPLICATION": {
+    "NAME": "EFF Alerts"
+  },
+
+  "CREDENTIALS": {
+    "GCM": {
+      "PROJECT_ID": "",
+      "API_KEY": ""
+    }
   }
+
 }

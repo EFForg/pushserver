@@ -22,6 +22,7 @@ Hapi server app for creating and distributing push notifications
 npm install
 bower install
 gulp build
+gulp syncDb
 ```
 
 ## Running the server
