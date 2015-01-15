@@ -5,6 +5,7 @@
 var assert = require('assert');
 var config = require('config');
 var lodash = require('lodash');
+var sinon = require('sinon');
 
 var notificationUtils = require('../../routes/notifications/utils');
 
@@ -81,6 +82,24 @@ describe('NotificationUtils', function() {
       assert.deepEqual(val, expected[key]);
     });
 
+  });
+
+  describe('sendNotification', function() {
+
+    it('should respect the deviceIds value when supplied', function(done) {
+      var notification = notificationUtils.notificationFromPayload({
+        message: 'sendNotification',
+        deviceIds: ['abc'],
+        channels: ['GCM']
+      });
+
+      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
+        assert.equal(channel, 'GCM');
+        assert.deepEqual(deviceIds, ['abc']);
+        assert.equal(message.data.message, 'sendNotification');
+        done();
+      });
+    });
   });
 
 });

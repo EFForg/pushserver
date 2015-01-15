@@ -56,6 +56,8 @@ var notificationFromPayload = function(payload) {
   }));
   stats.total = lodash.clone(emptyStats);
 
+  // TODO(leah): Add in an assertion check to ensure that if deviceIds have been provided
+  //             that the notification is only going to a single channel.
   var notification = {
     title: lodash.isUndefined(payload.title) ? null : payload.title,
     message: payload.message,
@@ -108,7 +110,6 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
       success(groupedSubscriptions);
     })
     .on('error', error);
-
 };
 
 
@@ -120,30 +121,36 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
  *     deviceIds to the remote servers for distribution.
  */
 var sendNotification = function(notification, dispatchFn) {
-  // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
-  //             that could be arbitrarily large.
-  fetchDeviceIdsForChannels(
-    notification.channels,
-    function(groupedSubscriptions) {
-      var arrLengths = lodash.map(groupedSubscriptions, function(val) {
-        return val.length;
-      });
+  if (lodash.isUndefined(notification.deviceIds) || notification.deviceIds === null) {
+    // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
+    //             that could be arbitrarily large.
+    fetchDeviceIdsForChannels(
+      notification.channels,
+      function(groupedSubscriptions) {
+        var arrLengths = lodash.map(groupedSubscriptions, function(val) {
+          return val.length;
+        });
 
-      var devicesToSendTo = lodash.reduce(arrLengths, function(sum, num) {
-        return sum + num;
-      }) > 0;
+        var devicesToSendTo = lodash.reduce(arrLengths, function(sum, num) {
+          return sum + num;
+        }) > 0;
 
-      if (devicesToSendTo) {
-        sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
-      } else {
-        updateNotificationStateAndStats(notification.notificationId, 'success', undefined);
+        if (devicesToSendTo) {
+          sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
+        } else {
+          updateNotificationStateAndStats(notification.notificationId, 'success', undefined);
+        }
+      },
+      function(err) {
+        logger.error('Fetching device ids for channels %s failed with:\n%s', channels, err.toString());
+        updateNotificationStateAndStats(notification.notificationId, 'error', undefined);
       }
-    },
-    function(err) {
-      logger.error('Fetching device ids for channels %s failed with:\n%s', channels, err.toString());
-      updateNotificationStateAndStats(notification.notificationId, 'error', undefined);
-    }
-  );
+    );
+  } else {
+    var groupedSubscriptions = lodash.zipObject(
+      [notification.channels[0]], [notification.deviceIds]);
+    sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
+  }
 };
 
 

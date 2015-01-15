@@ -23,7 +23,9 @@ var ChannelMessageAdapter = function(channel, notification, subscriptions) {
    * An array of deviceIds to send the associated message to.
    * @type {Array.<string>}
    */
-  this.deviceIds = lodash.map(subscriptions, function(sub) {return sub.deviceId});
+  this.deviceIds = lodash.map(subscriptions, function(sub) {
+    return lodash.isString(sub) ? sub : sub.deviceId;
+  });
 };
 
 
