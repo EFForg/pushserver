@@ -121,7 +121,14 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
  *     deviceIds to the remote servers for distribution.
  */
 var sendNotification = function(notification, dispatchFn) {
-  if (lodash.isUndefined(notification.deviceIds) || notification.deviceIds === null) {
+
+  var noDeviceIds = (
+    lodash.isUndefined(notification.deviceIds) ||
+    notification.deviceIds === null ||
+    lodash.isEmpty(notification.deviceIds)
+  );
+
+  if (noDeviceIds) {
     // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
     //             that could be arbitrarily large.
     fetchDeviceIdsForChannels(

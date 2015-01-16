@@ -100,6 +100,22 @@ describe('NotificationUtils', function() {
         done();
       });
     });
+
+    it('should fetch deviceIds from the DB when none are supplied', function(done) {
+      var notification = notificationUtils.notificationFromPayload({
+        message: 'fetchFromDB',
+        deviceIds: [],
+        channels: ['GCM']
+      });
+
+      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
+        assert.equal(channel, 'GCM');
+        assert.deepEqual(deviceIds, ['GCM_SUB_1', 'GCM_SUB_2']);
+        assert.equal(message.data.message, 'fetchFromDB');
+        done();
+      });
+    });
+
   });
 
 });
