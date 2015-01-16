@@ -4,7 +4,7 @@
 
 var config = require('config');
 
-var GCMDispatcher = require('../plugins/push/apns_dispatcher').GCMDispatcher;
+var GCMDispatcher = require('../plugins/push/apns_dispatcher');
 
 var credentials = config.get('CREDENTIALS');
 var gcmCreds = {
