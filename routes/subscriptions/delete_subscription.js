@@ -30,8 +30,7 @@ var deleteSubscription = function(request, reply) {
   var whereClause = lodash.zipObject([models.Subscriptions.attributes.deviceId.field], [deviceId]);
   models.Subscriptions
     .destroy({where: whereClause})
-    .on('success', success)
-    .on('error', error);
+    .then(success, error);
 };
 
 

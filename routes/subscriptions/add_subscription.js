@@ -23,7 +23,7 @@ var addSubscription = function(request, reply) {
     var initialized = res[1];
 
     if (initialized) {
-      instance.save().on('success', function (newInstance) {
+      instance.save().then(function (newInstance) {
         var subscriptionURL = routeUtils.makePrefixedPath(
           '/subscriptions/' + newInstance.subscriptionId);
         reply(newInstance.externalize())
@@ -45,8 +45,7 @@ var addSubscription = function(request, reply) {
   //       error under Sequelize 2.0.0-rc1
   models.Subscriptions
     .findOrInitialize(params)
-    .on('success', success)
-    .on('error', error);
+    .then(success, error);
 };
 
 

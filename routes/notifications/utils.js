@@ -85,15 +85,17 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
 
   var queryCriteria = {
     where: {channel: channels},
-    attributes: ['subscriptionId', 'language', 'deviceId', 'channel']
+    attributes: ['subscriptionId', 'language', 'deviceId', 'channel'],
+    // Use raw to reduce object footprint
+    raw: true
   };
 
   // TODO(leah): This should move to a limit / offset based iterator. Unfortunately, sequelize
   //             doesn't seem to support lazy iteration of query results. So, implement a wrapper
   //             to protect against pulling a huge result and getting mem issues.
   models.Subscriptions
-    .findAll(queryCriteria, {raw: true})  // Use raw to reduce object footprint
-    .on('success', function(subscriptions) {
+    .findAll(queryCriteria)
+    .then(function(subscriptions) {
 
       var groupedSubscriptions = lodash.zipObject(lodash.map(channels, function(channel) {
         return [channel, []];
@@ -108,8 +110,7 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
       });
 
       success(groupedSubscriptions);
-    })
-    .on('error', error);
+    }, error);
 };
 
 
@@ -235,7 +236,7 @@ var summarizeNotificationStats = function(results) {
 var updateNotificationStateAndStats = function(notificationId, state, opt_stats) {
   models.Notifications
     .find({where: {notificationId: notificationId}})
-    .on('success', function(notification) {
+    .then(function(notification) {
       notification.state = state;
 
       if (!lodash.isUndefined(opt_stats)) {
@@ -243,13 +244,13 @@ var updateNotificationStateAndStats = function(notificationId, state, opt_stats)
       }
 
       notification.save()
-        .on('error', function(err) {
+        .then(function() {}, function(err) {
           logger.error(
             'Unable to update notificationId %s to state %s, failed with:\n%s',
             notificationId, state, err.toString());
         });
-    })
-    .on('error', function(err) {
+    },
+    function(err) {
       logger.error(
         'Unable to update notificationId %s to failed state, failed with:\n%s',
         notificationId, err.toString());

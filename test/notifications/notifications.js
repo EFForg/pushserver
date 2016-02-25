@@ -39,7 +39,7 @@ describe('NotificationRouteHandlers', function() {
 
       models.Notifications
         .find({where: {notificationId: 1}})
-        .on('success', function(notification) {
+        .then(function(notification) {
           assert.equal(notification.notificationId, 1);
           assert.equal(notification.title, 'title');
           assert.equal(notification.state, 'pending');

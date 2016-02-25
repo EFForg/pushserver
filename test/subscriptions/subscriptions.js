@@ -28,7 +28,7 @@ describe('SubscriptionRouteHandlers', function() {
 
       models.Subscriptions
         .find({where: {subscriptionId: 1}})
-        .on('success', function(subscription) {
+        .then(function(subscription) {
           assert.notEqual(null, subscription);
           done();
         });
@@ -51,7 +51,7 @@ describe('SubscriptionRouteHandlers', function() {
 
       models.Subscriptions
         .find({where: {deviceId: sampleDeviceId}})
-        .on('success', function(subscription) {
+        .then(function(subscription) {
           assert.equal(null, subscription);
           done();
         });

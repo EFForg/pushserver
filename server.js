@@ -18,23 +18,31 @@ var db = require('./db/db');
 var distDir = path.join(__dirname, 'www', 'dist');
 
 var defaultOptions = {
-  files: {
-    relativeTo: distDir
+  connections: {
+    routes: {
+      files: {
+        relativeTo: distDir
+      }
+    }
   }
 };
 
 log4js.configure(config.get('LOGGING'));
 
-var server = new hapi.Server(serverConfig.URL, serverConfig.PORT, defaultOptions);
-server.views({
-  basePath: distDir,
-  engines: {
-    html: require('handlebars')
-  },
-  isCached: serverConfig.get('CACHE_TEMPLATES'),
-  partialsPath: path.join(__dirname, 'www/dist/templates')
+var server = new hapi.Server(defaultOptions);
+server.connection({ port: serverConfig.PORT, uri: serverConfig.URL });
+server.register(require('inert'), () => {});
+server.register(require('vision'), (err) => {
+  server.views({
+    relativeTo: distDir,
+    engines: {
+      html: require('handlebars')
+    },
+    isCached: serverConfig.get('CACHE_TEMPLATES'),
+    partialsPath: path.join(__dirname, 'www/dist/templates')
+  });
+  server.route(require('./routes/routes').routes);
 });
-server.route(require('./routes/routes').routes);
 
 // Required due to the way the tests + gulp tasks handle server instantiation.
 server.registerPlugins = function(done) {
@@ -46,8 +54,8 @@ server.registerPlugins = function(done) {
   var pushConfig = config.get('PUSH');
   var supportedChannels = config.get('SUPPORTED_CHANNELS');
 
-  var plugins = [{
-    plugin: require('./plugins/push_dispatcher'),
+  var plugins = {
+    register: require('./plugins/push_dispatcher'),
     options: {
       channels: supportedChannels,
       channelConfig: {
@@ -64,9 +72,9 @@ server.registerPlugins = function(done) {
         }
       }
     }
-  }];
+  };
 
-  server.pack.register(plugins, function(err) {
+  server.register(plugins, function(err) {
     if (err) {
       throw err;
     }

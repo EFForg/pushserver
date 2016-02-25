@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "node bin/fix_cl_strings.js",
-    "postupdate": "node bin/fix_cl_strings.js",
     "start": "node bin/start_server"
   },
   "dependencies": {
@@ -13,7 +11,8 @@
     "chunk": "0.0.2",
     "config": "^1.2.0",
     "handlebars": "^2.0.0",
-    "hapi": "^7.0.0",
+    "hapi": "^13.0.0",
+    "inert": "^3.2.0",
     "joi": "4.7.0",
     "lodash": "^2.4.1",
     "log4js": "^0.6.21",
@@ -22,8 +21,9 @@
     "node-gcm": "^0.9.12",
     "pg": "^3.4.2",
     "q": "^2.0.2",
-    "sequelize": "^2.0.0-rc2",
-    "sqlite3": "^3.1.1"
+    "sequelize": "^3.19.3",
+    "sqlite3": "^3.1.1",
+    "vision": "^4.0.1"
   },
   "devDependencies": {
     "bower": "^1.3.12",

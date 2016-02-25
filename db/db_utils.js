@@ -8,8 +8,7 @@ var syncDatabase = function(success, failure, force) {
 
   db
     .sync({force: !!force})
-    .on('success', success)
-    .on('failure', failure);
+    .then(success, failure);
 
 };
 

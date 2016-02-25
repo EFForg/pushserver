@@ -29,8 +29,7 @@ var addNotification = function(request, reply) {
   models.Notifications
     .build(notification)
     .save()
-    .on('success', success)
-    .on('error', function(err) {
+    .then(success, function(err) {
       logger.error('unable to add notification %s, error: %s', notification, err);
       reply(hapi.error.internal('unable to add the notification', err));
     });

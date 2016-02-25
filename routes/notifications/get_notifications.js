@@ -18,10 +18,9 @@ var notificationUtils = require('./utils');
  */
 var getCount = function(done) {
   models.Notifications.count()
-    .on('success', function(count) {
+    .then(function(count) {
       done(null, count);
-    })
-    .on('error', function(err) {
+    }, function(err) {
       logger.error('unable to get a count of notification rows for getNotifications: %s', err);
       done(err, null);
     });
@@ -37,10 +36,9 @@ var getCount = function(done) {
 var getRows = function(findCriteria, done) {
   models.Notifications
     .findAndCountAll(findCriteria)
-    .on('success', function(result) {
+    .then(function(result) {
       done(null, result);
-    })
-    .on('error', function(err) {
+    }, function(err) {
       logger.error('unable to fetch rows and row count for getNotifications: %s', err);
       done(err, null);
     });

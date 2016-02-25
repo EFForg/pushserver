@@ -48,8 +48,6 @@ before(function(done) {
 
 after(function() {
   // Force close the underlying sqlite3 connection
-  var defaultConn = db.connectionManager.connections['default'];
-  defaultConn.close();
   db.close();
 
   registerChannelFeedbackHandlerMock.verify();
@@ -67,7 +65,7 @@ var populateSubscriptionData = function(done) {
   ];
 
   models.Subscriptions.bulkCreate(sampleSubs)
-    .on('success', function() {
+    .then(function() {
       done();
     });
 };

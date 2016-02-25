@@ -13,14 +13,13 @@ var getNotification = function(request, reply) {
 
   models.Notifications
     .find({where: {notificationId: notificationId}})
-    .on('success', function(notification) {
+    .then(function(notification) {
       if (notification !== null) {
         reply(notification.externalize());
       } else {
         reply(hapi.error.notFound('notification not found for id: ' + notificationId));
       }
-    })
-    .on('error', function(err) {
+    }, function(err) {
       logger.error('unable to fetch notification for id %s, err:\n %s', notificationId, err);
       reply(hapi.error.internal('unable to fetch notification for id %s, err: %s', notificationId, err));
     });
