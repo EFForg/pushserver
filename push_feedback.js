@@ -8,12 +8,12 @@ var logger = require('log4js').getLogger('server');
 var db = require('./db/db');
 var models = require('./db/models');
 
+// @todo Figure out why this SELECT query logs that it deleted something.
 var deleteQuery = "SELECT subscription_id FROM subscriptions WHERE channel = ? AND device_id LIKE ?";
 
-
 var deleteSubscription = function(channel, registrationId) {
-  db.query(deleteQuery, null, {raw: true}, [channel, registrationId])
-    .on('success', function(res) {
+  db.query(deleteQuery, {raw: true, replacements: [channel, registrationId]})
+    .then(function (res) {
       if (res.length > 0) {
         logger.info(
           'deleted subscription with id %s, device_id %s', res[0]['subscription_id'], registrationId);
@@ -21,7 +21,7 @@ var deleteSubscription = function(channel, registrationId) {
         logger.info('no subscription matching device_id %s found', registrationId);
       }
     })
-    .on('error', function(err) {
+    .catch(function (err) {
       logger.error('unable to delete subscription with id %s, err:\n%s', registrationId, err);
     });
 };
