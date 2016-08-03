@@ -243,7 +243,7 @@ var updateNotificationStateAndStats = function(notificationId, state, opt_stats)
         notification.stats = opt_stats;
       }
 
-      notification.save()
+      return notification.save()
         .then(function() {}, function(err) {
           logger.error(
             'Unable to update notificationId %s to state %s, failed with:\n%s',
