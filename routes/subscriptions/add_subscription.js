@@ -28,7 +28,7 @@ var addSubscription = function(request, reply) {
           '/subscriptions/' + newInstance.subscriptionId);
         reply(newInstance.externalize())
           .code(201)
-          .header('Location:' + subscriptionURL);
+          .header('Location', subscriptionURL);
       });
     } else {
       // kick back a 200 for easier client handling, technically should probably be a 302 / 303

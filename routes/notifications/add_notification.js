@@ -23,7 +23,7 @@ var addNotification = function(request, reply) {
 
     reply(externalNotification)
       .code(201)
-      .header('Location:' + locationURL);
+      .header('Location', locationURL);
   };
 
   models.Notifications
