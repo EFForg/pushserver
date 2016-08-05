@@ -3,6 +3,7 @@
  */
 
 var async = require('async');
+var boom = require('boom');
 var hapi = require('hapi');
 var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
@@ -52,7 +53,7 @@ var getNotifications = function(request, reply) {
 
     if (err) {
       logger('unable to fetch notifications from the db: %s', err);
-      reply(hapi.error.internal('unable to fetch notifications from the db: %s', err));
+      reply(boom.badImplementation('unable to fetch notifications from the db', err));
     } else {
       reply({
         draw: parseInt(request.payload.draw),

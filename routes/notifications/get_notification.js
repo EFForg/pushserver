@@ -2,9 +2,9 @@
  * Fetches a notification from the database.
  */
 
+var boom = require('boom');
 var hapi = require('hapi');
 var logger = require('log4js').getLogger('server');
-
 var models = require('../../db/models');
 
 
@@ -16,12 +16,13 @@ var getNotification = function(request, reply) {
     .then(function(notification) {
       if (notification !== null) {
         reply(notification.externalize());
-      } else {
-        reply(hapi.error.notFound('notification not found for id: ' + notificationId));
+      }
+       else {
+        reply(boom.badImplementation('notification not found', notificationId));
       }
     }, function(err) {
       logger.error('unable to fetch notification for id %s, err:\n %s', notificationId, err);
-      reply(hapi.error.internal('unable to fetch notification for id %s, err: %s', notificationId, err));
+      reply(boom.badImplementation('unable to fetch notification for id', [notificationId, err]));
     });
 };
 
