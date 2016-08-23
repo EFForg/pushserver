@@ -32,7 +32,7 @@
 
   "DATABASE": {
     "OPTIONS": {
-      "storage": "/home/pushserver/push_server_db"
+      "storage": "/home/pushserver/db/push_server_db"
     }
   },
 
