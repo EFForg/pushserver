@@ -21,7 +21,7 @@ var addNotification = function(request, reply) {
     notificationUtils.sendNotification(
       externalNotification, request.server.methods.dispatchPushNotification);
 
-    reply(externalNotification)
+    return reply(externalNotification)
       .code(201)
       .header('Location', locationURL);
   };
