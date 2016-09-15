@@ -23,7 +23,7 @@ var addSubscription = function(request, reply) {
     var initialized = res[1];
 
     if (initialized) {
-      instance.save().then(function (newInstance) {
+      return instance.save().then(function (newInstance) {
         var subscriptionURL = routeUtils.makePrefixedPath(
           '/subscriptions/' + newInstance.subscriptionId);
         reply(newInstance.externalize())
