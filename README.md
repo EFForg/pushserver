@@ -1,6 +1,8 @@
 push server
 ============
 
+[![Build Status](https://travis-ci.org/EFForg/pushserver.svg)](https://travis-ci.org/EFForg/pushserver)
+
 Hapi server app for creating and distributing push notifications
 
 ## Table of Contents
