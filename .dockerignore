@@ -1,0 +1,6 @@
+.git/
+node_modules/
+npm-debug.log
+bower_components/
+www/build/
+www/dist/
