@@ -45,7 +45,7 @@
     ]
   },
 
-  "SUPPORTED_CHANNELS": ["APNS", "GCM"],
+  "SUPPORTED_CHANNELS": ["GCM"],
   "CHANNEL_LOOKUP": {
     "APNS": "iOS",
     "GCM": "Android"
