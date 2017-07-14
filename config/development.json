@@ -4,7 +4,7 @@
   "SERVER": {
     "CACHE_TEMPLATES": false
   },
-
+  "SUPPORTED_CHANNELS": ["GCM"],
   "LOGGING": {
     "appenders": [
       {
