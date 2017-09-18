@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:argon-stretch
 
 RUN npm install -g bower
 RUN npm install -g gulp-cli
