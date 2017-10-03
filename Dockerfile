@@ -25,5 +25,6 @@ RUN gulp build
 RUN gulp syncDb
 
 VOLUME ["/home/$user/db"]
+VOLUME ["/home/$user/logs"]
 EXPOSE 3000
 CMD [ "gulp", "watch" ]

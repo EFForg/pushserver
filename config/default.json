@@ -20,7 +20,7 @@
       "dialect": "sqlite",
       "host": null,
       "port": null,
-      "storage": "/tmp/push_server_dev_db"
+      "storage": "/home/pushserver/db/push_server_db"
     }
   },
 
@@ -28,7 +28,7 @@
     "appenders": [
       {
         "type": "file",
-        "filename": "/tmp/push_server_logs",
+        "filename": "/home/pushserver/logs/push_server",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
@@ -36,7 +36,7 @@
       },
       {
         "type": "file",
-        "filename": "/tmp/push_server_client_logs",
+        "filename": "/home/pushserver/logs/push_client",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
