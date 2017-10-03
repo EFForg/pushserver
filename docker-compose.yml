@@ -1,0 +1,8 @@
+version: '2.1'
+services:
+  app:
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000

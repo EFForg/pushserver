@@ -17,9 +17,9 @@ RUN npm install
 
 # Bundle app source
 COPY . /home/$user/pushserver
-RUN chown -R $user:$user /home/$user/pushserver
+RUN mkdir /home/$user/db /home/$user/logs
+RUN chown -R $user:$user /home/$user
 USER $user
-
 RUN bower install
 RUN gulp build
 RUN gulp syncDb
