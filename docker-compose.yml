@@ -4,5 +4,3 @@ services:
     build: .
     environment:
       NODE_ENV: development
-    ports:
-      - 3000
