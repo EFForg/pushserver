@@ -45,14 +45,14 @@
     ]
   },
 
-  "SUPPORTED_CHANNELS": ["APNS", "GCM"],
+  "SUPPORTED_CHANNELS": ["APNS", "FCM"],
   "CHANNEL_LOOKUP": {
     "APNS": "iOS",
-    "GCM": "Android"
+    "FCM": "Android"
   },
 
   "CREDENTIALS": {
-    "GCM": {
+    "FCM": {
       "PROJECT_ID": "",
       "CLIENT_EMAIL": "",
       "PRIVATE_KEY": "",

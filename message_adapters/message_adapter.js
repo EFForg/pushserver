@@ -5,7 +5,7 @@
 var lodash = require('lodash');
 
 var APNSAdapter = require('./apns_adapter');
-var GCMAdapter = require('./gcm_adapter');
+var FCMAdapter = require('./fcm_adapter');
 
 
 /**
@@ -23,7 +23,7 @@ var MessageAdapter = function(notification, channelData) {
    */
   this.adapterClasses_ = {
     APNS: APNSAdapter,
-    GCM: GCMAdapter
+    FCM: FCMAdapter
   };
 
   /**

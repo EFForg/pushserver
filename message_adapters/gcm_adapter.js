@@ -1,5 +1,5 @@
 /**
- * Adapter to create a GCM friendly message from a notification object.
+ * Adapter to create a FCM friendly message from a notification object.
  * @constructor
  */
 
@@ -9,28 +9,28 @@ var util = require('util');
 var ChannelMessageAdapter = require('./channel_message_adapter');
 
 
-var GCMMessageAdapter = function(channel, notification, subscriptions) {
+var FCMMessageAdapter = function(channel, notification, subscriptions) {
   ChannelMessageAdapter.call(this, channel, notification, subscriptions);
 };
 
-util.inherits(GCMMessageAdapter, ChannelMessageAdapter);
+util.inherits(FCMMessageAdapter, ChannelMessageAdapter);
 
 
 /** @override */
-GCMMessageAdapter.prototype.createMessage = function(notification) {
+FCMMessageAdapter.prototype.createMessage = function(notification) {
 
-  var gcmMessage = {
+  var fcmMessage = {
     data: {
       message: notification.message,
       title: notification.title
     }
   };
 
-  lodash.assign(gcmMessage.data, notification.data);
+  lodash.assign(fcmMessage.data, notification.data);
 
-  return gcmMessage;
+  return fcmMessage;
 
 };
 
 
-module.exports = GCMMessageAdapter;
+module.exports = FCMMessageAdapter;

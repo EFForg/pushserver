@@ -7,14 +7,14 @@
     }
   },
 
-  "SUPPORTED_CHANNELS": ["GCM"],
+  "SUPPORTED_CHANNELS": ["FCM"],
 
   "APPLICATION": {
     "NAME": "EFF Alerts"
   },
 
   "CREDENTIALS": {
-    "GCM": {
+    "FCM": {
       "PROJECT_ID": "",
       "CLIENT_EMAIL": "",
       "PRIVATE_KEY": "",

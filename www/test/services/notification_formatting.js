@@ -14,7 +14,7 @@ describe('Unit: Notification Formatting Service', function() {
   });
 
   it('should convert unfriendly channels to friendly', function() {
-    var friendlyChannels = notificationFormatting.friendlyChannels(['APNS', 'GCM']);
+    var friendlyChannels = notificationFormatting.friendlyChannels(['APNS', 'FCM']);
     assert.deepEqual(friendlyChannels, ['iOS', 'Android']);
   });
 
