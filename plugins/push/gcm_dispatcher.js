@@ -4,7 +4,8 @@
 
 var async = require('async');
 var chunk = require('chunk');
-var gcm = require('node-gcm');
+var firebase = require('firebase-admin');
+var config = require('config');
 var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
 var util = require('util');
@@ -23,6 +24,15 @@ var GCMDispatcher = function(config) {
 
 util.inherits(GCMDispatcher, ChannelDispatcher);
 
+firebase.initializeApp({
+  credential: firebase.credential.cert({
+    projectId: config.CREDENTIALS.GCM.PROJECT_ID,
+    clientEmail: config.CREDENTIALS.GCM.CLIENT_EMAIL,
+    privateKey: config.CREDENTIALS.GCM.PRIVATE_KEY
+  }),
+  databaseURL: config.CREDENTIALS.GCM.DATABASE_URL
+});
+
 
 /**
  * Sends a GCM message to the supplied registrationIds.
@@ -37,18 +47,20 @@ GCMDispatcher.prototype.dispatchMessageToRegistrationIds_ = function(
   sender, gcmMessage, max1KRegistrationIds, callback) {
 
   var sendCallback = lodash.bind(function(err, result) {
-
-    if (err) {
-      logger.error('Call to GCM failed with: %s', err.toString());
-    }
-
     // Stitch the original registrationIds onto the object. This is to allow us to figure out the
     // registrationIds of failed messages. In that case, the index of the registrationId is equal
     // to the index of the object in the results array.
-    callback(err, {result: result, registrationIds: max1KRegistrationIds});
+    callback(null, {result: result, registrationIds: max1KRegistrationIds});
   });
 
-  sender.send(gcmMessage, max1KRegistrationIds, 3, sendCallback);
+  var errorCallback = lodash.bind(function(error) {
+    logger.error('Call to GCM failed with: %s', error);
+    callback(error, {result: result, registrationIds: max1KRegistrationIds});
+  });
+
+  sender.sendToDevice(max1KRegistrationIds, gcmMessage)
+    .then(sendCallback)
+    .catch(errorCallback);
 };
 
 
@@ -92,8 +104,8 @@ GCMDispatcher.prototype.getSendResults = function(results) {
 GCMDispatcher.prototype.dispatch = function(registrationIds, message, done) {
   GCMDispatcher.super_.prototype.dispatch.call(this, registrationIds, message);
 
-  var gcmMessage = new gcm.Message(message);
-  var sender = new gcm.Sender(this.config.apiKey);
+  var gcmMessage = message;
+  var sender = firebase.messaging();
 
   var registrationIdChunks = chunk(registrationIds, 1000);
   var chunkFunctions = lodash.map(registrationIdChunks, function(registrationIdsChunk) {

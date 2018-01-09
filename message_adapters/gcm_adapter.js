@@ -20,7 +20,6 @@ util.inherits(GCMMessageAdapter, ChannelMessageAdapter);
 GCMMessageAdapter.prototype.createMessage = function(notification) {
 
   var gcmMessage = {
-    dry_run: notification.mode === 'sandbox',
     data: {
       message: notification.message,
       title: notification.title

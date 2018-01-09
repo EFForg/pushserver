@@ -54,7 +54,9 @@
   "CREDENTIALS": {
     "GCM": {
       "PROJECT_ID": "",
-      "API_KEY": ""
+      "CLIENT_EMAIL": "",
+      "PRIVATE_KEY": "",
+      "DATABASE_URL": ""
     },
     "APNS": {
       "CERT_FILE": "cert.pem",

@@ -11,6 +11,7 @@
     "boom": "^3.2.2",
     "chunk": "0.0.2",
     "config": "^1.2.0",
+    "firebase-admin": "^5.7.0",
     "handlebars": "^2.0.0",
     "hapi": "^13.0.0",
     "inert": "^3.2.0",
