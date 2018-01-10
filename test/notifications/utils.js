@@ -56,7 +56,7 @@ describe('NotificationUtils', function() {
         // Do a >= check to avoid creating any dependencies or need for ordering v-a-v the
         // subscriptions tests
         assert.equal(groupedChannels['APNS'].length >= 2, true);
-        assert.equal(groupedChannels['GCM'].length >= 2, true);
+        assert.equal(groupedChannels['FCM'].length >= 2, true);
         done();
       },
       function(err) {
@@ -68,13 +68,13 @@ describe('NotificationUtils', function() {
 
     var expected = {
       total: {idCount: 1014, success: 1001, unregistered: 2, failure: 10},
-      GCM: {idCount: 1003, success: 1000, unregistered: 2, failure: 0},
+      FCM: {idCount: 1003, success: 1000, unregistered: 2, failure: 0},
       APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}
     };
 
     var stats = notificationUtils.summarizeNotificationStats([
-      {GCM: {idCount: 1000, success: 998, unregistered: 2, failure: 0}},
-      {GCM: {idCount: 3, success: 2, unregistered: 0, failure: 0}},
+      {FCM: {idCount: 1000, success: 998, unregistered: 2, failure: 0}},
+      {FCM: {idCount: 3, success: 2, unregistered: 0, failure: 0}},
       {APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}}
     ]);
 
@@ -90,11 +90,11 @@ describe('NotificationUtils', function() {
       var notification = notificationUtils.notificationFromPayload({
         message: 'sendNotification',
         deviceIds: ['abc'],
-        channels: ['GCM']
+        channels: ['FCM']
       });
 
       notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'GCM');
+        assert.equal(channel, 'FCM');
         assert.deepEqual(deviceIds, ['abc']);
         assert.equal(message.data.message, 'sendNotification');
         done();
@@ -105,12 +105,12 @@ describe('NotificationUtils', function() {
       var notification = notificationUtils.notificationFromPayload({
         message: 'fetchFromDB',
         deviceIds: [],
-        channels: ['GCM']
+        channels: ['FCM']
       });
 
       notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'GCM');
-        assert.deepEqual(deviceIds, ['GCM_SUB_1', 'GCM_SUB_2']);
+        assert.equal(channel, 'FCM');
+        assert.deepEqual(deviceIds, ['FCM_SUB_1', 'FCM_SUB_2']);
         assert.equal(message.data.message, 'fetchFromDB');
         done();
       });

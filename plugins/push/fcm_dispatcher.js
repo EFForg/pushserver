@@ -24,14 +24,16 @@ var FCMDispatcher = function(config) {
 
 util.inherits(FCMDispatcher, ChannelDispatcher);
 
-firebase.initializeApp({
-  credential: firebase.credential.cert({
-    projectId: config.CREDENTIALS.FCM.PROJECT_ID,
-    clientEmail: config.CREDENTIALS.FCM.CLIENT_EMAIL,
-    privateKey: config.CREDENTIALS.FCM.PRIVATE_KEY.replace(/\\n/g, "\n")
-  }),
-  databaseURL: config.CREDENTIALS.FCM.DATABASE_URL
-});
+if (config.mode != 'test') {
+  firebase.initializeApp({
+    credential: firebase.credential.cert({
+      projectId: config.CREDENTIALS.FCM.PROJECT_ID,
+      clientEmail: config.CREDENTIALS.FCM.CLIENT_EMAIL,
+      privateKey: config.CREDENTIALS.FCM.PRIVATE_KEY.replace(/\\n/g, "\n")
+    }),
+    databaseURL: config.CREDENTIALS.FCM.DATABASE_URL
+  });
+}
 
 
 /**

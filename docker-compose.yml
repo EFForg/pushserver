@@ -13,4 +13,5 @@ services:
       - ./message_adapters:/home/node/pushserver/message_adapters
       - ./plugins:/home/node/pushserver/plugins
       - ./routes:/home/node/pushserver/routes
+      - ./test:/home/node/pushserver/test
       - ./www:/home/node/pushserver/www

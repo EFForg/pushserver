@@ -16,7 +16,7 @@ describe('MessageAdapters', function() {
     message: 'message',
     sound: null,
     data: null,
-    channels: ['APNS', 'GCM'],
+    channels: ['APNS', 'FCM'],
     mode: 'prod',
     deviceIds: null
   };
@@ -25,7 +25,7 @@ describe('MessageAdapters', function() {
       {subscriptionId: 2, language: 'en', deviceId: '4rLI0szVmUa6'},
       {subscriptionId: 3, language: 'en', deviceId: 'ZNthkc20cnS1'}
     ],
-    GCM: [
+    FCM: [
       {subscriptionId: 4, language: 'en', deviceId: '9PYHNoxx3BJb'},
       {subscriptionId: 5, language: 'en', deviceId: 'zx0vqxrrWEm0'}
     ]
@@ -40,8 +40,7 @@ describe('MessageAdapters', function() {
       sound: null,
       alert: 'title'
     },
-    GCM: {
-      'dry_run': false,
+    FCM: {
       'data': {
         'message': 'message',
         'title': 'title'

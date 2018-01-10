@@ -60,8 +60,8 @@ var populateSubscriptionData = function(done) {
     {channel: 'APNS',language: 'en', deviceId: 'device_id_to_be_deleted'},
     {channel: 'APNS',language: 'en', deviceId: 'APNS_SUB_1'},
     {channel: 'APNS',language: 'en', deviceId: 'APNS_SUB_2'},
-    {channel: 'GCM',language: 'en', deviceId: 'GCM_SUB_1'},
-    {channel: 'GCM',language: 'en', deviceId: 'GCM_SUB_2'}
+    {channel: 'FCM',language: 'en', deviceId: 'FCM_SUB_1'},
+    {channel: 'FCM',language: 'en', deviceId: 'FCM_SUB_2'}
   ];
 
   models.Subscriptions.bulkCreate(sampleSubs)

@@ -40,7 +40,7 @@ describe('Validation', function() {
   // Only check the general err handling, don't repeat check items that Joi should cover (e.g. max
   // length)
   var missingDeviceId = {
-    channel: 'GCM',
+    channel: 'FCM',
     language: 'en-US'
   };
   it('should return an error for an invalid subscription object', function(done) {
