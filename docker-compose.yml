@@ -7,3 +7,10 @@ services:
       NODE_ENV: development
     ports:
       - '3001:3001'
+    volumes:
+      - ./bin:/home/node/pushserver/bin
+      - ./config:/home/node/pushserver/config
+      - ./message_adapters:/home/node/pushserver/message_adapters
+      - ./plugins:/home/node/pushserver/plugins
+      - ./routes:/home/node/pushserver/routes
+      - ./www:/home/node/pushserver/www
