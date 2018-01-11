@@ -105,18 +105,6 @@ var PushNotificationDetailController = function(
   };
 
   /**
-   * Returns a line break delimited string containing all device ids.
-   */
-  $scope.deviceIds = function() {
-    var deviceIds = [];
-    if (!angular.isUndefined($scope.notification) &&
-        !angular.isUndefined($scope.notification.deviceIds)) {
-      deviceIds = $scope.notification.deviceIds;
-    }
-    return deviceIds.join('\n');
-  };
-
-  /**
    * Returns the notification data object, with the URL field removed.
    *
    * This is because the FE presents URL as a top-level option, but to comply with the backend API

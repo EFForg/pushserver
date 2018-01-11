@@ -46,7 +46,6 @@ describe('NotificationUtils', function() {
     assert.equal(notification.data, null);
     assert.deepEqual(notification.channels, SUPPORTED_CHANNELS);
     assert.equal(notification.mode, 'prod');
-    assert.equal(notification.deviceIds, null);
   });
 
   describe('sendNotification', function() {
@@ -54,7 +53,6 @@ describe('NotificationUtils', function() {
 
       var notification = notificationUtils.notificationFromPayload({
         message: 'fetchFromDB',
-        deviceIds: [],
         channels: ['FCM']
       });
 

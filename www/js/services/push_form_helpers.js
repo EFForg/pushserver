@@ -45,8 +45,7 @@ var pushFormHelpers = function () {
         data: {},
 
         // admin variables
-        channels: [],
-        deviceIds: []
+        channels: []
       };
     },
 
@@ -62,7 +61,6 @@ var pushFormHelpers = function () {
 
       return {
         notification: angular.copy(notification),
-        deviceIds: notification.deviceIds.join('\n'),
         channels: angular.copy(supportedChannels),
         url: lastPageWasNotificationPreview ? notification.data.url : ''
       };

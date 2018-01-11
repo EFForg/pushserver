@@ -23,7 +23,6 @@ describe('NotificationValidation', function() {
     //      // admin variables
     //      channels: Joi.string().valid(supportedChannels).default(supportedChannels), // the channel(s) (FCM, APNS) to send to
     //      mode: Joi.string().valid(['prod', 'sandbox']).default('prod'),  // the notification mode, if it's sandbox, the notification will be processed but not sent
-    //      deviceIds: Joi.array().includes(Joi.string())   // an array of deviceIds to send the notification to. If not supplied, the server will notify all deviceIds in the database
     //    });
 
     var validNotification = {
