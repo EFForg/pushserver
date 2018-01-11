@@ -35,7 +35,7 @@ var removeSubscription = function(channel, registrationIds) {
 
 
 var feedbackHandlers = {
-  GCM: lodash.partial(removeSubscription, 'GCM'),
+  FCM: lodash.partial(removeSubscription, 'FCM'),
   APNS: lodash.partial(removeSubscription, 'APNS')
 };
 

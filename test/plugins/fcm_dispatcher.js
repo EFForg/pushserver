@@ -1,16 +1,16 @@
 /**
- * Tests for the GCM Dispatcher.
+ * Tests for the FCM Dispatcher.
  */
 
 var assert = require('assert');
 var lodash = require('lodash');
 
-var GCMDispatcher = require('../../plugins/push/gcm_dispatcher');
+var FCMDispatcher = require('../../plugins/push/fcm_dispatcher');
 
 
-describe('GCMDispatcher', function() {
+describe('FCMDispatcher', function() {
 
-  var gcmAdapter = new GCMDispatcher('GCM', {});
+  var fcmAdapter = new FCMDispatcher('FCM', {});
 
   it('should correctly parse the result from a message send', function() {
 
@@ -27,7 +27,7 @@ describe('GCMDispatcher', function() {
       }
     ];
 
-    var sendResults = gcmAdapter.getSendResults(deregisterResponse);
+    var sendResults = fcmAdapter.getSendResults(deregisterResponse);
     var stats = sendResults[0], failedIds = sendResults[1];
 
     assert.equal(stats.success, 0);
@@ -49,7 +49,7 @@ describe('GCMDispatcher', function() {
       }
     ];
 
-    var sendResults = gcmAdapter.getSendResults(totalFailureResponse);
+    var sendResults = fcmAdapter.getSendResults(totalFailureResponse);
     var stats = sendResults[0], failedIds = sendResults[1];
 
     assert.equal(stats.success, 0);
@@ -70,7 +70,7 @@ describe('GCMDispatcher', function() {
       }
     ];
 
-    var sendResults = gcmAdapter.getSendResults(successResponse);
+    var sendResults = fcmAdapter.getSendResults(successResponse);
     var stats = sendResults[0], failedIds = sendResults[1];
 
     assert.equal(stats.success, 1);

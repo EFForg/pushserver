@@ -3,9 +3,8 @@ FROM node:argon-stretch
 RUN npm install -g bower
 RUN npm install -g gulp-cli
 
-ENV user pushserver
-#ENV NODE_ENV production
-RUN groupadd --system $user && useradd --system --create-home --gid $user $user
+ENV user node
+RUN groupadd -f $user && useradd --create-home --gid $user $user || true
 
 # Create app directory
 RUN mkdir -p /home/$user/pushserver

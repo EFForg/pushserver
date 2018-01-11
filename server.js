@@ -65,9 +65,11 @@ server.registerPlugins = function(done) {
           feedbackInterval: pushConfig.get('APNS_FEEDBACK_INTERVAL'),
           mode: config.get('MODE')
         },
-        GCM: {
-          projectId: credentials.get('GCM').get('PROJECT_ID'),
-          apiKey: credentials.get('GCM').get('API_KEY'),
+        FCM: {
+          projectId: credentials.get('FCM').get('PROJECT_ID'),
+          clientEmail: credentials.get('FCM').get('CLIENT_EMAIL'),
+          privateKey: credentials.get('FCM').get('PRIVATE_KEY'),
+          databaseUrl: credentials.get('FCM').get('DATABASE_URL'),
           mode: config.get('MODE')
         }
       }

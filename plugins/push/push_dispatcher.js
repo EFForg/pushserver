@@ -6,7 +6,7 @@ var lodash = require('lodash');
 var util = require('util');
 
 var APNSDispatcher = require('./apns_dispatcher');
-var GCMDispatcher = require('./gcm_dispatcher');
+var FCMDispatcher = require('./fcm_dispatcher');
 
 
 /**
@@ -35,7 +35,7 @@ var PushDispatcher = function(channels, channelsConfig) {
    */
   this.dispatcherClasses_ = {
     APNS: APNSDispatcher,
-    GCM: GCMDispatcher
+    FCM: FCMDispatcher
   };
 
   lodash.forEach(this.channels, function(channel) {

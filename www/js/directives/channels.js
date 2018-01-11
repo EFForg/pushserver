@@ -31,7 +31,7 @@ var PushNotificationChannelsDirective = function() {
       /**
        * Toggles a boolean isSupported value for the supplied channel.
        *
-       * @param channel The name of the channel to toggle, e.g GCM.
+       * @param channel The name of the channel to toggle, e.g FCM.
        */
       scope.toggleSupportedChannel = function(channel) {
         ctrl.$pristine = false;

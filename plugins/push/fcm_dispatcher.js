@@ -1,10 +1,11 @@
 /**
- * Dispatcher to send notifications to clients via GCM.
+ * Dispatcher to send notifications to clients via FCM.
  */
 
 var async = require('async');
 var chunk = require('chunk');
-var gcm = require('node-gcm');
+var firebase = require('firebase-admin');
+var config = require('config');
 var lodash = require('lodash');
 var logger = require('log4js').getLogger('server');
 var util = require('util');
@@ -17,47 +18,60 @@ var DEREGISTRATION_ERR_MSGS = [
 ];
 
 
-var GCMDispatcher = function(config) {
-  ChannelDispatcher.call(this, 'GCM', config);
+var FCMDispatcher = function(config) {
+  ChannelDispatcher.call(this, 'FCM', config);
 };
 
-util.inherits(GCMDispatcher, ChannelDispatcher);
+util.inherits(FCMDispatcher, ChannelDispatcher);
+
+if (config.MODE != 'test') {
+  firebase.initializeApp({
+    credential: firebase.credential.cert({
+      projectId: config.CREDENTIALS.FCM.PROJECT_ID,
+      clientEmail: config.CREDENTIALS.FCM.CLIENT_EMAIL,
+      privateKey: config.CREDENTIALS.FCM.PRIVATE_KEY.replace(/\\n/g, "\n")
+    }),
+    databaseURL: config.CREDENTIALS.FCM.DATABASE_URL
+  });
+}
 
 
 /**
- * Sends a GCM message to the supplied registrationIds.
+ * Sends a FCM message to the supplied registrationIds.
  *
- * @param {*} sender The GCM sender object to use to send the message
- * @param {*} gcmMessage The GCM message object to send.
+ * @param {*} sender The FCM sender object to use to send the message
+ * @param {*} fcmMessage The FCM message object to send.
  * @param {string[]} max1KRegistrationIds Array of registrationIds to send, max 1K.
  * @param {function} callback The callback to call once send completes.
  * @private
  */
-GCMDispatcher.prototype.dispatchMessageToRegistrationIds_ = function(
-  sender, gcmMessage, max1KRegistrationIds, callback) {
+FCMDispatcher.prototype.dispatchMessageToRegistrationIds_ = function(
+  sender, fcmMessage, max1KRegistrationIds, callback) {
 
   var sendCallback = lodash.bind(function(err, result) {
-
-    if (err) {
-      logger.error('Call to GCM failed with: %s', err.toString());
-    }
-
     // Stitch the original registrationIds onto the object. This is to allow us to figure out the
     // registrationIds of failed messages. In that case, the index of the registrationId is equal
     // to the index of the object in the results array.
-    callback(err, {result: result, registrationIds: max1KRegistrationIds});
+    callback(null, {result: result, registrationIds: max1KRegistrationIds});
   });
 
-  sender.send(gcmMessage, max1KRegistrationIds, 3, sendCallback);
+  var errorCallback = lodash.bind(function(error) {
+    logger.error('Call to FCM failed with: %s', error);
+    callback(error, {result: result, registrationIds: max1KRegistrationIds});
+  });
+
+  sender.sendToDevice(max1KRegistrationIds, fcmMessage)
+    .then(sendCallback)
+    .catch(errorCallback);
 };
 
 
 /**
- * Gets send stats from the results returned by GCM.
+ * Gets send stats from the results returned by FCM.
  * @param results
  * @returns {Array}
  */
-GCMDispatcher.prototype.getSendResults = function(results) {
+FCMDispatcher.prototype.getSendResults = function(results) {
   var stats = this.getEmptyStatsObject();
   var failedIds = [];
 
@@ -89,19 +103,19 @@ GCMDispatcher.prototype.getSendResults = function(results) {
 
 
 /** @inherits */
-GCMDispatcher.prototype.dispatch = function(registrationIds, message, done) {
-  GCMDispatcher.super_.prototype.dispatch.call(this, registrationIds, message);
+FCMDispatcher.prototype.dispatch = function(registrationIds, message, done) {
+  FCMDispatcher.super_.prototype.dispatch.call(this, registrationIds, message);
 
-  var gcmMessage = new gcm.Message(message);
-  var sender = new gcm.Sender(this.config.apiKey);
+  var fcmMessage = message;
+  var sender = firebase.messaging();
 
   var registrationIdChunks = chunk(registrationIds, 1000);
   var chunkFunctions = lodash.map(registrationIdChunks, function(registrationIdsChunk) {
     return lodash.bind(
-      this.dispatchMessageToRegistrationIds_, this, sender, gcmMessage, registrationIdsChunk);
+      this.dispatchMessageToRegistrationIds_, this, sender, fcmMessage, registrationIdsChunk);
   }, this);
 
-  // NOTE: series is used here as a precaution in case the internals of node-gcm aren't friendly
+  // NOTE: series is used here as a precaution in case the internals of node-fcm aren't friendly
   //       to being accessed with different registrationId chunks concurrently.
   async.series(chunkFunctions, lodash.bind(function(err, results) {
     var sendResults = this.getSendResults(results);
@@ -118,4 +132,4 @@ GCMDispatcher.prototype.dispatch = function(registrationIds, message, done) {
 };
 
 
-module.exports = GCMDispatcher;
+module.exports = FCMDispatcher;

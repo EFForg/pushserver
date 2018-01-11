@@ -38,4 +38,8 @@ build/Release
 node_modules
 
 # Users Environment Variables
+.env
 .lock-wscript
+
+# Other Secrets
+*firebase-adminsdk*.json

@@ -21,7 +21,7 @@ describe('NotificationValidation', function() {
     //      data: Joi.object(),     // a bundle of key / value pairs to include in the notification
     //
     //      // admin variables
-    //      channels: Joi.string().valid(supportedChannels).default(supportedChannels), // the channel(s) (GCM, APNS) to send to
+    //      channels: Joi.string().valid(supportedChannels).default(supportedChannels), // the channel(s) (FCM, APNS) to send to
     //      mode: Joi.string().valid(['prod', 'sandbox']).default('prod'),  // the notification mode, if it's sandbox, the notification will be processed but not sent
     //      deviceIds: Joi.array().includes(Joi.string())   // an array of deviceIds to send the notification to. If not supplied, the server will notify all deviceIds in the database
     //    });
@@ -61,7 +61,7 @@ describe('NotificationValidation', function() {
       notificationValidation.validateNotification(SUPPORTED_CHANNELS, apnsNotification, function(err) {
         assert.equal(undefined, err);
 
-        apnsNotification.channels.push('GCM');
+        apnsNotification.channels.push('FCM');
         notificationValidation.validateNotification(SUPPORTED_CHANNELS, apnsNotification, function(err) {
           assert.equal(err.toString(), 'ValidationError: title is required');
           done();

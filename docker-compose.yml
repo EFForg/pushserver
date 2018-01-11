@@ -2,5 +2,16 @@ version: '2.1'
 services:
   app:
     build: .
+    env_file: .env
     environment:
       NODE_ENV: development
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./bin:/home/node/pushserver/bin
+      - ./config:/home/node/pushserver/config
+      - ./message_adapters:/home/node/pushserver/message_adapters
+      - ./plugins:/home/node/pushserver/plugins
+      - ./routes:/home/node/pushserver/routes
+      - ./test:/home/node/pushserver/test
+      - ./www:/home/node/pushserver/www

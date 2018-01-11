@@ -20,7 +20,7 @@
       "dialect": "sqlite",
       "host": null,
       "port": null,
-      "storage": "/home/pushserver/db/push_server_db"
+      "storage": "db/push_server_db"
     }
   },
 
@@ -28,7 +28,7 @@
     "appenders": [
       {
         "type": "file",
-        "filename": "/home/pushserver/logs/push_server",
+        "filename": "logs/push_server",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
@@ -36,7 +36,7 @@
       },
       {
         "type": "file",
-        "filename": "/home/pushserver/logs/push_client",
+        "filename": "logs/push_client",
         "absolute": true,
         "maxLogSize": 20480,
         "backups": 10,
@@ -45,16 +45,18 @@
     ]
   },
 
-  "SUPPORTED_CHANNELS": ["APNS", "GCM"],
+  "SUPPORTED_CHANNELS": ["APNS", "FCM"],
   "CHANNEL_LOOKUP": {
     "APNS": "iOS",
-    "GCM": "Android"
+    "FCM": "Android"
   },
 
   "CREDENTIALS": {
-    "GCM": {
+    "FCM": {
       "PROJECT_ID": "",
-      "API_KEY": ""
+      "CLIENT_EMAIL": "",
+      "PRIVATE_KEY": "",
+      "DATABASE_URL": ""
     },
     "APNS": {
       "CERT_FILE": "cert.pem",
