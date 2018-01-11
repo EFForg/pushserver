@@ -17,13 +17,13 @@ var fcmDispatcher = require('../../plugins/push/fcm_dispatcher');
 var getNotificationFindCriteria = function(query) {
   // NOTE: due to its complexity and the fact it's a 3rd-party lib, the getNotifications query
   //       object from datatables isn't Joi-validated
-  var search = query.search.value;
+  var search = query['search[value]'];
 
   var findCriteria = {
     offset: parseInt(query.start),
     limit: parseInt(query.length),
     order: lodash.map(query.order, function(order) {
-      return [query.columns[order.column].data, order.dir];
+      return [query['columns['+order.column+'][data]'], order.dir];
     })
   };
 
