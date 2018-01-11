@@ -53,20 +53,4 @@ describe('NotificationValidation', function() {
         done();
       });
     });
-
-    it('should support notifications with no titles targeted at APNS only', function(done) {
-      var apnsNotification = lodash.cloneDeep(validNotification);
-      apnsNotification.title = undefined;
-      apnsNotification.channels = ['APNS'];
-      notificationValidation.validateNotification(SUPPORTED_CHANNELS, apnsNotification, function(err) {
-        assert.equal(undefined, err);
-
-        apnsNotification.channels.push('FCM');
-        notificationValidation.validateNotification(SUPPORTED_CHANNELS, apnsNotification, function(err) {
-          assert.equal(err.toString(), 'ValidationError: title is required');
-          done();
-        });
-
-      });
-    });
 });

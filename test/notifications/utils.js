@@ -8,7 +8,7 @@ var lodash = require('lodash');
 var sinon = require('sinon');
 
 var notificationUtils = require('../../routes/notifications/utils');
-
+var fcmDispatcher = require('../../plugins/push/fcm_dispatcher');
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 
 
@@ -50,35 +50,22 @@ describe('NotificationUtils', function() {
   });
 
   describe('sendNotification', function() {
+    it('should send a notification to FCM.TOPIC', function(done) {
 
-    it('should respect the deviceIds value when supplied', function(done) {
-      var notification = notificationUtils.notificationFromPayload({
-        message: 'sendNotification',
-        deviceIds: ['abc'],
-        channels: ['FCM']
-      });
-
-      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'FCM');
-        assert.deepEqual(deviceIds, ['abc']);
-        assert.equal(message.data.message, 'sendNotification');
-        done();
-      });
-    });
-
-    it('should fetch deviceIds from the DB when none are supplied', function(done) {
       var notification = notificationUtils.notificationFromPayload({
         message: 'fetchFromDB',
         deviceIds: [],
         channels: ['FCM']
       });
 
-      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'FCM');
-        assert.deepEqual(deviceIds, ['FCM_SUB_1', 'FCM_SUB_2']);
-        assert.equal(message.data.message, 'fetchFromDB');
-        done();
-      });
+      var mock = sinon.mock(fcmDispatcher)
+                  .expects('dispatchToTopic').once();
+
+      notificationUtils.sendNotification(notification, 'topic');
+      mock.verify();
+
+      done();
+
     });
 
   });
