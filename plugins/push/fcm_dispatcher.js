@@ -129,6 +129,25 @@ FCMDispatcher.prototype.dispatch = function(registrationIds, message, done) {
       done(null, sendResults[0]);
     }
   }, this));
+}
+
+/**
+ * Sends a FCM message to the supplied topic
+ *
+ * @param {*} topic The FCM topic to which the message is sent
+ * @param {*} notification The notification containing the message to be sent
+ * @param {function} done The callback to call once send completes.
+ */
+FCMDispatcher.prototype.dispatchToTopic = function(topic, notification, done) {
+  var payload = {
+    data: {
+      title: notification.title,
+      message: notification.message,
+      url: notification.data.url
+    }
+  };
+
+  firebase.messaging().sendToTopic(topic, payload).then(done);
 };
 
 

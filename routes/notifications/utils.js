@@ -12,6 +12,7 @@ var MessageAdapter = require('../../message_adapters/message_adapter');
 
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 
+var FCMDispatcher = require('../../plugins/push/fcm_dispatcher');
 
 /**
  * Constructs a Sequelize-friendly criteria object to search for notifications.
@@ -118,47 +119,11 @@ var fetchDeviceIdsForChannels = function(channels, success, error) {
  * Sends a notification out via the supported channels
  *
  * @param notification The notification to send.
- * @param {function} dispatchFn The function responsible for sending the adapted messages and
- *     deviceIds to the remote servers for distribution.
+ * @param topic The topic on which to broadcast the notification.
  */
-var sendNotification = function(notification, dispatchFn) {
-
-  var noDeviceIds = (
-    lodash.isUndefined(notification.deviceIds) ||
-    notification.deviceIds === null ||
-    lodash.isEmpty(notification.deviceIds)
-  );
-
-  if (noDeviceIds) {
-    // TODO(leah): Update this to use an iterator of some kind, so we're not shuttling around objects
-    //             that could be arbitrarily large.
-    fetchDeviceIdsForChannels(
-      notification.channels,
-      function(groupedSubscriptions) {
-        var arrLengths = lodash.map(groupedSubscriptions, function(val) {
-          return val.length;
-        });
-
-        var devicesToSendTo = lodash.reduce(arrLengths, function(sum, num) {
-          return sum + num;
-        }) > 0;
-
-        if (devicesToSendTo) {
-          sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
-        } else {
-          updateNotificationStateAndStats(notification.notificationId, 'success', undefined);
-        }
-      },
-      function(err) {
-        logger.error('Fetching device ids for channels %s failed with:\n%s', channels, err.toString());
-        updateNotificationStateAndStats(notification.notificationId, 'error', undefined);
-      }
-    );
-  } else {
-    var groupedSubscriptions = lodash.zipObject(
-      [notification.channels[0]], [notification.deviceIds]);
-    sendNotificationToSubscribers(notification, groupedSubscriptions, dispatchFn);
-  }
+var sendNotification = function(notification, topic) {
+  var dispatcher = new FCMDispatcher();
+  dispatcher.dispatchToTopic(topic, notification);
 };
 
 

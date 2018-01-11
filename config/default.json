@@ -51,6 +51,10 @@
     "FCM": "Android"
   },
 
+  "FCM": {
+    "TOPIC": ""
+  },
+
   "CREDENTIALS": {
     "FCM": {
       "PROJECT_ID": "",
