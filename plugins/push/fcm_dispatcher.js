@@ -24,7 +24,7 @@ var FCMDispatcher = function(config) {
 
 util.inherits(FCMDispatcher, ChannelDispatcher);
 
-if (config.mode != 'test') {
+if (config.MODE != 'test') {
   firebase.initializeApp({
     credential: firebase.credential.cert({
       projectId: config.CREDENTIALS.FCM.PROJECT_ID,
