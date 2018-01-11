@@ -69,12 +69,4 @@ describe('NotificationValidation', function() {
 
       });
     });
-
-//    it('should return null for a valid notification object', function(done) {
-//      subscriptionValidation.validateSubscriptions(validNotification, function(err) {
-//        assert.equal(err, null);
-//        done();
-//      });
-//    });
-
 });

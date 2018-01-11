@@ -6,7 +6,5 @@ var gulp = require('gulp');
 
 gulp.task('runServer', ['build'], function() {
   var server = require('../../server');
-  server.registerPlugins(function() {
-    server.start();
-  });
+  server.start();
 });

@@ -49,41 +49,6 @@ describe('NotificationUtils', function() {
     assert.equal(notification.deviceIds, null);
   });
 
-  it('should get a set of subscription objects for specific channels', function(done) {
-    notificationUtils.fetchDeviceIdsForChannels(
-      SUPPORTED_CHANNELS,
-      function(groupedChannels) {
-        // Do a >= check to avoid creating any dependencies or need for ordering v-a-v the
-        // subscriptions tests
-        assert.equal(groupedChannels['APNS'].length >= 2, true);
-        assert.equal(groupedChannels['FCM'].length >= 2, true);
-        done();
-      },
-      function(err) {
-        throw err;
-      });
-  });
-
-  it('should correctly summarize push result stats', function() {
-
-    var expected = {
-      total: {idCount: 1014, success: 1001, unregistered: 2, failure: 10},
-      FCM: {idCount: 1003, success: 1000, unregistered: 2, failure: 0},
-      APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}
-    };
-
-    var stats = notificationUtils.summarizeNotificationStats([
-      {FCM: {idCount: 1000, success: 998, unregistered: 2, failure: 0}},
-      {FCM: {idCount: 3, success: 2, unregistered: 0, failure: 0}},
-      {APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}}
-    ]);
-
-    lodash.forEach(stats, function(val, key) {
-      assert.deepEqual(val, expected[key]);
-    });
-
-  });
-
   describe('sendNotification', function() {
 
     it('should respect the deviceIds value when supplied', function(done) {
