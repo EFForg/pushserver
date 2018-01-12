@@ -25,7 +25,7 @@ if (config.MODE != 'test') {
  * @param {*} notification The notification containing the message to be sent
  * @param {function} done The callback to call once send completes.
  */
-FCMDispatcher.prototype.dispatchToTopic = function(topic, notification, done) {
+FCMDispatcher.prototype.dispatchToTopic = function(topic, notification) {
   var payload = {
     data: {
       title: notification.title,
@@ -34,7 +34,7 @@ FCMDispatcher.prototype.dispatchToTopic = function(topic, notification, done) {
     }
   };
 
-  firebase.messaging().sendToTopic(topic, payload).then(done);
+  return firebase.messaging().sendToTopic(topic, payload);
 };
 
 

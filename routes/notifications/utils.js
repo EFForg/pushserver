@@ -5,6 +5,8 @@
 var config = require('config');
 var lodash = require('lodash');
 
+var models = require('../../db/models');
+
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 var fcmDispatcher = require('../../plugins/push/fcm_dispatcher');
 
@@ -77,8 +79,43 @@ var notificationFromPayload = function(payload) {
  * @param topic The topic on which to broadcast the notification.
  */
 var sendNotification = function(notification, topic) {
-  fcmDispatcher.dispatchToTopic(topic, notification);
+  var message = fcmDispatcher.dispatchToTopic(topic, notification);
+
+  if (message) {
+    message.then(function() {
+      updateNotificationState(notification.notificationId, 'success');
+    })
+    .catch(function(err) {
+      updateNotificationState(notification.notificationId, 'failed');
+    });
+  }
 };
+
+
+/**
+ * Updates the specified notification to the supplied state.
+ * @param notificationId
+ * @param state
+ */
+var updateNotificationState = function(notificationId, state) {
+  models.Notifications
+    .find({where: {notificationId: notificationId}})
+    .then(function(notification) {
+      notification.state = state;
+
+      return notification.save()
+        .then(function() {}, function(err) {
+          logger.error(
+            'Unable to update notificationId %s to state %s, failed with:\n%s',
+            notificationId, state, err.toString());
+        });
+    })
+    .catch(function(err) {
+      logger.error(
+        'Unable to update notificationId %s to failed state, failed with:\n%s',
+        notificationId, err.toString());
+    });
+}
 
 
 module.exports.getNotificationFindCriteria = getNotificationFindCriteria;
