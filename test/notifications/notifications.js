@@ -64,11 +64,11 @@ describe('NotificationRouteHandlers', function() {
 
   var getNotificationsQuery = {
     draw: '1',
-    columns: [{data: 'notificationId'}],
+    'columns[0][data]': 'notificationId',
     order: [{column: '0', dir: 'asc'}],
     start: '0',
     length: '10',
-    search: {value: '', regex: 'false'}
+    'search[value]': ''
   };
 
   it('should get a list of notifications from the database', function(done) {

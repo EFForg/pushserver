@@ -19,17 +19,9 @@ describe('NotificationUtils', function() {
       start: '0',
       length: '15',
       order: [{column: '0', dir: 'asc'}, {column: '1', dir: 'desc'}],
-      columns: [
-        {
-          data: 'notificationId',
-          name: ''
-        },
-        {
-          data: 'title',
-          name: ''
-        }
-      ],
-      search: {value: 'test', regex: 'false'}
+      'columns[0][data]': 'notificationId',
+      'columns[1][data]': 'title',
+      'search[value]': 'test'
     };
 
     var findCriteria = notificationUtils.getNotificationFindCriteria(payload);
