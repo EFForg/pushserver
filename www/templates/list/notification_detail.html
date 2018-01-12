@@ -25,47 +25,6 @@
         <div class="col-sm-9 col-lg-8">&nbsp;</div>
       </div>
 
-      <div class="row">
-        <div class="col-sm-3 col-lg-2">
-          Stats
-        </div>
-
-        <div class="col-sm-9 col-lg-8">
-
-          <div class="row detail-data-row">
-            <div class="col-sm-4 col-lg-2"></div>
-            <div class="col-sm-2 col-lg-2">Total</div>
-            <div class="col-sm-2 col-lg-2">Success</div>
-            <div class="col-sm-2 col-lg-2">Not Sent</div>
-            <div class="col-sm-2 col-lg-2">Failed</div>
-          </div>
-
-          <div class="row detail-data-row" ng-repeat="(key, value) in getFriendlyStats()">
-            <div class="col-sm-4 col-lg-2">{[key]}</div>
-            <div class="col-sm-2 col-lg-2">{[value.idCount]}</div>
-            <div class="col-sm-2 col-lg-2">{[value.success]}</div>
-            <div class="col-sm-2 col-lg-2">{[value.unregistered]}</div>
-            <div class="col-sm-2 col-lg-2">{[value.failure]}</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div class="col-sm-2 col-lg-2"></div>
-        <div class="col-sm-9 col-lg-8">
-          <br>
-          <div class="text-warning validation-message">
-            <ul>
-              <li>Total: total # of notifications sent</li>
-              <li>Success: # of notifications sent successfully</li>
-              <li>Not Sent: # of notifications sent but not received, e.g. due to a user uninstalling the app</li>
-              <li>Failed: # of notifications that failed delivery outright</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
