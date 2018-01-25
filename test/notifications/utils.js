@@ -8,7 +8,7 @@ var lodash = require('lodash');
 var sinon = require('sinon');
 
 var notificationUtils = require('../../routes/notifications/utils');
-
+var fcmDispatcher = require('../../plugins/push/fcm_dispatcher');
 var SUPPORTED_CHANNELS = config.get('SUPPORTED_CHANNELS');
 
 
@@ -19,17 +19,9 @@ describe('NotificationUtils', function() {
       start: '0',
       length: '15',
       order: [{column: '0', dir: 'asc'}, {column: '1', dir: 'desc'}],
-      columns: [
-        {
-          data: 'notificationId',
-          name: ''
-        },
-        {
-          data: 'title',
-          name: ''
-        }
-      ],
-      search: {value: 'test', regex: 'false'}
+      'columns[0][data]': 'notificationId',
+      'columns[1][data]': 'title',
+      'search[value]': 'test'
     };
 
     var findCriteria = notificationUtils.getNotificationFindCriteria(payload);
@@ -46,74 +38,24 @@ describe('NotificationUtils', function() {
     assert.equal(notification.data, null);
     assert.deepEqual(notification.channels, SUPPORTED_CHANNELS);
     assert.equal(notification.mode, 'prod');
-    assert.equal(notification.deviceIds, null);
-  });
-
-  it('should get a set of subscription objects for specific channels', function(done) {
-    notificationUtils.fetchDeviceIdsForChannels(
-      SUPPORTED_CHANNELS,
-      function(groupedChannels) {
-        // Do a >= check to avoid creating any dependencies or need for ordering v-a-v the
-        // subscriptions tests
-        assert.equal(groupedChannels['APNS'].length >= 2, true);
-        assert.equal(groupedChannels['FCM'].length >= 2, true);
-        done();
-      },
-      function(err) {
-        throw err;
-      });
-  });
-
-  it('should correctly summarize push result stats', function() {
-
-    var expected = {
-      total: {idCount: 1014, success: 1001, unregistered: 2, failure: 10},
-      FCM: {idCount: 1003, success: 1000, unregistered: 2, failure: 0},
-      APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}
-    };
-
-    var stats = notificationUtils.summarizeNotificationStats([
-      {FCM: {idCount: 1000, success: 998, unregistered: 2, failure: 0}},
-      {FCM: {idCount: 3, success: 2, unregistered: 0, failure: 0}},
-      {APNS: {idCount: 11, success: 1, unregistered: 0, failure: 10}}
-    ]);
-
-    lodash.forEach(stats, function(val, key) {
-      assert.deepEqual(val, expected[key]);
-    });
-
   });
 
   describe('sendNotification', function() {
+    it('should send a notification to FCM.TOPIC', function(done) {
 
-    it('should respect the deviceIds value when supplied', function(done) {
-      var notification = notificationUtils.notificationFromPayload({
-        message: 'sendNotification',
-        deviceIds: ['abc'],
-        channels: ['FCM']
-      });
-
-      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'FCM');
-        assert.deepEqual(deviceIds, ['abc']);
-        assert.equal(message.data.message, 'sendNotification');
-        done();
-      });
-    });
-
-    it('should fetch deviceIds from the DB when none are supplied', function(done) {
       var notification = notificationUtils.notificationFromPayload({
         message: 'fetchFromDB',
-        deviceIds: [],
         channels: ['FCM']
       });
 
-      notificationUtils.sendNotification(notification, function(channel, deviceIds, message) {
-        assert.equal(channel, 'FCM');
-        assert.deepEqual(deviceIds, ['FCM_SUB_1', 'FCM_SUB_2']);
-        assert.equal(message.data.message, 'fetchFromDB');
-        done();
-      });
+      var mock = sinon.mock(fcmDispatcher)
+                  .expects('dispatchToTopic').once();
+
+      notificationUtils.sendNotification(notification, 'topic');
+      mock.verify();
+
+      done();
+
     });
 
   });

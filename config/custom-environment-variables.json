@@ -6,5 +6,9 @@
       "PRIVATE_KEY": "FIREBASE_PRIVATE_KEY",
       "DATABASE_URL": "FIREBASE_DATABASE_URL"
     }
+  },
+
+  "FCM": {
+    "TOPIC": "FCM_TOPIC"
   }
 }

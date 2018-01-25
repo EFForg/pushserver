@@ -7,10 +7,6 @@
     "CACHE_TEMPLATES": true
   },
 
-  "PUSH": {
-    "APNS_FEEDBACK_INTERVAL": 43200 // default to 12 hours
-  },
-
   "DATABASE": {
     "DB_NAME": null,
     "USERNAME": null,
@@ -45,10 +41,13 @@
     ]
   },
 
-  "SUPPORTED_CHANNELS": ["APNS", "FCM"],
+  "SUPPORTED_CHANNELS": ["FCM"],
   "CHANNEL_LOOKUP": {
-    "APNS": "iOS",
     "FCM": "Android"
+  },
+
+  "FCM": {
+    "TOPIC": ""
   },
 
   "CREDENTIALS": {
@@ -57,10 +56,6 @@
       "CLIENT_EMAIL": "",
       "PRIVATE_KEY": "",
       "DATABASE_URL": ""
-    },
-    "APNS": {
-      "CERT_FILE": "cert.pem",
-      "KEY_FILE": "key.pem"
     }
   },
 

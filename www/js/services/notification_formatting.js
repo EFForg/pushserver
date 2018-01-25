@@ -31,24 +31,6 @@ var notificationPreview = function () {
 
       return friendlyChannels;
     },
-
-    /**
-     * Converts the raw \n delimited deviceIds string to an array of individual deviceIds.
-     */
-    formatDeviceIds: function(newValue) {
-      var deviceIds = [];
-      var rawDeviceIds = newValue.split('\n');
-
-      for (var i = 0, rawDeviceId; i < rawDeviceIds.length; ++i) {
-        rawDeviceId = rawDeviceIds[i].trim();
-        if (angular.isString(rawDeviceId) && rawDeviceId !== '') {
-          deviceIds.push(rawDeviceId);
-        }
-      }
-
-      return deviceIds;
-    }
-
   };
 
 };

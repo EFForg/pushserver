@@ -9,6 +9,7 @@ var sinon = require('sinon');
 
 var models = require('../../db/models');
 var routeUtils = require('../../routes/utils');
+var notificationUtils = require('../../routes/notifications/utils');
 var server = require('../../server');
 
 
@@ -19,12 +20,13 @@ describe('NotificationRouteHandlers', function() {
   var dispatchPushNotificationMock;
 
   before(function() {
-    dispatchPushNotificationMock = sinon.mock(server.methods)
-      .expects('dispatchPushNotification').twice();
+    dispatchPushNotificationMock = sinon.mock(notificationUtils)
+      .expects('sendNotification').once();
   });
 
   after(function() {
     dispatchPushNotificationMock.verify();
+    dispatchPushNotificationMock.restore();
   });
 
   it('should add a notification to the database', function(done) {
@@ -62,11 +64,11 @@ describe('NotificationRouteHandlers', function() {
 
   var getNotificationsQuery = {
     draw: '1',
-    columns: [{data: 'notificationId'}],
+    'columns[0][data]': 'notificationId',
     order: [{column: '0', dir: 'asc'}],
     start: '0',
     length: '10',
-    search: {value: '', regex: 'false'}
+    'search[value]': ''
   };
 
   it('should get a list of notifications from the database', function(done) {

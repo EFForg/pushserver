@@ -53,15 +53,6 @@ var PushNotificationListController = function(
       return notificationFormatting.friendlyChannels(data).join(', ');
     }),
     DTColumnBuilder.newColumn('state').withTitle('State'),
-    DTColumnBuilder.newColumn('stats').withTitle('Push Total #').renderWith(function(data, type, full) {
-      return data['total']['idCount'];
-    }),
-    DTColumnBuilder.newColumn('stats').withTitle('Push Success #').renderWith(function(data, type, full) {
-      return data['total']['success'];
-    }),
-    DTColumnBuilder.newColumn('stats').withTitle('Push Failed #').renderWith(function(data, type, full) {
-      return data['total']['failure'];
-    })
   ];
 
 };
