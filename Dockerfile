@@ -16,7 +16,7 @@ RUN npm install
 
 # Bundle app source
 COPY . /home/$user/pushserver
-RUN mkdir /home/$user/db /home/$user/logs
+RUN mkdir /home/$user/pushserver/logs
 RUN chown -R $user:$user /home/$user
 USER $user
 RUN bower install
